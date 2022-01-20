@@ -1,0 +1,15 @@
+@mixin button {
+	max-width: fit-content;
+	background: $blue;
+	color: white;
+	padding: 10px 20px;
+	font-weight: bold;
+	font-size: 14px;
+	border-radius: 27px;
+}
+
+@mixin grid {
+	display: grid;
+	grid-template-columns: repeat($columnsCount, 1fr);
+	column-gap: 20px;
+}

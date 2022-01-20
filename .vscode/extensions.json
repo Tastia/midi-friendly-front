@@ -1,0 +1,12 @@
+{
+	"recommendations": [
+		"streetsidesoftware.code-spell-checker",
+		"streetsidesoftware.code-spell-checker-french",
+		"esbenp.prettier-vscode",
+		"christian-kohler.path-intellisense",
+		"artdiniz.quitcontrol-vscode",
+		"mrmlnc.vscode-scss",
+		"vilicvane.sensitive-replace",
+		"mrmlnc.vscode-postcss-sorting"
+	]
+}

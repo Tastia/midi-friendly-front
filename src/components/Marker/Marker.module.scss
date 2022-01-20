@@ -1,0 +1,37 @@
+@import 'src/styles/variables';
+
+.wrapper {
+	--pin-size: 30px;
+	width: var(--pin-size);
+	height: var(--pin-size);
+	border-radius: 50%;
+	border: 2px solid white;
+	user-select: none;
+	cursor: pointer;
+
+	&:hover {
+		.infos {
+			display: block;
+		}
+	}
+}
+
+.infos {
+	padding: 10px;
+	border-radius: 5px;
+	position: absolute;
+	right: 100%;
+	margin-right: 10px;
+	z-index: 10;
+	min-width: fit-content;
+	max-width: 200px;
+	top: 0;
+	background: white;
+	display: none;
+}
+
+.name {
+	display: inline-block;
+	white-space: pre;
+	font-size: 16px;
+}

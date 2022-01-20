@@ -1,0 +1,21 @@
+@import 'src/styles/variables';
+
+.wrapper {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	row-gap: 100px;
+}
+
+.title {
+	font-size: 50px;
+}
+
+.forms {
+	width: 100%;
+	display: flex;
+	column-gap: 50px;
+	justify-content: center;
+}
