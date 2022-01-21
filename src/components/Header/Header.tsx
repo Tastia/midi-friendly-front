@@ -1,6 +1,7 @@
 import classNames from 'classnames/bind';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import React from 'react';
+import Logo from '../../svg/logo_horizontal.svg';
 import styles from './Header.module.scss';
 
 const c = classNames.bind(styles);
@@ -12,12 +13,12 @@ export default function Header({}: HeaderProps) {
 
 	return (
 		<header className={c('wrapper')}>
+			<Logo className={c('logo')} />
 			<div className={c('button-container')}>
 				{session ? (
 					<>
-						<span className={c('text')}>Signed in as {session.user?.name}</span>
 						<button className={c('button')} onClick={() => signOut()}>
-							Sign out
+							Se déconnecter
 						</button>
 					</>
 				) : (
