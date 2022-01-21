@@ -25,14 +25,16 @@ export default function Home({}: PageProps) {
 
 	return (
 		<div className={c('wrapper')}>
-			<Logo className={c('logo')}/>
+			<Link href="/">
+				<Logo className={c('logo')}/>
+			</Link>
 			<div className={c('forms')}>
 				<h1 className={c('title')}>Connexion</h1>
 				<SignIn />
 			</div>
 			<Link href="/signup">
 				<span className={c('link')}>
-					Pas encore de compte, je m'inscris
+					{"Pas encore de compte, je m'inscris"}
 				</span>
 			</Link>
 		</div>

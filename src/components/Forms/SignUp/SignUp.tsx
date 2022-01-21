@@ -65,36 +65,41 @@ export default function SignUp({}: SignUpProps) {
 
 	return (
 		<form method="post" className={c('wrapper')} onSubmit={handleSubmit}>
+			<div className={c('rowInput')}>
+				<Field
+					label="Nom"
+					name="name"
+					type="text"
+					placeholder="Dupond"
+					required={true}
+					value={name}
+					setValue={setName}
+				/>
+				<Field
+					label="Prénom"
+					name="firstname"
+					placeholder="Michel"
+					type="firstname"
+					required={true}
+					value={firstname}
+					setValue={setFirstname}
+				/>
+			</div>
+
 			<Field
 				label="Email"
 				name="email"
-				placeholder="exemple@mail.com"
+				placeholder="exemple@societe.com"
 				type="email"
 				required={true}
 				value={email}
 				setValue={setEmail}
 			/>
 			<Field
-				label="Prénom"
-				name="firstname"
-				placeholder="Michel"
-				type="firstname"
-				required={true}
-				value={firstname}
-				setValue={setFirstname}
-			/>
-			<Field
-				label="Nom"
-				name="name"
-				type="text"
-				required={true}
-				value={name}
-				setValue={setName}
-			/>
-			<Field
 				label="Mot de passe"
 				name="password"
 				type="password"
+				placeholder="•••••••••"
 				required={true}
 				value={password}
 				setValue={setPassword}
@@ -103,12 +108,13 @@ export default function SignUp({}: SignUpProps) {
 				label="Confirmation du mot de passe"
 				name="passwordConfirm"
 				type="password"
+				placeholder="•••••••••"
 				required={true}
 				value={passwordConfirm}
 				setValue={setPasswordConfirm}
 			/>
 			<button className={c('button')} type="submit">
-				{"S'inscrire"}
+				{"M'inscrire à MidiFriendly"}
 			</button>
 		</form>
 	);

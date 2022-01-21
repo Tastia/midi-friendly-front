@@ -54,7 +54,7 @@ export default function SignIn({}: SignInProps) {
 				setValue={setPassword}
 			/>
 			<button className={c('button')} type="submit">
-				Accéder à MidiFriendly
+				{"Accéder à MidiFriendly"}
 			</button>
 		</form>
 	);

@@ -6,6 +6,19 @@
 	row-gap: 20px;
 }
 
+.rowInput {
+	display: flex;
+	justify-content: space-between;
+
+	label {
+		width: calc(50% - 8px);
+	}
+}
+
 .button {
+	margin-top: 12px;
+	align-self: flex-end;
+
 	@include button;
+	@include btn-cta;
 }
