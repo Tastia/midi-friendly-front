@@ -1,27 +1,42 @@
 @import 'src/styles/variables';
 
 .wrapper {
+	padding: 40px;
 	position: relative;
 	display: flex;
 	flex-direction: column;
-	justify-content: center;
 	align-items: center;
-	row-gap: 100px;
 	height: 100%;
-}
 
-.title {
-	font-size: 50px;
-}
+	.logo {
+		margin-bottom: 48px;
+	}
 
-.forms {
-	width: 100%;
-	display: flex;
-	column-gap: 50px;
-	justify-content: center;
-}
+	.title {
+		font-size: 24px;
+		font-weight: bold;
+		margin-bottom: 24px;
+	}
 
-.button {
-	@include button;
-	align-self: start;
+	.forms {
+		width: 80%;
+		max-width: 620px;
+		display: flex;
+		padding: 24px;
+		flex-direction: column;
+		background: #FFFFFF;
+		border-radius: 6px;
+		border: 1px solid rgba($dark-blue, 0.2);
+		box-shadow: 0 3px 6px rgba(135, 135, 135, 0.1);
+		margin-bottom: 24px;
+	}
+
+	.link {
+		color: $link;
+		cursor: pointer;
+
+		&:hover {
+			text-decoration: underline;
+		}
+	}
 }

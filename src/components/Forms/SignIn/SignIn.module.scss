@@ -7,5 +7,9 @@
 }
 
 .button {
+	margin-top: 12px;
+	align-self: flex-end;
+
 	@include button;
+	@include btn-cta;
 }

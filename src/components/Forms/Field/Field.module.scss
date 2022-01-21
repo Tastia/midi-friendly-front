@@ -6,13 +6,27 @@
 	row-gap: 10px;
 }
 
-.label {
-	font-size: 20px;
-	font-weight: 600;
+.input {
+	padding: 16px;
+	min-width: 300px;
+	background: $white;
+	border-radius: 4px;
+	border: 1px solid rgba($dark-blue, .2);
+	box-shadow: 0 2px 3px rgba(0, 0, 0, 0.08);
+
+	&::placeholder {
+		font-weight: normal;
+		color: rgba($dark-blue, .5);
+	}
 }
 
-.input {
-	padding: 5px 10px;
-	min-width: 300px;
-	background: $pink;
+.input:-webkit-autofill,
+.input:-webkit-autofill:hover,
+.input:-webkit-autofill:focus, {
+	border: 1px solid rgba($melon, .3);
+	-webkit-text-fill-color: $dark-blue;
+	-webkit-box-shadow: 0 0 0 1000px $white inset;
+	font-weight: normal;
+	font-size: 16px;
+	font-family: $openSans, sans-serif;
 }

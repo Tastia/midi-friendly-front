@@ -1,11 +1,22 @@
 @mixin button {
 	max-width: fit-content;
-	background: $blue;
-	color: white;
-	padding: 10px 20px;
-	font-weight: bold;
-	font-size: 14px;
-	border-radius: 27px;
+	padding: 16px 30px;
+	font-weight: 600;
+	border-radius: 6px;
+}
+
+@mixin btn-cta {
+	background: $melon;
+	color: #FFFFFF;
+
+	&:hover {
+		background: rgba($melon, .8);
+	}
+}
+
+@mixin btn-secondary {
+	border: 1px solid $melon;
+	color: $melon;
 }
 
 @mixin grid {

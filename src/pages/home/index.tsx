@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import SignIn from '../../components/Forms/SignIn/SignIn';
 import styles from './home.module.scss';
+import Logo from '../../svg/logo.svg';
 
 const c = classNames.bind(styles);
 
@@ -24,13 +25,16 @@ export default function Home({}: PageProps) {
 
 	return (
 		<div className={c('wrapper')}>
+			<Logo className={c('logo')}/>
 			<div className={c('forms')}>
-				<h1 className={c('title')}>Bienvenue sur Tastia</h1>
+				<h1 className={c('title')}>Connexion</h1>
 				<SignIn />
-				<Link href="/signup">
-					<a className={c('button')}>Créer un compte</a>
-				</Link>
 			</div>
+			<Link href="/signup">
+				<span className={c('link')}>
+					Pas encore de compte, je m'inscris
+				</span>
+			</Link>
 		</div>
 	);
 }

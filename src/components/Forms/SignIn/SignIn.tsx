@@ -38,7 +38,7 @@ export default function SignIn({}: SignInProps) {
 			<Field
 				label="Email"
 				name="email"
-				placeholder="exemple@mail.com"
+				placeholder="email@societe.com"
 				type="email"
 				required={true}
 				value={email}
@@ -48,12 +48,13 @@ export default function SignIn({}: SignInProps) {
 				label="Mot de passe"
 				name="password"
 				type="password"
+				placeholder="•••••••••"
 				required={true}
 				value={password}
 				setValue={setPassword}
 			/>
 			<button className={c('button')} type="submit">
-				Se connecter
+				Accéder à MidiFriendly
 			</button>
 		</form>
 	);
