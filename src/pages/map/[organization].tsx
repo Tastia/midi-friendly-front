@@ -114,8 +114,6 @@ export async function getStaticProps(context: any) {
 		type: 'restaurant',
 	});
 
-	console.log(places);
-
 	placesArr = places.results;
 
 	if (process && process.env.NODE_ENV !== 'development') {
