@@ -1,9 +1,9 @@
 import classNames from 'classnames/bind';
 import { useSession } from 'next-auth/react';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import SignIn from '../../components/Forms/SignIn/SignIn';
-import SignUp from '../../components/Forms/SignUp/SignUp';
 import styles from './home.module.scss';
 
 const c = classNames.bind(styles);
@@ -27,7 +27,9 @@ export default function Home({}: PageProps) {
 			<div className={c('forms')}>
 				<h1 className={c('title')}>Bienvenue sur Tastia</h1>
 				<SignIn />
-				<SignUp />
+				<Link href="/signup">
+					<a className={c('button')}>Créer un compte</a>
+				</Link>
 			</div>
 		</div>
 	);

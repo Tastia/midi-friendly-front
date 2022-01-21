@@ -1,12 +1,12 @@
 @import 'src/styles/variables';
 
 .wrapper {
+	display: grid;
+	grid-template-rows: 100px 1fr;
 	position: relative;
-	display: flex;
 	flex-direction: column;
-	justify-content: center;
 	align-items: center;
-	row-gap: 100px;
+	height: 100%;
 }
 
 .title {

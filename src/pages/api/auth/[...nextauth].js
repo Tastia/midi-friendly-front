@@ -32,6 +32,7 @@ const options = {
     ],
     pages: {
         signIn: '/',
+        signUp: '/signup',
         error: '/',
         signOut: '/'
     },

@@ -3,7 +3,6 @@ import 'destyle.css';
 import { SessionProvider } from 'next-auth/react';
 import type { AppProps } from 'next/app';
 import { useRef } from 'react';
-import Header from '../components/Header/Header';
 import Notification, {
 	NotificationContext,
 	NotificationHandle,
@@ -24,7 +23,6 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
 	return (
 		<div className={c('main-wrapper')}>
 			<SessionProvider session={session}>
-				<Header />
 				<NotificationContext.Provider value={NotificationValue}>
 					<Component {...pageProps} />
 				</NotificationContext.Provider>

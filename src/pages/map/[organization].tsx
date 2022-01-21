@@ -2,6 +2,7 @@ import classNames from 'classnames/bind';
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 import Details from '../../components/Details/Details';
+import Header from '../../components/Header/Header';
 import Map from '../../components/Map/Map';
 import { MarkerInfos } from '../../components/Marker/Marker';
 import styles from './organization.module.scss';
@@ -32,6 +33,7 @@ export default function Home({ orga }: PageProps) {
 
 	return (
 		<div className={c('wrapper')}>
+			<Header />
 			{orga && (
 				<Map
 					coords={orga.coords}
@@ -53,6 +55,8 @@ export async function getStaticPaths() {
 	});
 
 	const orgas = await res.json();
+
+	console.log(orgas);
 
 	return {
 		paths: orgas.map((orga: any) => ({

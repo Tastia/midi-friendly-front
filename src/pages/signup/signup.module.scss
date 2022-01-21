@@ -20,8 +20,3 @@
 	column-gap: 50px;
 	justify-content: center;
 }
-
-.button {
-	@include button;
-	align-self: start;
-}

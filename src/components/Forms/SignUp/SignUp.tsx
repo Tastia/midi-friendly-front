@@ -1,5 +1,6 @@
 import classNames from 'classnames/bind';
 import { getCsrfToken } from 'next-auth/react';
+import { useRouter } from 'next/router';
 import React, { FormEvent, useContext, useState } from 'react';
 import { apiSignUp, apiUrl } from '../../../utils/env';
 import { NotificationContext } from '../../Notification/Notification';
@@ -17,6 +18,7 @@ export default function SignUp({}: SignUpProps) {
 	const [password, setPassword] = useState('');
 	const [passwordConfirm, setPasswordConfirm] = useState('');
 	const { notify } = useContext(NotificationContext);
+	const router = useRouter();
 
 	async function handleSubmit(e: FormEvent) {
 		e.preventDefault();
@@ -54,6 +56,7 @@ export default function SignUp({}: SignUpProps) {
 					message:
 						'Votre compte est enregistré, merci de vérifier votre adresse mail.',
 				});
+				router.push('/');
 			}
 
 			return null;

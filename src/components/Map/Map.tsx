@@ -8,6 +8,7 @@ const LAT_LIMIT = 0.005;
 const LONG_LIMIT = 0.01;
 
 const c = classNames.bind(styles);
+
 type MapProps = {
 	coords: {
 		lat: number;
