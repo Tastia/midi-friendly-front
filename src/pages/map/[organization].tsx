@@ -35,15 +35,22 @@ export default function Home({ orga }: PageProps) {
 		<div className={c('wrapper')}>
 			<Header />
 			{orga && (
-				<Map
-					coords={orga.coords}
-					markers={orga.markers}
-					setName={setName}
-					setId={setId}
-				/>
+				<div className={c('map-wrapper')}>
+					<Map
+						coords={orga.coords}
+						markers={orga.markers}
+						setName={setName}
+						setId={setId}
+					/>
+					<Details
+						closeDetails={() => {
+							setName('');
+						}}
+						name={name}
+						id={id}
+					/>
+				</div>
 			)}
-
-			<Details name={name} id={id} />
 		</div>
 	);
 }

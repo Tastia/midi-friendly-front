@@ -12,9 +12,15 @@ type DetailsProps = {
 	className?: string;
 	name: string;
 	id: string;
+	closeDetails: () => void;
 };
 
-export default function Details({ className, name, id }: DetailsProps) {
+export default function Details({
+	className,
+	name,
+	id,
+	closeDetails,
+}: DetailsProps) {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [schedule, setSchedule] = useState('');
 	const { notify } = useContext(NotificationContext);
@@ -71,28 +77,41 @@ export default function Details({ className, name, id }: DetailsProps) {
 	if (name) {
 		return (
 			<div className={c('wrapper', className)}>
-				<div className={c('image')}></div>
+				<button
+					className={c('button', 'button-close')}
+					onClick={() => closeDetails()}
+				>
+					Fermer
+				</button>
+				<div className={c('image-container')}>
+					<img
+						src="http://4.bp.blogspot.com/-rusiFRzM624/U8VIIaM_wgI/AAAAAAAABJw/B6AMb8-fDsQ/s1600/restaurant.jpg"
+						className={c('image')}
+					/>
+				</div>
 				<div className={c('infos')}>
 					<span className={c('title')}>{name}</span>
-					<span>{id}</span>
+					{/* <span>{id}</span> */}
 					{/* GROUPS */}
-					<button className={c('button')} onClick={handleClick}>
-						Créer un groupe
-					</button>
-					{isModalOpen && (
-						<div className={c('modal')}>
-							<Field
-								name="schedule"
-								label="Définir un horaire"
-								value={schedule}
-								setValue={setSchedule}
-							/>
-							<button className={c('button')} onClick={validate}>
-								Valider
-							</button>
-						</div>
-					)}
 				</div>
+				<button className={c('button')} onClick={handleClick}>
+					Créer un groupe
+				</button>
+
+				{isModalOpen && (
+					<div className={c('modal')}>
+						<Field
+							name="schedule"
+							label="Définir un horaire"
+							value={schedule}
+							setValue={setSchedule}
+							className={c('input')}
+						/>
+						<button className={c('button')} onClick={validate}>
+							Valider
+						</button>
+					</div>
+				)}
 			</div>
 		);
 	} else {

@@ -8,16 +8,21 @@
 	width: 35vw;
 	background: white;
 	padding: 24px;
+	display: flex;
+	flex-direction: column;
+	row-gap: 24px;
 }
 
-.image {
+.image-container {
 	width: 100%;
 	height: 20vw;
 	background: green;
-}
 
-.infos {
-	margin-top: 24px;
+	.image {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
 }
 
 .title {
@@ -29,7 +34,15 @@
 	@include button;
 }
 
+.button-close {
+	align-self: flex-end;
+}
+
 .modal {
 	background: red;
 	padding: 24px;
+
+	.input {
+		max-width: 100%;
+	}
 }

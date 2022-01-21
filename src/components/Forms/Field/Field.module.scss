@@ -11,19 +11,19 @@
 	width: 100%;
 	background: $white;
 	border-radius: 4px;
-	border: 1px solid rgba($dark-blue, .2);
+	border: 1px solid rgba($dark-blue, 0.2);
 	box-shadow: 0 2px 3px rgba(0, 0, 0, 0.08);
 
 	&::placeholder {
 		font-weight: normal;
-		color: rgba($dark-blue, .5);
+		color: rgba($dark-blue, 0.5);
 	}
 }
 
 .input:-webkit-autofill,
 .input:-webkit-autofill:hover,
-.input:-webkit-autofill:focus, {
-	border: 1px solid rgba($melon, .3);
+.input:-webkit-autofill:focus {
+	border: 1px solid rgba($melon, 0.3);
 	-webkit-text-fill-color: $dark-blue;
 	-webkit-box-shadow: 0 0 0 1000px $white inset;
 	font-weight: normal;
