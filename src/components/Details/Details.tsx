@@ -84,10 +84,14 @@ export default function Details({
 					Fermer
 				</button>
 				<div className={c('image-container')}>
-					<img
+					{/* <Image
 						src="http://4.bp.blogspot.com/-rusiFRzM624/U8VIIaM_wgI/AAAAAAAABJw/B6AMb8-fDsQ/s1600/restaurant.jpg"
 						className={c('image')}
-					/>
+						alt="image d'un restaurant"
+						layout="responsive"
+						width="18vw"
+						height="100%"
+					/> */}
 				</div>
 				<div className={c('infos')}>
 					<span className={c('title')}>{name}</span>

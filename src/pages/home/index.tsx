@@ -4,8 +4,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import SignIn from '../../components/Forms/SignIn/SignIn';
-import styles from './home.module.scss';
 import Logo from '../../svg/logo.svg';
+import styles from './home.module.scss';
 
 const c = classNames.bind(styles);
 
@@ -17,6 +17,7 @@ export default function Home({}: PageProps) {
 
 	useEffect(() => {
 		if (session) {
+			console.log(session);
 			const user: any = session.user;
 			const orgaID = user.organization.id;
 			router.push('/map/' + orgaID);
@@ -26,7 +27,7 @@ export default function Home({}: PageProps) {
 	return (
 		<div className={c('wrapper')}>
 			<Link href="/">
-				<Logo className={c('logo')}/>
+				<Logo className={c('logo')} />
 			</Link>
 			<div className={c('forms')}>
 				<h1 className={c('title')}>Connexion</h1>

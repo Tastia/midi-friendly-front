@@ -1,11 +1,10 @@
 import classNames from 'classnames/bind';
-import Fork from '../../svg/pins/fork.svg';
 import styles from './Marker.module.scss';
 
 const c = classNames.bind(styles);
 
 export type MarkerInfos = {
-	coords: {
+	coords?: {
 		lat: number;
 		lng: number;
 	};
@@ -14,10 +13,12 @@ export type MarkerInfos = {
 
 type MarkerProps = {
 	infos: MarkerInfos;
-	onClick: () => void;
+	onClick?: () => void;
 	lat: number;
 	lng: number;
 	className?: string;
+	children: JSX.Element;
+	big?: boolean;
 };
 
 export default function Marker({
@@ -26,13 +27,15 @@ export default function Marker({
 	lng,
 	infos,
 	className,
+	children,
+	big,
 }: MarkerProps) {
 	return (
-		<div onClick={onClick} className={c('wrapper', className)}>
-			<Fork className={c('svg')} />
+		<div onClick={onClick} className={c('wrapper', className, { big })}>
 			<div className={c('infos')}>
 				<p className={c('name')}>{infos.name}</p>
 			</div>
+			<div className={c('svg-container')}>{children}</div>
 		</div>
 	);
 }

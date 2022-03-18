@@ -1,6 +1,8 @@
 import classNames from 'classnames/bind';
 import GoogleMapReact from 'google-map-react';
 import { Dispatch, SetStateAction, useState } from 'react';
+import Fork from '../../svg/pins/fork.svg';
+import Home from '../../svg/pins/home.svg';
 import Marker, { MarkerInfos } from '../Marker/Marker';
 import styles from './Map.module.scss';
 
@@ -14,12 +16,19 @@ type MapProps = {
 		lat: number;
 		lng: number;
 	};
-	markers: MarkerInfos[];
+	markers?: MarkerInfos[];
 	setName: Dispatch<SetStateAction<string>>;
 	setId: Dispatch<SetStateAction<string>>;
+	restaurants: any;
 };
 
-export default function Map({ coords, markers, setName, setId }: MapProps) {
+export default function Map({
+	coords,
+	markers,
+	setName,
+	setId,
+	restaurants,
+}: MapProps) {
 	const [displayMarkers, setDisplayMarkers] = useState(false);
 
 	const MapProps = {
@@ -63,17 +72,27 @@ export default function Map({ coords, markers, setName, setId }: MapProps) {
 					onGoogleApiLoaded={() => setDisplayMarkers(true)}
 				>
 					{displayMarkers &&
-						markers.map((marker, i) => (
+						restaurants.map((restaurant: any, i: number) => (
 							<Marker
 								key={i}
-								onClick={() => {
-									handleMarkerClick(marker);
-								}}
-								infos={marker}
-								lat={marker.coords.lat}
-								lng={marker.coords.lng}
-							/>
+								infos={{ name: restaurant.name }}
+								lat={restaurant.Position.latitude}
+								lng={restaurant.Position.longitude}
+								onClick={() => handleMarkerClick(restaurant)}
+							>
+								<Fork className={c('svg')} />
+							</Marker>
 						))}
+					{displayMarkers && (
+						<Marker
+							infos={{ name: 'Mon entreprise' }}
+							lat={coords.lat}
+							lng={coords.lng}
+							big
+						>
+							<Home className={c('svg')} />
+						</Marker>
+					)}
 				</GoogleMapReact>
 			)}
 		</div>
