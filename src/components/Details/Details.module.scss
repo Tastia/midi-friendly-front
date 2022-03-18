@@ -1,0 +1,48 @@
+@import 'src/styles/variables';
+
+.wrapper {
+	position: absolute;
+	left: 0;
+	top: 0;
+	bottom: 0;
+	width: 35vw;
+	background: $white;
+	padding: 24px;
+	display: flex;
+	flex-direction: column;
+	row-gap: 24px;
+}
+
+.image-container {
+	width: 100%;
+	height: 20vw;
+
+	.image {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+}
+
+.title {
+	font-size: 24px;
+	font-weight: 600;
+}
+
+.button {
+	@include button;
+	@include btn-cta;
+}
+
+.button-close {
+	align-self: flex-end;
+}
+
+.modal {
+	background: white;
+	padding: 24px;
+
+	.input {
+		max-width: 100%;
+	}
+}

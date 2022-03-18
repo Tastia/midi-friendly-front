@@ -1,0 +1,43 @@
+@import 'src/styles/variables';
+
+.wrapper {
+  padding: 40px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+
+  .logo {
+    margin-bottom: 48px;
+    cursor: pointer;
+  }
+
+  .title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 24px;
+  }
+
+  .forms {
+    width: 80%;
+    max-width: 620px;
+    display: flex;
+    padding: 24px;
+    flex-direction: column;
+    background: #FFFFFF;
+    border-radius: 6px;
+    border: 1px solid rgba($dark-blue, 0.2);
+    box-shadow: 0 3px 6px rgba(135, 135, 135, 0.1);
+    margin-bottom: 24px;
+  }
+
+  .link {
+    color: $link;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

@@ -1,0 +1,26 @@
+@import 'src/styles/variables';
+
+.wrapper {
+	width: 100%;
+	background: white;
+	height: 90px;
+	display: flex;
+	padding: 20px;
+	justify-content: space-between;
+}
+
+.button-container {
+	justify-self: flex-end;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	.text {
+		display: block;
+	}
+
+	.button {
+		color: white;
+		background: rgba(100, 100, 200);
+		padding: 5px 20px;
+	}
+}
