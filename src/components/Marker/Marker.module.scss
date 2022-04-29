@@ -1,6 +1,7 @@
 @import 'src/styles/variables';
 
 .wrapper {
+	position: relative;
 	--pin-size: 30px;
 	--border-size: 2px;
 	width: var(--pin-size);
@@ -19,6 +20,7 @@
 	}
 
 	&:hover {
+		z-index: 20;
 		.infos {
 			display: block;
 		}
@@ -43,4 +45,20 @@
 	display: inline-block;
 	white-space: pre;
 	font-size: 16px;
+}
+
+.count {
+	position: absolute;
+	top: 0%;
+	left: 100%;
+	transform: translateY(-50%);
+	font-family: $openSans;
+	font-size: 12px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background: white;
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
 }

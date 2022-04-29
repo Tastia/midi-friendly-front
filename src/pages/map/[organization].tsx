@@ -1,6 +1,7 @@
 import classNames from 'classnames/bind';
 import { useSession } from 'next-auth/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import useSWR from 'swr';
 import Details from '../../components/Details/Details';
 import Header from '../../components/Header/Header';
 import Map from '../../components/Map/Map';
@@ -25,9 +26,41 @@ type PageProps = {
 
 export default function Home({ orga, restaurants }: PageProps) {
 	const { data: session } = useSession();
+	const [restaurant, setRestaurant] = useState({});
+	const [restaurantsCopy, setRestaurantsCopy] = useState(restaurants);
 
-	const [name, setName] = useState('');
-	const [id, setId] = useState('');
+	const user: any = session?.user;
+
+	const { data, error } = useSWR(
+		process.env.NEXT_PUBLIC_API_URL + '/lunch-groups/organization/85',
+		(apiURL: string) =>
+			fetch(apiURL, {
+				headers: { Authorization: 'Bearer ' + user?.token },
+			}).then((res) => res.json()),
+		{ refreshInterval: 1000 },
+	);
+
+	useEffect(() => {
+		if (data && !data.error) {
+			setRestaurantsCopy((restaurantsCopy: any) => {
+				restaurantsCopy.forEach((restaurant: any) => {
+					if (restaurant.lunchGroups) {
+						restaurant.lunchGroups = [];
+					}
+				});
+				data.forEach((lunchGroup: any) => {
+					const current = restaurantsCopy.find(
+						(element: any) => element.id === lunchGroup.restaurant.id,
+					);
+					if (current && !current.lunchGroups) {
+						current.lunchGroups = [];
+					}
+					current?.lunchGroups.push(lunchGroup);
+				});
+				return [...restaurantsCopy];
+			});
+		}
+	}, [data, restaurantsCopy.lunchGroups]);
 
 	return (
 		<div className={c('wrapper')}>
@@ -36,16 +69,14 @@ export default function Home({ orga, restaurants }: PageProps) {
 				<div className={c('map-wrapper')}>
 					<Map
 						coords={orga.coords}
-						setName={setName}
-						setId={setId}
-						restaurants={restaurants}
+						setRestaurant={setRestaurant}
+						restaurants={restaurantsCopy}
 					/>
 					<Details
 						closeDetails={() => {
-							setName('');
+							setRestaurant('');
 						}}
-						name={name}
-						id={id}
+						restaurant={restaurant}
 					/>
 				</div>
 			)}

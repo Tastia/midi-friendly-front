@@ -5,23 +5,22 @@
 	left: 0;
 	top: 0;
 	bottom: 0;
-	width: 35vw;
-	background: $white;
+	width: 25vw;
+	min-width: 300px;
+	margin: 12px;
 	padding: 24px;
 	display: flex;
 	flex-direction: column;
 	row-gap: 24px;
+	background: $white;
+	filter: drop-shadow(2px 2px 10px rgba(0, 0, 0, 0.15));
+	border-radius: 8px;
 }
 
-.image-container {
-	width: 100%;
-	height: 20vw;
-
-	.image {
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-	}
+.top-section {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 }
 
 .title {
@@ -29,13 +28,22 @@
 	font-weight: 600;
 }
 
+.button-close {
+	padding: 10px;
+	border-radius: 50%;
+	background: none;
+	align-self: flex-end;
+}
+
+.cross-svg {
+	width: 20px;
+	height: 20px;
+	fill: $grey-2;
+}
+
 .button {
 	@include button;
 	@include btn-cta;
-}
-
-.button-close {
-	align-self: flex-end;
 }
 
 .modal {
@@ -44,5 +52,42 @@
 
 	.input {
 		max-width: 100%;
+	}
+}
+
+.lunch-groups {
+	display: flex;
+	flex-direction: column;
+	row-gap: 12px;
+
+	.item {
+		background: white;
+		padding: 8px;
+		display: flex;
+		flex-direction: column;
+		row-gap: 4px;
+	}
+
+	.schedule {
+		font-weight: bold;
+		color: $blue;
+		text-align: center;
+	}
+
+	.users {
+		.users-title {
+			font-weight: bold;
+			text-transform: uppercase;
+			font-size: 12px;
+		}
+	}
+
+	.button {
+		@include button;
+		padding: 8px;
+		margin-top: 10px;
+		display: block;
+		max-width: unset;
+		text-align: center;
 	}
 }

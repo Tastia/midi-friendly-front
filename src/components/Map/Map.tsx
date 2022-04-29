@@ -6,8 +6,8 @@ import Home from '../../svg/pins/home.svg';
 import Marker, { MarkerInfos } from '../Marker/Marker';
 import styles from './Map.module.scss';
 
-const LAT_LIMIT = 0.005;
-const LONG_LIMIT = 0.01;
+const LAT_LIMIT = 0.004;
+const LONG_LIMIT = 0.008;
 
 const c = classNames.bind(styles);
 
@@ -17,16 +17,14 @@ type MapProps = {
 		lng: number;
 	};
 	markers?: MarkerInfos[];
-	setName: Dispatch<SetStateAction<string>>;
-	setId: Dispatch<SetStateAction<string>>;
+	setRestaurant: Dispatch<SetStateAction<any>>;
 	restaurants: any;
 };
 
 export default function Map({
 	coords,
 	markers,
-	setName,
-	setId,
+	setRestaurant,
 	restaurants,
 }: MapProps) {
 	const [displayMarkers, setDisplayMarkers] = useState(false);
@@ -52,8 +50,7 @@ export default function Map({
 	};
 
 	function handleMarkerClick(marker: any) {
-		setName(marker.name);
-		setId(marker.id);
+		setRestaurant(marker);
 	}
 
 	return (
@@ -75,7 +72,10 @@ export default function Map({
 						restaurants.map((restaurant: any, i: number) => (
 							<Marker
 								key={i}
-								infos={{ name: restaurant.name }}
+								infos={{
+									name: restaurant.name,
+									lunchGroupCount: restaurant.lunchGroups?.length,
+								}}
 								lat={restaurant.Position.latitude}
 								lng={restaurant.Position.longitude}
 								onClick={() => handleMarkerClick(restaurant)}

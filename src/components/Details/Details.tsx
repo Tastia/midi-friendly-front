@@ -1,6 +1,7 @@
 import classNames from 'classnames/bind';
 import { useSession } from 'next-auth/react';
 import React, { useContext, useState } from 'react';
+import Cross from '../../svg/cross.svg';
 import { apiUrl } from '../../utils/env';
 import Field from '../Forms/Field/Field';
 import { NotificationContext } from '../Notification/Notification';
@@ -10,21 +11,20 @@ const c = classNames.bind(styles);
 
 type DetailsProps = {
 	className?: string;
-	name: string;
-	id: string;
+	restaurant: any;
 	closeDetails: () => void;
 };
 
 export default function Details({
 	className,
-	name,
-	id,
+	restaurant,
 	closeDetails,
 }: DetailsProps) {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [schedule, setSchedule] = useState('');
 	const { notify } = useContext(NotificationContext);
 	const { data: session } = useSession();
+	const user: any = session?.user;
 
 	function handleClick() {
 		setIsModalOpen(!isModalOpen);
@@ -45,7 +45,8 @@ export default function Details({
 			fake_schedule: schedule,
 			users: user.id,
 			date: date,
-			restaurant_id: id,
+			restaurant: restaurant.id,
+			organization: user.organization.id,
 		};
 
 		const res = await fetch(apiUrl + '/lunch-groups', {
@@ -74,29 +75,42 @@ export default function Details({
 		return null;
 	}
 
-	if (name) {
+	async function joinClick(lunchGroup: any) {
+		const apiURL =
+			process.env.NEXT_PUBLIC_API_URL + '/lunch-groups/' + lunchGroup.id;
+		console.log(user.id);
+		const body = {
+			users: [...lunchGroup.users.map((user: any) => user.id), user.id],
+		};
+		console.log(body, apiURL);
+		const request = await fetch(apiURL, {
+			headers: {
+				'Authorization': 'Bearer ' + user?.token,
+				'Content-Type': 'application/json',
+			},
+			method: 'PUT',
+			body: JSON.stringify(body),
+		}).then((res) => res.json());
+		console.log(request);
+	}
+
+	console.log(restaurant);
+
+	if (restaurant.name) {
 		return (
 			<div className={c('wrapper', className)}>
-				<button
-					className={c('button', 'button-close')}
-					onClick={() => closeDetails()}
-				>
-					Fermer
-				</button>
-				<div className={c('image-container')}>
-					{/* <Image
-						src="http://4.bp.blogspot.com/-rusiFRzM624/U8VIIaM_wgI/AAAAAAAABJw/B6AMb8-fDsQ/s1600/restaurant.jpg"
-						className={c('image')}
-						alt="image d'un restaurant"
-						layout="responsive"
-						width="18vw"
-						height="100%"
-					/> */}
-				</div>
-				<div className={c('infos')}>
-					<span className={c('title')}>{name}</span>
-					{/* <span>{id}</span> */}
-					{/* GROUPS */}
+				<div className={c('top-section')}>
+					<a
+						href={`https://www.google.com/maps/place/?q=place_id:${restaurant.id}`}
+						target="_blank"
+						rel="noreferrer"
+					>
+						<span className={c('title')}>{restaurant.name}</span>
+					</a>
+
+					<button className={c('button-close')} onClick={() => closeDetails()}>
+						<Cross className={c('cross-svg')} />
+					</button>
 				</div>
 				<button className={c('button')} onClick={handleClick}>
 					Créer un groupe
@@ -116,6 +130,33 @@ export default function Details({
 						</button>
 					</div>
 				)}
+
+				<ul className={c('lunch-groups')}>
+					{restaurant.lunchGroups &&
+						restaurant.lunchGroups.map((lunchGroup: any, i: number) => (
+							<li className={c('item')} key={i}>
+								<div className={c('schedule')}>
+									<span>Horaire : {lunchGroup.fake_schedule}</span>
+								</div>
+								<div className={c('users')}>
+									<span className={c('users-title')}> Participants</span>
+									<ul className={c('user-list')}>
+										{lunchGroup.users.map((user: any, y: number) => (
+											<li className={c('user')} key={y}>
+												{user.firstname + ' ' + user.name}
+											</li>
+										))}
+									</ul>
+								</div>
+								<button
+									className={c('button')}
+									onClick={() => joinClick(lunchGroup)}
+								>
+									Rejoindre
+								</button>
+							</li>
+						))}
+				</ul>
 			</div>
 		);
 	} else {
