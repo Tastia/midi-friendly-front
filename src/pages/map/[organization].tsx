@@ -60,7 +60,7 @@ export default function Home({ orga, restaurants }: PageProps) {
 				return [...restaurantsCopy];
 			});
 		}
-	}, [data, restaurantsCopy.lunchGroups]);
+	}, [data, restaurantsCopy?.lunchGroups]);
 
 	return (
 		<div className={c('wrapper')}>
