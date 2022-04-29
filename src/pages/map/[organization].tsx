@@ -32,7 +32,9 @@ export default function Home({ orga, restaurants }: PageProps) {
 	const user: any = session?.user;
 
 	const { data, error } = useSWR(
-		process.env.NEXT_PUBLIC_API_URL + '/lunch-groups/organization/85',
+		process.env.NEXT_PUBLIC_API_URL +
+			'/lunch-groups/organization/' +
+			user?.organization.id,
 		(apiURL: string) =>
 			fetch(apiURL, {
 				headers: { Authorization: 'Bearer ' + user?.token },

@@ -78,11 +78,9 @@ export default function Details({
 	async function joinClick(lunchGroup: any) {
 		const apiURL =
 			process.env.NEXT_PUBLIC_API_URL + '/lunch-groups/' + lunchGroup.id;
-		console.log(user.id);
 		const body = {
 			users: [...lunchGroup.users.map((user: any) => user.id), user.id],
 		};
-		console.log(body, apiURL);
 		const request = await fetch(apiURL, {
 			headers: {
 				'Authorization': 'Bearer ' + user?.token,
@@ -91,10 +89,7 @@ export default function Details({
 			method: 'PUT',
 			body: JSON.stringify(body),
 		}).then((res) => res.json());
-		console.log(request);
 	}
-
-	console.log(restaurant);
 
 	if (restaurant.name) {
 		return (
