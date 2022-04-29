@@ -1,13 +1,12 @@
 import classNames from 'classnames/bind';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import React from 'react';
-import Button from '../../components/Button2/Button';
-import Logo from '../../svg/logo_horizontal.svg';
-import UserIcon from '../../svg/homepage/users.svg';
+import Button from '../../components/Button/Button';
 import FavorisIcon from '../../svg/homepage/favoris.svg';
 import OrganisationIcon from '../../svg/homepage/organisation.svg';
 import SocietyIcon from '../../svg/homepage/society.svg';
+import UserIcon from '../../svg/homepage/users.svg';
+import Logo from '../../svg/logo_horizontal.svg';
 import styles from './homepage2.module.scss';
 
 const c = classNames.bind(styles);
@@ -37,10 +36,12 @@ export default function Homepage2({}: PageProps) {
 						Enfin un moyen pour vous et vos collègues de{' '}
 						<span>trouver à manger</span>
 					</h1>
-					<p className={c('subtitle')}>
-						{
-							"MidiFriendly, l'outil pour trouver des lieux ou partager et rencontrer"
-						}
+					<h2>Réponder leur "Midi Fiendly"</h2>
+					<p>
+						Lorem ipsum de la muerta del sol de la cuenta por favor este texto
+						es por la cocina y la tortilla con las patatas por favor hombre.
+						Lorem ipsum de la muerta del sol de la cuenta por favor este texto
+						es por la cocina y la tortilla con las patatas por favor hombre.
 					</p>
 					<div className={c('buttons-list')}>
 						<Button name={'Je cherche mes collègues'} type={'secondary'} />
