@@ -36,7 +36,7 @@ export default function Homepage2({}: PageProps) {
 						Enfin un moyen pour vous et vos collègues de{' '}
 						<span>trouver à manger</span>
 					</h1>
-					<h2>{`Réponder leur "Midi Fiendly"`}</h2>
+					<h2>Réponder leur "Midi Fiendly"</h2>
 					<p>
 						Lorem ipsum de la muerta del sol de la cuenta por favor este texto
 						es por la cocina y la tortilla con las patatas por favor hombre.
