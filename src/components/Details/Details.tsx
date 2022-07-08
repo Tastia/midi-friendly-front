@@ -1,6 +1,6 @@
 import classNames from 'classnames/bind';
 import { useSession } from 'next-auth/react';
-import React, { useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 import Cross from '../../svg/cross.svg';
 import { apiUrl } from '../../utils/env';
 import Field from '../Forms/Field/Field';
@@ -60,10 +60,8 @@ export default function Details({
 
 		const response = await res.json();
 
-		if (response.message) {
-			response.message[0].messages.forEach((message: { message: string }) => {
-				notify({ type: 'error', message: message.message });
-			});
+		if (response.statusCode === 400) {
+			notify({ type: 'error', message: response.message });
 		} else {
 			notify({
 				type: 'success',
@@ -88,7 +86,19 @@ export default function Details({
 			},
 			method: 'PUT',
 			body: JSON.stringify(body),
-		}).then((res) => res.json());
+		});
+
+		const response = await request.json();
+
+		if (response.statusCode === 400) {
+			notify({ type: 'error', message: response.message });
+		} else {
+			notify({
+				type: 'success',
+				message: 'Vous avez bien rejoint le groupe.',
+			});
+			setIsModalOpen(false);
+		}
 	}
 
 	if (restaurant.name) {

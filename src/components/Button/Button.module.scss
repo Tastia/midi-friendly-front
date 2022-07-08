@@ -1,0 +1,17 @@
+@import 'src/styles/variables';
+
+.button {
+    @include button;
+
+    &.primary {
+        @include btn-cta;
+    }
+
+    &.secondary {
+        @include btn-secondary;
+    }
+
+    &.tertiary {
+        @include btn-tertiary;
+    }
+}

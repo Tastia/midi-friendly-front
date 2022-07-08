@@ -19,6 +19,11 @@
 	color: $melon;
 }
 
+@mixin btn-tertiary {
+	background: rgba(white, .2);
+	color: #FFFFFF;
+}
+
 @mixin grid {
 	display: grid;
 	grid-template-columns: repeat($columnsCount, 1fr);
