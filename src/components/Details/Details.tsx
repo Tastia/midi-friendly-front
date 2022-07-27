@@ -4,6 +4,7 @@ import { useContext, useState } from 'react';
 import Cross from '../../svg/cross.svg';
 import { apiUrl } from '../../utils/env';
 import Field from '../Forms/Field/Field';
+import LunchGroup from '../LunchGroup/LunchGroup';
 import { NotificationContext } from '../Notification/Notification';
 import styles from './Details.module.scss';
 
@@ -24,7 +25,6 @@ export default function Details({
 	const [schedule, setSchedule] = useState('');
 	const { notify } = useContext(NotificationContext);
 	const { data: session } = useSession();
-	const user: any = session?.user;
 
 	function handleClick() {
 		setIsModalOpen(!isModalOpen);
@@ -73,40 +73,12 @@ export default function Details({
 		return null;
 	}
 
-	async function joinClick(lunchGroup: any) {
-		const apiURL =
-			process.env.NEXT_PUBLIC_API_URL + '/lunch-groups/' + lunchGroup.id;
-		const body = {
-			users: [...lunchGroup.users.map((user: any) => user.id), user.id],
-		};
-		const request = await fetch(apiURL, {
-			headers: {
-				'Authorization': 'Bearer ' + user?.token,
-				'Content-Type': 'application/json',
-			},
-			method: 'PUT',
-			body: JSON.stringify(body),
-		});
-
-		const response = await request.json();
-
-		if (response.statusCode === 400) {
-			notify({ type: 'error', message: response.message });
-		} else {
-			notify({
-				type: 'success',
-				message: 'Vous avez bien rejoint le groupe.',
-			});
-			setIsModalOpen(false);
-		}
-	}
-
 	if (restaurant.name) {
 		return (
 			<div className={c('wrapper', className)}>
 				<div className={c('top-section')}>
 					<a
-						href={`https://www.google.com/maps/place/?q=place_id:${restaurant.id}`}
+						href={`https://www.google.com/maps/place/?q=place_id:${restaurant.place_id}`}
 						target="_blank"
 						rel="noreferrer"
 					>
@@ -139,27 +111,7 @@ export default function Details({
 				<ul className={c('lunch-groups')}>
 					{restaurant.lunchGroups &&
 						restaurant.lunchGroups.map((lunchGroup: any, i: number) => (
-							<li className={c('item')} key={i}>
-								<div className={c('schedule')}>
-									<span>Horaire : {lunchGroup.fake_schedule}</span>
-								</div>
-								<div className={c('users')}>
-									<span className={c('users-title')}> Participants</span>
-									<ul className={c('user-list')}>
-										{lunchGroup.users.map((user: any, y: number) => (
-											<li className={c('user')} key={y}>
-												{user.firstname + ' ' + user.name}
-											</li>
-										))}
-									</ul>
-								</div>
-								<button
-									className={c('button')}
-									onClick={() => joinClick(lunchGroup)}
-								>
-									Rejoindre
-								</button>
-							</li>
+							<LunchGroup key={i} lunchGroup={lunchGroup} />
 						))}
 				</ul>
 			</div>
