@@ -1,7 +1,6 @@
 import classNames from 'classnames/bind';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import React from 'react';
 import Button from '../../components/Button/Button';
 import Logo from '../../svg/logo_horizontal.svg';
 import styles from './homepage.module.scss';
