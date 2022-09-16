@@ -2,6 +2,7 @@ import classNames from 'classnames/bind';
 import 'destyle.css';
 import { SessionProvider } from 'next-auth/react';
 import type { AppProps } from 'next/app';
+import Head from 'next/head';
 import { useRef } from 'react';
 import Notification, {
 	NotificationContext,
@@ -22,6 +23,13 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
 
 	return (
 		<div className={c('main-wrapper')}>
+			<Head>
+				<script
+					defer
+					data-domain="midi-friendly.vercel.app"
+					src="https://plausible.io/js/plausible.js"
+				></script>
+			</Head>
 			<SessionProvider session={session}>
 				<NotificationContext.Provider value={NotificationValue}>
 					<Component {...pageProps} />
