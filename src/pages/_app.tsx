@@ -27,7 +27,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
 				<script
 					defer
 					data-domain="midi-friendly.vercel.app"
-					src="https://plausible.io/js/plausible.js"
+					src="https://http://134.209.83.95:8000/js/plausible.js"
 				></script>
 			</Head>
 			<SessionProvider session={session}>
