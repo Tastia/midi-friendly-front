@@ -95,9 +95,10 @@ export async function getStaticPaths() {
 	const orgas = await res.json();
 
 	return {
-		paths: orgas.map((orga: any) => ({
-			params: { organization: orga.id.toString() },
-		})),
+		paths: [],
+		// orgas?.map((orga: any) => ({
+		// 	params: { organization: orga.id.toString() },
+		// })) ?? [],
 		fallback: true, // false or 'blocking'
 	};
 }
