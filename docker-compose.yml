@@ -1,0 +1,22 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: ./docker/DockerFile-next
+    tty: true
+    container_name: app
+    # command: bash -c "npm run start -p $${APP_PORT_PRODUCTION}"
+    ports:
+      - ${APP_PORT_PRODUCTION}:${APP_PORT_PRODUCTION}
+    env_file: .env
+
+  # app-ngninx:
+  #   image: nginx:latest
+  #   volumes:
+  #     - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+  #     - ./nginx/conf.d:/etc/nginx/conf.d
+  #   ports:
+  #     - "80:80"
+  #   depends_on:
+  #     - app
+  #   restart: always

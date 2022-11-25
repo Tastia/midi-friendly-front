@@ -1,0 +1,6 @@
+.vscode
+.idea
+.next
+node_modules
+public
+yarn.lock
