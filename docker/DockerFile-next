@@ -10,11 +10,9 @@ WORKDIR /app
 
 RUN npm install --legacy-peer-deps
 
-EXPOSE 3000
-
 RUN npm run build
 
-EXPOSE ${APP_PORT_PRODUCTION}
-
+ARG ENV
+EXPOSE ${ENV}
 
 # ENTRYPOINT ["tail", "-f", "/dev/null"]
