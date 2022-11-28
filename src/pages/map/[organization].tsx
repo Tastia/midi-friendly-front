@@ -1,9 +1,10 @@
 import classNames from 'classnames/bind';
 import { useSession } from 'next-auth/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Details from '../../components/Details/Details';
 import Header from '../../components/Header/Header';
 import Map from '../../components/Map/Map';
+import socket from '../../utils/socket';
 import styles from './organization.module.scss';
 
 const c = classNames.bind(styles);
@@ -26,9 +27,33 @@ type PageProps = {
 
 export default function Home({ orga, restaurants }: PageProps) {
 	const { data: session } = useSession();
-	const [restaurant, setRestaurant] = useState({});
+	const [restaurant, setRestaurant] = useState<any>({});
+	const [groupList, setGroupList] = useState<any>([]);
 
 	const user: any = session?.user;
+
+	useEffect(() => {
+		socket.then((socket) => {
+			if (typeof socket === 'undefined') {
+				return;
+			}
+			socket.on('SetGroupList', (groupList) => {
+				setGroupList(groupList.groups);
+			});
+			socket.on('AddGroup', (group) => {
+				setGroupList((groupList: any) => [...groupList, group.group]);
+			});
+			socket.on('AddUserToGroup', ({ groupId, user }) => {
+				setGroupList((groupList: any) => {
+					const groupIndex = groupList.findIndex(
+						(group: any) => group._id === groupId,
+					);
+					groupList[groupIndex].users = [...groupList[groupIndex].users, user];
+					return groupList;
+				});
+			});
+		});
+	}, []);
 
 	return (
 		<div className={c('wrapper')}>
@@ -39,12 +64,16 @@ export default function Home({ orga, restaurants }: PageProps) {
 						coords={orga.coords}
 						setRestaurant={setRestaurant}
 						restaurants={restaurants}
+						groupList={groupList}
 					/>
 					<Details
 						closeDetails={() => {
 							setRestaurant('');
 						}}
 						restaurant={restaurant}
+						groupList={groupList.filter(
+							(group: any) => group.restaurant === restaurant._id,
+						)}
 					/>
 				</div>
 			)}

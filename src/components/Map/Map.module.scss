@@ -14,4 +14,12 @@
 	position: absolute;
 	top: 0;
 	left: 0;
+
+	font-weight: bold;
+
+	color: red;
+
+	&.connected {
+		color: green;
+	}
 }

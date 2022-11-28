@@ -20,6 +20,7 @@ type MapProps = {
 	markers?: MarkerInfos[];
 	setRestaurant: Dispatch<SetStateAction<any>>;
 	restaurants: any;
+	groupList: any[];
 };
 
 export default function Map({
@@ -27,6 +28,7 @@ export default function Map({
 	markers,
 	setRestaurant,
 	restaurants,
+	groupList,
 }: MapProps) {
 	const [displayMarkers, setDisplayMarkers] = useState(false);
 
@@ -56,7 +58,6 @@ export default function Map({
 
 	const [wsState, updateWsState] = useState(false);
 	useEffect(() => {
-		console.log(socket);
 		socket.then((socket) => {
 			if (typeof socket === 'undefined') {
 				return;
@@ -70,9 +71,20 @@ export default function Map({
 		});
 	}, []);
 
+	console.log('render Map');
+
+	function getGroupCount(restaurantID: string) {
+		if (groupList.length === 0) {
+			return;
+		}
+		return groupList.reduce((n, x) => n + (x.restaurant === restaurantID), 0);
+	}
+
 	return (
 		<div className={c('wrapper')}>
-			<h1 className={c('ws-status')}>{wsState ? 'ONLINE' : 'OFFLINE'}</h1>
+			<h1 className={c('ws-status', { connected: wsState })}>
+				{wsState ? 'ONLINE' : 'OFFLINE'}
+			</h1>
 			{process.env.NEXT_PUBLIC_MAPS_API_KEY && (
 				<GoogleMapReact
 					{...MapProps}
@@ -92,7 +104,7 @@ export default function Map({
 								key={i}
 								infos={{
 									name: restaurant.name,
-									lunchGroupCount: restaurant.lunchGroups?.length,
+									lunchGroupCount: getGroupCount(restaurant._id),
 								}}
 								lat={restaurant.coordinates.latitude}
 								lng={restaurant.coordinates.longitude}

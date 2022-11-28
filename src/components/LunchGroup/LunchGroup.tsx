@@ -1,6 +1,7 @@
 import classNames from 'classnames/bind';
 import { useSession } from 'next-auth/react';
 import { useContext } from 'react';
+import socket from '../../utils/socket';
 import { NotificationContext } from '../Notification/Notification';
 import styles from './LunchGroup.module.scss';
 
@@ -17,65 +18,14 @@ function LunchGroup({ className, lunchGroup, key }: LunchGroupProps) {
 	const { notify } = useContext(NotificationContext);
 	const user: any = session?.user;
 
-	async function joinClick(lunchGroup: any) {
-		const apiURL =
-			process.env.NEXT_PUBLIC_API_URL + '/lunch-groups/' + lunchGroup.id;
-		const body = {
-			users: [...lunchGroup.users.map((user: any) => user.id), user.id],
-		};
-		const request = await fetch(apiURL, {
-			headers: {
-				'Authorization': 'Bearer ' + user?.token,
-				'Content-Type': 'application/json',
-			},
-			method: 'PUT',
-			body: JSON.stringify(body),
+	function handleClick(lunchGroup: any, status: 'LeaveGroup' | 'JoinGroup') {
+		socket.then((socket) => {
+			const params = {
+				groupId: lunchGroup._id,
+			};
+			console.log(params);
+			socket?.emit(status, params);
 		});
-
-		const response = await request.json();
-
-		if (response.statusCode === 400) {
-			notify({ type: 'error', message: response.message });
-		} else {
-			notify({
-				type: 'success',
-				message: 'Vous avez bien rejoint le groupe.',
-			});
-		}
-	}
-
-	async function leaveClick(lunchGroup: any) {
-		const apiURL =
-			process.env.NEXT_PUBLIC_API_URL +
-			'/lunch-groups-leaving/' +
-			lunchGroup.id;
-		const body = {
-			users: [
-				...lunchGroup.users
-					.filter((userLunch: any) => userLunch.id !== user.id)
-					.map((user: any) => user.id),
-			],
-			isLeaving: true,
-		};
-		const request = await fetch(apiURL, {
-			headers: {
-				'Authorization': 'Bearer ' + user?.token,
-				'Content-Type': 'application/json',
-			},
-			method: 'PUT',
-			body: JSON.stringify(body),
-		});
-
-		const response = await request.json();
-
-		if (!response) {
-			notify({ type: 'error', message: 'Il y a eu une erreur' });
-		} else {
-			notify({
-				type: 'success',
-				message: 'Vous avez bien quitté le groupe.',
-			});
-		}
 	}
 
 	return (
@@ -88,17 +38,25 @@ function LunchGroup({ className, lunchGroup, key }: LunchGroupProps) {
 				<ul className={c('user-list')}>
 					{lunchGroup.users.map((user: any, y: number) => (
 						<li className={c('user')} key={y}>
-							{user.firstname + ' ' + user.name}
+							{user.firstName + ' ' + user.lastName}
 						</li>
 					))}
 				</ul>
 			</div>
-			{lunchGroup.users.some((userLunch: any) => userLunch.id === user.id) ? (
-				<button className={c('button')} onClick={() => leaveClick(lunchGroup)}>
+			{lunchGroup.users.some(
+				(userLunch: any) => userLunch._id === user.account._id,
+			) ? (
+				<button
+					className={c('button')}
+					onClick={() => handleClick(lunchGroup, 'LeaveGroup')}
+				>
 					Quitter
 				</button>
 			) : (
-				<button className={c('button')} onClick={() => joinClick(lunchGroup)}>
+				<button
+					className={c('button')}
+					onClick={() => handleClick(lunchGroup, 'JoinGroup')}
+				>
 					Rejoindre
 				</button>
 			)}

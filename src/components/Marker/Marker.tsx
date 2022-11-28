@@ -9,7 +9,7 @@ export type MarkerInfos = {
 		lng: number;
 	};
 	name: string;
-	lunchGroupCount?: number;
+	lunchGroupCount: number;
 };
 
 type MarkerProps = {
@@ -37,7 +37,7 @@ export default function Marker({
 				<p className={c('name')}>{infos.name}</p>
 			</div>
 			<div className={c('svg-container')}>{children}</div>
-			{infos.lunchGroupCount && (
+			{infos.lunchGroupCount > 0 && (
 				<div className={c('count')}>
 					<span>{infos.lunchGroupCount}</span>
 				</div>

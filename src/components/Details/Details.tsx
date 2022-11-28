@@ -1,6 +1,7 @@
 import classNames from 'classnames/bind';
 import { useState } from 'react';
 import Cross from '../../svg/cross.svg';
+import socket from '../../utils/socket';
 import Field from '../Forms/Field/Field';
 import LunchGroup from '../LunchGroup/LunchGroup';
 import styles from './Details.module.scss';
@@ -10,6 +11,7 @@ const c = classNames.bind(styles);
 type DetailsProps = {
 	className?: string;
 	restaurant: any;
+	groupList: any;
 	closeDetails: () => void;
 };
 
@@ -17,12 +19,26 @@ export default function Details({
 	className,
 	restaurant,
 	closeDetails,
+	groupList,
 }: DetailsProps) {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [schedule, setSchedule] = useState('');
 
+	console.log('render details');
+
 	function handleClick() {
 		setIsModalOpen(!isModalOpen);
+	}
+
+	function validate() {
+		const params = {
+			restaurant: restaurant._id,
+			meetingTime: new Date(),
+		};
+
+		socket.then((socket) => {
+			socket?.emit('CreateGroup', params);
+		});
 	}
 
 	if (restaurant.name) {
@@ -61,8 +77,8 @@ export default function Details({
 				)}
 
 				<ul className={c('lunch-groups')}>
-					{restaurant.lunchGroups &&
-						restaurant.lunchGroups.map((lunchGroup: any, i: number) => (
+					{groupList &&
+						groupList.map((lunchGroup: any, i: number) => (
 							<LunchGroup key={i} lunchGroup={lunchGroup} />
 						))}
 				</ul>

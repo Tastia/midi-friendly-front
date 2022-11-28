@@ -16,6 +16,5 @@ export default (async () => {
 			},
 		},
 	};
-	console.log('going here');
 	return io('localhost:8080', socketOptions);
 })();
