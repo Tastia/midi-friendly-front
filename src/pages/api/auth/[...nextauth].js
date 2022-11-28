@@ -10,7 +10,7 @@ const options = {
                 password: { label: "Mot de passe", type: "password" }
             },
             async authorize(credentials, req) {
-                const credentialsQuery = { identifier: credentials.identifier, password: credentials.password };
+                const credentialsQuery = { email: credentials.identifier, password: credentials.password };
 
                 const res = await fetch(process.env.NEXT_PUBLIC_API_URL + process.env.API_LOGIN_ROUTE, {
                     method: 'POST',
@@ -22,7 +22,6 @@ const options = {
 
                 // If no error and we have user data, return it
                 if (res.ok && user) {
-                    user.user.token = user.jwt;
                     return user;
                 }
 
@@ -39,11 +38,11 @@ const options = {
     secret: process.env.SECRET,
     callbacks: {
         jwt: async ({ token, user }) => {
-            user && (token.user = user.user)
+            user && (token.user = { account: user.account, organizationID: user.organizations[0]._id, token: user.accessToken });
             return token
         },
         session: async ({ session, token }) => {
-            session.user = token.user
+            session.user = token.user;
             return session
         }
     }

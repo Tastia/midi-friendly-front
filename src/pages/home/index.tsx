@@ -18,7 +18,7 @@ export default function Home({}: PageProps) {
 	useEffect(() => {
 		if (session) {
 			const user: any = session.user;
-			const orgaID = user.organization.id;
+			const orgaID = user.organizationID;
 			router.push('/map/' + orgaID);
 		}
 	});

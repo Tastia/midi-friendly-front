@@ -1,8 +1,9 @@
 import classNames from 'classnames/bind';
 import GoogleMapReact from 'google-map-react';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import Fork from '../../svg/pins/fork.svg';
 import Home from '../../svg/pins/home.svg';
+import socket from '../../utils/socket';
 import Marker, { MarkerInfos } from '../Marker/Marker';
 import styles from './Map.module.scss';
 
@@ -53,8 +54,25 @@ export default function Map({
 		setRestaurant(marker);
 	}
 
+	const [wsState, updateWsState] = useState(false);
+	useEffect(() => {
+		console.log(socket);
+		socket.then((socket) => {
+			if (typeof socket === 'undefined') {
+				return;
+			}
+			socket.on('connect', () => {
+				updateWsState(true);
+			});
+			socket.on('disconnect', () => {
+				updateWsState(false);
+			});
+		});
+	}, []);
+
 	return (
 		<div className={c('wrapper')}>
+			<h1 className={c('ws-status')}>{wsState ? 'ONLINE' : 'OFFLINE'}</h1>
 			{process.env.NEXT_PUBLIC_MAPS_API_KEY && (
 				<GoogleMapReact
 					{...MapProps}
@@ -76,8 +94,8 @@ export default function Map({
 									name: restaurant.name,
 									lunchGroupCount: restaurant.lunchGroups?.length,
 								}}
-								lat={restaurant.Position.latitude}
-								lng={restaurant.Position.longitude}
+								lat={restaurant.coordinates.latitude}
+								lng={restaurant.coordinates.longitude}
 								onClick={() => handleMarkerClick(restaurant)}
 							>
 								<Fork className={c('svg')} />

@@ -1,7 +1,6 @@
 import classNames from 'classnames/bind';
 import { useSession } from 'next-auth/react';
-import { useEffect, useState } from 'react';
-import useSWR from 'swr';
+import { useState } from 'react';
 import Details from '../../components/Details/Details';
 import Header from '../../components/Header/Header';
 import Map from '../../components/Map/Map';
@@ -17,6 +16,7 @@ type OrgaInfos = {
 		lat: number;
 		lng: number;
 	};
+	restaurants: any[];
 };
 
 type PageProps = {
@@ -27,42 +27,8 @@ type PageProps = {
 export default function Home({ orga, restaurants }: PageProps) {
 	const { data: session } = useSession();
 	const [restaurant, setRestaurant] = useState({});
-	const [restaurantsCopy, setRestaurantsCopy] = useState(restaurants);
 
 	const user: any = session?.user;
-
-	const { data, error } = useSWR(
-		process.env.NEXT_PUBLIC_API_URL +
-			'/lunch-groups/organization/' +
-			user?.organization.id,
-		(apiURL: string) =>
-			fetch(apiURL, {
-				headers: { Authorization: 'Bearer ' + user?.token },
-			}).then((res) => res.json()),
-		{ refreshInterval: 1000 },
-	);
-
-	useEffect(() => {
-		if (data && !data.error) {
-			setRestaurantsCopy((restaurantsCopy: any) => {
-				restaurantsCopy.forEach((restaurant: any) => {
-					if (restaurant.lunchGroups) {
-						restaurant.lunchGroups = [];
-					}
-				});
-				data.forEach((lunchGroup: any) => {
-					const current = restaurantsCopy.find(
-						(element: any) => element.id === lunchGroup.restaurant.id,
-					);
-					if (current && !current.lunchGroups) {
-						current.lunchGroups = [];
-					}
-					current?.lunchGroups.push(lunchGroup);
-				});
-				return [...restaurantsCopy];
-			});
-		}
-	}, [data, restaurantsCopy?.lunchGroups]);
 
 	return (
 		<div className={c('wrapper')}>
@@ -72,7 +38,7 @@ export default function Home({ orga, restaurants }: PageProps) {
 					<Map
 						coords={orga.coords}
 						setRestaurant={setRestaurant}
-						restaurants={restaurantsCopy}
+						restaurants={restaurants}
 					/>
 					<Details
 						closeDetails={() => {
@@ -87,44 +53,45 @@ export default function Home({ orga, restaurants }: PageProps) {
 }
 
 export async function getStaticPaths() {
-	const res = await fetch(process.env.NEXT_PUBLIC_API_URL + '/organizations', {
-		method: 'GET',
-		headers: { 'Content-Type': 'application/json' },
-	});
-
-	const orgas = await res.json();
-
-	return {
-		paths: orgas.map((orga: any) => ({
-			params: { organization: orga.id.toString() },
-		})),
-		fallback: true, // false or 'blocking'
-	};
-}
-
-export async function getStaticProps(context: any) {
 	const res = await fetch(
-		process.env.NEXT_PUBLIC_API_URL +
-			'/organizations/' +
-			context.params.organization,
+		process.env.NEXT_PUBLIC_API_URL + '/api/organization',
 		{
 			method: 'GET',
 			headers: { 'Content-Type': 'application/json' },
 		},
 	);
 
-	const response = await res.json();
+	const orgas = await res.json();
 
+	return {
+		paths: orgas.map((orga: any) => ({
+			params: { organization: orga._id.toString() },
+		})),
+		fallback: true, // false or 'blocking'
+	};
+}
+
+export async function getStaticProps(context: any) {
+	const organizationInfoCall = await fetch(
+		process.env.NEXT_PUBLIC_API_URL +
+			'/api/organization/' +
+			context.params.organization,
+		{
+			method: 'GET',
+		},
+	);
+	const organizationInfo = await organizationInfoCall.json();
 	const coords = {
-		lat: response.Place.latitude,
-		lng: response.Place.longitude,
+		lat: organizationInfo.coordinates.latitude,
+		lng: organizationInfo.coordinates.longitude,
 	};
 
 	const orga: OrgaInfos = {
 		coords: coords,
+		restaurants: organizationInfo.restaurants,
 	};
 
 	return {
-		props: { orga: orga, restaurants: response.restaurants }, // will be passed to the page component as props
+		props: { orga: orga, restaurants: orga.restaurants }, // will be passed to the page component as props
 	};
 }

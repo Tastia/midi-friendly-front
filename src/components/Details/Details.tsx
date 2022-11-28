@@ -1,11 +1,8 @@
 import classNames from 'classnames/bind';
-import { useSession } from 'next-auth/react';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import Cross from '../../svg/cross.svg';
-import { apiUrl } from '../../utils/env';
 import Field from '../Forms/Field/Field';
 import LunchGroup from '../LunchGroup/LunchGroup';
-import { NotificationContext } from '../Notification/Notification';
 import styles from './Details.module.scss';
 
 const c = classNames.bind(styles);
@@ -23,54 +20,9 @@ export default function Details({
 }: DetailsProps) {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [schedule, setSchedule] = useState('');
-	const { notify } = useContext(NotificationContext);
-	const { data: session } = useSession();
 
 	function handleClick() {
 		setIsModalOpen(!isModalOpen);
-	}
-
-	async function validate() {
-		if (!schedule) {
-			notify({ type: 'error', message: 'Merci de renseigner un horaire' });
-			return null;
-		}
-
-		var date = new Date();
-		date.toISOString();
-
-		const user: any = session?.user;
-
-		const body = {
-			fake_schedule: schedule,
-			users: user.id,
-			date: date,
-			restaurant: restaurant.id,
-			organization: user.organization.id,
-		};
-
-		const res = await fetch(apiUrl + '/lunch-groups', {
-			method: 'POST',
-			body: JSON.stringify(body),
-			headers: {
-				'Content-Type': 'application/json',
-				'Authorization': 'Bearer ' + user.token,
-			},
-		});
-
-		const response = await res.json();
-
-		if (response.statusCode === 400) {
-			notify({ type: 'error', message: response.message });
-		} else {
-			notify({
-				type: 'success',
-				message: 'Le groupe a bien été créé.',
-			});
-			setIsModalOpen(false);
-		}
-
-		return null;
 	}
 
 	if (restaurant.name) {
