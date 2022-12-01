@@ -18,4 +18,4 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           password: ${{ secrets.SSH_PASSWORD }}
-          script: deploy
+          script: cd ./midi-friendly-front && ./deploy.sh
