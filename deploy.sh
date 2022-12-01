@@ -2,5 +2,5 @@
 
 git pull origin main
 git checkout $RELEASE_VERSION
-docker-compose up -d --build
-nginx -s reload
+sudo docker-compose up -d --build
+sudo nginx -s reload
