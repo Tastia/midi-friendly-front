@@ -1,4 +1,4 @@
-#!bin/sh
+#!/bin/sh
 
 git pull origin master
 git checkout $RELEASE_VERSION
