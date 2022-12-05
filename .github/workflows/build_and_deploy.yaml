@@ -18,4 +18,10 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           password: ${{ secrets.SSH_PASSWORD }}
-          script: cd ./midi-friendly-front && bash ./deploy.sh
+          script: |
+            cd ./midi-friendly-front 
+            git fetch --all
+            git pull
+            git checkout $RELEASE_VERSION
+            git pull
+            bash ./deploy.sh
