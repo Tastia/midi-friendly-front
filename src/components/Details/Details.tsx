@@ -1,7 +1,6 @@
 import classNames from 'classnames/bind';
 import { useState } from 'react';
 import Cross from '../../svg/cross.svg';
-import socket from '../../utils/socket';
 import Field from '../Forms/Field/Field';
 import LunchGroup from '../LunchGroup/LunchGroup';
 import styles from './Details.module.scss';
@@ -24,8 +23,6 @@ export default function Details({
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [schedule, setSchedule] = useState('');
 
-	console.log('render details');
-
 	function handleClick() {
 		setIsModalOpen(!isModalOpen);
 	}
@@ -35,10 +32,6 @@ export default function Details({
 			restaurant: restaurant._id,
 			meetingTime: new Date(),
 		};
-
-		socket.then((socket) => {
-			socket?.emit('CreateGroup', params);
-		});
 	}
 
 	if (restaurant.name) {

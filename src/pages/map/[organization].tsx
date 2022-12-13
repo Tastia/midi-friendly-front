@@ -1,16 +1,6 @@
-import classNames from 'classnames/bind';
-import { useSession } from 'next-auth/react';
-import { useEffect, useState } from 'react';
-import Details from '../../components/Details/Details';
-import Header from '../../components/Header/Header';
-import Map from '../../components/Map/Map';
-import socket from '../../utils/socket';
-import styles from './organization.module.scss';
-
-const c = classNames.bind(styles);
-
-const LAT_LIMIT = 0.01;
-const LONG_LIMIT = 0.02;
+import { createContext } from 'react';
+import { useMapsGateway } from '../../utils/useMapGateway';
+import MapPage from './mapPage';
 
 type OrgaInfos = {
 	coords: {
@@ -18,6 +8,7 @@ type OrgaInfos = {
 		lng: number;
 	};
 	restaurants: any[];
+	id: string;
 };
 
 type PageProps = {
@@ -25,59 +16,17 @@ type PageProps = {
 	restaurants: any;
 };
 
-export default function Home({ orga, restaurants }: PageProps) {
-	const { data: session } = useSession();
-	const [restaurant, setRestaurant] = useState<any>({});
-	const [groupList, setGroupList] = useState<any>([]);
+export const MapGatewayContext = createContext({});
 
-	const user: any = session?.user;
-
-	useEffect(() => {
-		socket.then((socket) => {
-			if (typeof socket === 'undefined') {
-				return;
-			}
-			socket.on('SetGroupList', (groupList) => {
-				setGroupList(groupList.groups);
-			});
-			socket.on('AddGroup', (group) => {
-				setGroupList((groupList: any) => [...groupList, group.group]);
-			});
-			socket.on('AddUserToGroup', ({ groupId, user }) => {
-				setGroupList((groupList: any) => {
-					const groupIndex = groupList.findIndex(
-						(group: any) => group._id === groupId,
-					);
-					groupList[groupIndex].users = [...groupList[groupIndex].users, user];
-					return groupList;
-				});
-			});
-		});
-	}, []);
+export default function MapWrapper({ orga, restaurants }: PageProps) {
+	const gatewayAPI = useMapsGateway({
+		organizationID: orga.id,
+	});
 
 	return (
-		<div className={c('wrapper')}>
-			<Header />
-			{orga && (
-				<div className={c('map-wrapper')}>
-					<Map
-						coords={orga.coords}
-						setRestaurant={setRestaurant}
-						restaurants={restaurants}
-						groupList={groupList}
-					/>
-					<Details
-						closeDetails={() => {
-							setRestaurant('');
-						}}
-						restaurant={restaurant}
-						groupList={groupList.filter(
-							(group: any) => group.restaurant === restaurant._id,
-						)}
-					/>
-				</div>
-			)}
-		</div>
+		<MapGatewayContext.Provider value={gatewayAPI}>
+			<MapPage orga={orga} restaurants={restaurants} />
+		</MapGatewayContext.Provider>
 	);
 }
 
@@ -118,6 +67,7 @@ export async function getStaticProps(context: any) {
 	const orga: OrgaInfos = {
 		coords: coords,
 		restaurants: organizationInfo.restaurants,
+		id: context.params.organization,
 	};
 
 	return {

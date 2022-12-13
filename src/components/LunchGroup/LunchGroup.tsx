@@ -1,7 +1,6 @@
 import classNames from 'classnames/bind';
 import { useSession } from 'next-auth/react';
 import { useContext } from 'react';
-import socket from '../../utils/socket';
 import { NotificationContext } from '../Notification/Notification';
 import styles from './LunchGroup.module.scss';
 
@@ -18,15 +17,7 @@ function LunchGroup({ className, lunchGroup, key }: LunchGroupProps) {
 	const { notify } = useContext(NotificationContext);
 	const user: any = session?.user;
 
-	function handleClick(lunchGroup: any, status: 'LeaveGroup' | 'JoinGroup') {
-		socket.then((socket) => {
-			const params = {
-				groupId: lunchGroup._id,
-			};
-			console.log(params);
-			socket?.emit(status, params);
-		});
-	}
+	function handleClick(lunchGroup: any, status: 'LeaveGroup' | 'JoinGroup') {}
 
 	return (
 		<li className={c('wrapper', className)} key={key}>

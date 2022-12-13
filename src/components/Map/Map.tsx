@@ -1,9 +1,9 @@
 import classNames from 'classnames/bind';
 import GoogleMapReact from 'google-map-react';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useContext, useState } from 'react';
+import { MapGatewayContext } from '../../pages/map/[organization]';
 import Fork from '../../svg/pins/fork.svg';
 import Home from '../../svg/pins/home.svg';
-import socket from '../../utils/socket';
 import Marker, { MarkerInfos } from '../Marker/Marker';
 import styles from './Map.module.scss';
 
@@ -31,6 +31,7 @@ export default function Map({
 	groupList,
 }: MapProps) {
 	const [displayMarkers, setDisplayMarkers] = useState(false);
+	const gatewayAPI = useContext<any>(MapGatewayContext);
 
 	const MapProps = {
 		center: {
@@ -56,23 +57,6 @@ export default function Map({
 		setRestaurant(marker);
 	}
 
-	const [wsState, updateWsState] = useState(false);
-	useEffect(() => {
-		socket.then((socket) => {
-			if (typeof socket === 'undefined') {
-				return;
-			}
-			socket.on('connect', () => {
-				updateWsState(true);
-			});
-			socket.on('disconnect', () => {
-				updateWsState(false);
-			});
-		});
-	}, []);
-
-	console.log('render Map');
-
 	function getGroupCount(restaurantID: string) {
 		if (groupList.length === 0) {
 			return;
@@ -82,8 +66,8 @@ export default function Map({
 
 	return (
 		<div className={c('wrapper')}>
-			<h1 className={c('ws-status', { connected: wsState })}>
-				{wsState ? 'ONLINE' : 'OFFLINE'}
+			<h1 className={c('ws-status', { connected: gatewayAPI.connected })}>
+				{gatewayAPI.connected ? 'ONLINE' : 'OFFLINE'}
 			</h1>
 			{process.env.NEXT_PUBLIC_MAPS_API_KEY && (
 				<GoogleMapReact
