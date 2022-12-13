@@ -44,7 +44,7 @@ const options = {
         session: async ({ session, token }) => {
             session.user = token.user;
             return session
-        }
+        },
     }
 }
 

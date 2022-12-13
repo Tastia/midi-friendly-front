@@ -1,7 +1,7 @@
 import classNames from 'classnames/bind';
 import { getCsrfToken, signIn } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import React, { FormEvent, useContext, useEffect, useState } from 'react';
+import { FormEvent, useContext, useEffect, useState } from 'react';
 import { NotificationContext } from '../../Notification/Notification';
 import Field from '../Field/Field';
 import styles from './SignIn.module.scss';
@@ -54,7 +54,7 @@ export default function SignIn({}: SignInProps) {
 				setValue={setPassword}
 			/>
 			<button className={c('button')} type="submit">
-				{"Accéder à MidiFriendly"}
+				{'Accéder à MidiFriendly'}
 			</button>
 		</form>
 	);

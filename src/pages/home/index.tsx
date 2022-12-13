@@ -1,5 +1,5 @@
 import classNames from 'classnames/bind';
-import { useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
@@ -11,6 +11,22 @@ const c = classNames.bind(styles);
 
 type PageProps = {};
 
+function parseJwt(token: any) {
+	var base64Url = token.split('.')[1];
+	var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+	var jsonPayload = decodeURIComponent(
+		window
+			.atob(base64)
+			.split('')
+			.map(function (c) {
+				return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+			})
+			.join(''),
+	);
+
+	return JSON.parse(jsonPayload);
+}
+
 export default function Home({}: PageProps) {
 	const router = useRouter();
 	const { data: session } = useSession();
@@ -19,7 +35,14 @@ export default function Home({}: PageProps) {
 		if (session) {
 			const user: any = session.user;
 			const orgaID = user.organizationID;
-			router.push('/map/' + orgaID);
+
+			const currentTimestamp = Math.floor(Date.now() / 1000);
+			const jwtExpiration = parseJwt(session.user.token).exp;
+			if (currentTimestamp > jwtExpiration) {
+				signOut();
+			} else {
+				router.push('/map/' + orgaID);
+			}
 		}
 	});
 

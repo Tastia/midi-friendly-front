@@ -1,6 +1,5 @@
 import classNames from 'classnames/bind';
 import { signIn, signOut, useSession } from 'next-auth/react';
-import React from 'react';
 import Logo from '../../svg/logo_horizontal.svg';
 import styles from './Header.module.scss';
 
@@ -17,7 +16,10 @@ export default function Header({}: HeaderProps) {
 			<div className={c('button-container')}>
 				{session ? (
 					<>
-						<button className={c('button')} onClick={() => signOut()}>
+						<button
+							className={c('button')}
+							onClick={() => signOut({ callbackUrl: '/' })}
+						>
 							Se déconnecter
 						</button>
 					</>
