@@ -6,6 +6,9 @@ module.exports = {
       height: {
         layout: "calc(100vh - 4rem)",
       },
+      colors: {
+        primary: "#F18669",
+      },
     },
   },
   plugins: [],
