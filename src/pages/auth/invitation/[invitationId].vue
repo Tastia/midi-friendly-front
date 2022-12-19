@@ -15,6 +15,7 @@ const router = useRouter();
 const messageApi = useMessage();
 const invitation = ref<InvitationPayload>();
 const registerMode = ref<"link" | "register">();
+const userStore = useUserStore();
 
 const errorMessage = computed<string>(() =>
   invitation.value ? GetErrorMessage(invitation.value) : ""
@@ -60,7 +61,8 @@ async function FinaliseRegisterProcess(data: AuthRegisterDto | AuthLoginDto) {
           registerMode.value === "link" ? "Association" : "Création"
         } du compte réussie !`
       );
-      router.go("/auth/login");
+
+      navigateTo("/auth/login");
     } else {
       messageApi.error(GetErrorMessage(errorFlags));
     }

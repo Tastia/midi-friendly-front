@@ -5,10 +5,13 @@ import {
   NDialogProvider,
   NNotificationProvider,
   NLoadingBarProvider,
+  useLoadingBar,
 } from "naive-ui";
 import { FormProvider } from "@chronicstone/vue-sweetforms";
 import "@chronicstone/vue-sweetforms/dist/style.css";
+
 const appStore = useAppStore();
+const route = useRoute();
 
 watch(
   () => appStore.isDark,
@@ -36,7 +39,7 @@ watch(
           <n-notification-provider>
             <n-loading-bar-provider>
               <NuxtLayout>
-                <NuxtPage />
+                <NuxtPage :key="route.name" />
               </NuxtLayout>
             </n-loading-bar-provider>
           </n-notification-provider>

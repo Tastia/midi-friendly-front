@@ -2,6 +2,11 @@
 import { AuthLoginDto } from "@/types/auth";
 import { useMessage } from "naive-ui";
 
+definePageMeta({
+  middleware: ["no-auth"],
+  name: "auth.login",
+});
+
 const router = useRouter();
 const userStore = useUserStore();
 const messageApi = useMessage();
