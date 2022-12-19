@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { map } from "lodash";
 import { GoogleMap } from "vue3-google-map";
 
 definePageMeta({
@@ -33,14 +32,14 @@ const computedBoundaries = computed(() => ({
   west: props.orgaCoordinates.longitude - props.boundaries.longitude,
 }));
 
-const mapStylesConfig = computed(() => ([ 
+const mapStylesConfig = computed(() => [
   {
     featureType: "poi",
     elementType: "labels",
     stylers: [{ visibility: "off" }],
   },
-  ...(appStore.isDark ? [...GMapsThemeOverridesDark] : [])
-]));
+  ...(appStore.isDark ? [...GMapsThemeOverridesDark] : []),
+]);
 </script>
 
 <template>
