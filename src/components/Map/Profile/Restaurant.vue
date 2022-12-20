@@ -25,47 +25,55 @@ const isUserInAGroup = computed<boolean>(() =>
   )
 );
 
-function GetDefaultMeetingTime() {
-  const now = new Date();
-  const minutes =
-    now.getMinutes() % 5 !== 0
-      ? now.getMinutes() + (5 - (now.getMinutes() % 5))
-      : now.getMinutes();
-  const hours = minutes >= 60 ? now.getHours() + 1 : now.getHours();
-  now.setDate(hours > 23 ? now.getDay() + 1 : now.getDay());
-  now.setHours(hours > 23 ? 0 : hours);
-  now.setMinutes(minutes >= 60 ? 0 : minutes);
-  return now.valueOf();
-}
-
 async function CreateLunchGroup() {
+  isOpen.value = false;
+  await nextTick();
   const { isCompleted, formData } = await formApi.createForm({
     title: "Créer un groupe",
-    maxWidth: "450px",
-    fieldSize: 8,
-    gridSize: 8,
+    maxWidth: "650px",
+    fieldSize: 9,
+    gridSize: 9,
     submitButtonText: "CONFIRMER",
     cancelButtonText: "Annuler",
     closeButtonText: "Fermer",
     allowClickOutside: false,
     fields: [
       {
+        label: "Label",
+        key: "label",
+        type: "text",
+        required: true,
+        placeholder: "Afterwork IT",
+        size: "9 md:6",
+      },
+      {
         key: "meetingTime",
         label: "Heure de rendez-vous",
         type: "time",
         required: true,
-        default: GetDefaultMeetingTime(),
+        default: Date.now(),
+        size: "9 md:3",
         fieldParams: {
           format: "HH:mm",
           minuteStep: 5,
         },
       },
+      {
+        key: "description",
+        label: "Description",
+        type: "textarea",
+        required: false,
+        placeholder: "Description du groupe (optionnel)",
+      },
     ],
   });
 
+  isOpen.value = true;
   if (!isCompleted) return;
 
   gatewayApi?.CreateGroup({
+    label: formData.label,
+    description: formData.description,
     restaurant: props.restaurant._id,
     meetingTime: new Date(formData.meetingTime).toISOString(),
   });
@@ -91,7 +99,7 @@ function SortByMeetingTime(groups: ParsedMapLunchGroup[]) {
     :width="width < 580 ? width : 580"
     placement="left"
   >
-    <NDrawerContent closable :title="restaurant.name">
+    <NDrawerContent :native-scrollbar="false" closable :title="restaurant.name">
       <template #header>
         <h1 class="text-2xl font-black">{{ restaurant.name }}</h1>
       </template>
@@ -118,7 +126,8 @@ function SortByMeetingTime(groups: ParsedMapLunchGroup[]) {
           size="large"
           type="primary"
           class="uppercase text-md w-full"
-          :disabled="isUserInAGroup"
+          :disabled="isUserInAGroup || !!gatewayApi?.pendingOperation.value"
+          :loading="gatewayApi?.pendingOperation.value === 'CreateGroup'"
           @click="CreateLunchGroup"
         >
           <template #icon>
