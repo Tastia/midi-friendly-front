@@ -46,7 +46,7 @@ const mappedLunchGroups = computed(
   <NDrawer
     v-model:show="showMenu"
     :width="width < 580 ? width : 580"
-    :z-index="900"
+    :z-index="800"
     placement="right"
     mask-closable
   >

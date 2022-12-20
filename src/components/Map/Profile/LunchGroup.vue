@@ -168,7 +168,7 @@ async function DeleteGroup() {
 
   <NDrawer
     v-model:show="showDetails"
-    :z-index="950"
+    :z-index="850"
     mask-closable
     :width="width < 580 ? width : 580"
     :placement="drawerPosition"

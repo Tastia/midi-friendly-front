@@ -47,6 +47,7 @@ async function CreateLunchGroup() {
     submitButtonText: "CONFIRMER",
     cancelButtonText: "Annuler",
     closeButtonText: "Fermer",
+    allowClickOutside: false,
     fields: [
       {
         key: "meetingTime",
@@ -85,7 +86,7 @@ function SortByMeetingTime(groups: ParsedMapLunchGroup[]) {
 <template>
   <NDrawer
     v-model:show="isOpen"
-    :z-index="950"
+    :z-index="850"
     mask-closable
     :width="width < 580 ? width : 580"
     placement="left"
