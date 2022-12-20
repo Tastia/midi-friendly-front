@@ -3,6 +3,8 @@ import { MapUser } from "@/types/mapGateway";
 
 export interface ParsedMapLunchGroup {
   _id: string;
+  label: string;
+  description?: string;
   restaurant: string;
   meetingTime: string;
   userSlots?: number;

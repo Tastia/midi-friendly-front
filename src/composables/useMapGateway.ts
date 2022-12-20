@@ -8,10 +8,8 @@ import {
   MapLunchGroup,
   MapUser,
 } from "@/types/mapGateway";
-import { useMessage } from "naive-ui";
 
 export function useMapGateway() {
-  const message = useMessage();
   const userStore = useUserStore();
   const client = io(import.meta.env.VITE_GATEWAY_URL as string, {
     transportOptions: {
@@ -27,6 +25,7 @@ export function useMapGateway() {
   const users = ref<MapUser[]>([]);
   const restaurants = ref<Restaurant[]>([]);
   const lunchGroups = ref<MapLunchGroup[]>([]);
+  const pendingOperation = ref<`${LunchGroupEmittedEvents}` | null>();
 
   onMounted(
     async () =>
@@ -123,6 +122,7 @@ export function useMapGateway() {
       "_id" | "owner" | "users" | "createdAt" | "updatedAt"
     >
   ) {
+    pendingOperation.value = LunchGroupEmittedEvents.createGroup;
     const { setSuccess, setError } = useActionNotification(
       "Création du groupe..."
     );
@@ -130,6 +130,7 @@ export function useMapGateway() {
       LunchGroupEmittedEvents.createGroup,
       group,
       (res: GatewayEventResponse) => {
+        pendingOperation.value = null;
         if (res.success) setSuccess("Groupe créé");
         else {
           setError("Une erreur est survenue, veuillez réessayer");
@@ -143,6 +144,7 @@ export function useMapGateway() {
     groupId: string;
     groupData: Omit<LunchGroup, "_id" | "owner" | "users" | "restaurant">;
   }) {
+    pendingOperation.value = LunchGroupEmittedEvents.updateGroup;
     const { setSuccess, setError } = useActionNotification(
       "Mise à jour du groupe..."
     );
@@ -150,6 +152,7 @@ export function useMapGateway() {
       LunchGroupEmittedEvents.updateGroup,
       group,
       (res: GatewayEventResponse) => {
+        pendingOperation.value = null;
         if (res.success) setSuccess("Groupe mis à jour");
         else {
           setError("Une erreur est survenue, veuillez réessayer");
@@ -160,6 +163,7 @@ export function useMapGateway() {
   }
 
   function DeleteGroup(groupId: string) {
+    pendingOperation.value = LunchGroupEmittedEvents.deleteGroup;
     const { setSuccess, setError } = useActionNotification(
       "Suppression du groupe..."
     );
@@ -167,6 +171,7 @@ export function useMapGateway() {
       LunchGroupEmittedEvents.deleteGroup,
       { groupId },
       (res: GatewayEventResponse) => {
+        pendingOperation.value = null;
         if (res.success) setSuccess("Groupe supprimé");
         else {
           setError("Une erreur est survenue, veuillez réessayer");
@@ -177,12 +182,14 @@ export function useMapGateway() {
   }
 
   function JoinGroup(groupId: string) {
+    pendingOperation.value = LunchGroupEmittedEvents.joinGroup;
     const { setError, setSuccess } =
       useActionNotification("Ajout au groupe...");
     client.emit(
       LunchGroupEmittedEvents.joinGroup,
       { groupId },
       (res: GatewayEventResponse) => {
+        pendingOperation.value = null;
         if (res.success) setSuccess("Groupe rejoint");
         else {
           setError("Une erreur est survenue, veuillez réessayer");
@@ -193,6 +200,7 @@ export function useMapGateway() {
   }
 
   function LeaveGroup(groupId: string) {
+    pendingOperation.value = LunchGroupEmittedEvents.leaveGroup;
     const { setSuccess, setError } = useActionNotification(
       "Sortie du groupe..."
     );
@@ -200,6 +208,7 @@ export function useMapGateway() {
       LunchGroupEmittedEvents.leaveGroup,
       { groupId },
       (res: GatewayEventResponse) => {
+        pendingOperation.value = null;
         if (res.success) setSuccess("Groupe quitté");
         else {
           setError("Une erreur est survenue, veuillez réessayer");
@@ -217,6 +226,7 @@ export function useMapGateway() {
     users,
     lunchGroups,
     restaurants,
+    pendingOperation,
     CreateGroup,
     UpdateGroup,
     DeleteGroup,
