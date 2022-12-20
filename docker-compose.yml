@@ -11,6 +11,12 @@ services:
     ports:
       - ${APP_PORT_PRODUCTION}:${APP_PORT_PRODUCTION}
     env_file: .env
+    restart: on-failure
+    restart_policy:
+      condition: on-failure
+      delay: 3s
+      max_attempts: 5
+      window: 60s
 
   # app-nginx:
   #   image: nginx:latest
