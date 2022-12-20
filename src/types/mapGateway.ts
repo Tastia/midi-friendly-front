@@ -31,6 +31,8 @@ export type MapUser = Omit<
 
 export type MapLunchGroup = {
   _id: string;
+  label: string;
+  description?: string;
   meetingTime: string;
   userSlots?: number;
   restaurant: string;
