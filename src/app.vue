@@ -11,7 +11,6 @@ import { FormProvider } from "@chronicstone/vue-sweetforms";
 import "@chronicstone/vue-sweetforms/dist/style.css";
 
 const appStore = useAppStore();
-const route = useRoute();
 
 watch(
   () => appStore.isDark,
@@ -39,7 +38,7 @@ watch(
           <n-notification-provider>
             <n-loading-bar-provider>
               <NuxtLayout>
-                <NuxtPage :key="route.name" />
+                <NuxtPage :key="$route.fullPath" />
               </NuxtLayout>
             </n-loading-bar-provider>
           </n-notification-provider>

@@ -34,6 +34,11 @@ export default defineNuxtConfig({
       // gatewayUrl: import.meta.env.VITE_GATEWAY_URL
     },
   },
+  nitro: {
+    prerender: {
+      routes: ["/"],
+    },
+  },
   routeRules: {
     "/": { static: true },
   },
