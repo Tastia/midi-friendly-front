@@ -4,7 +4,6 @@ import { ParsedMapLunchGroup } from "@/composables/useRestaurantLunchGroups";
 const showMenu = ref<boolean>(false);
 const { width } = useWindowSize();
 
-const appStore = useAppStore();
 const userStore = useUserStore();
 const gatewayApi = inject(mapApiInjectionKey);
 
@@ -51,7 +50,7 @@ const mappedLunchGroups = computed(
     placement="right"
     mask-closable
   >
-    <NDrawerContent closable>
+    <NDrawerContent :native-scrollbar="false" closable>
       <template #header>
         <span class="text-2xl font-black"> Mes groupes actifs </span>
       </template>

@@ -173,7 +173,7 @@ async function DeleteGroup() {
     :width="width < 580 ? width : 580"
     :placement="drawerPosition"
   >
-    <NDrawerContent closable>
+    <NDrawerContent :native-scrollbar="false" closable>
       <template #header>
         <h2 class="text-2xl font-black">
           <span>Restaurant </span>

@@ -36,7 +36,7 @@ const mappedUsersList = computed(() =>
     placement="right"
     mask-closable
   >
-    <NDrawerContent closable>
+    <NDrawerContent :native-scrollbar="false" closable>
       <template #header>
         <span class="text-2xl font-black">
           Utilisateurs de {{ userStore.activeOrganization?.name }}
