@@ -40,7 +40,7 @@ export default defineNuxtConfig({
     },
   },
   routeRules: {
-    "/": { static: true },
+    "/": { ssr: true },
   },
   app: {
     head: {
