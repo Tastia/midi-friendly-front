@@ -15,11 +15,11 @@ definePageMeta({
 });
 
 const route = useRoute();
-const router = useRouter();
 const messageApi = useMessage();
 const invitation = ref<InvitationPayload>();
 const registerMode = ref<"link" | "register">();
 const userStore = useUserStore();
+const appStore = useAppStore();
 
 const errorMessage = computed<string>(() =>
   invitation.value ? GetErrorMessage(invitation.value) : ""
@@ -65,8 +65,18 @@ async function FinaliseRegisterProcess(data: AuthRegisterDto | AuthLoginDto) {
           registerMode.value === "link" ? "Association" : "Création"
         } du compte réussie !`
       );
+      const authData = await Authcontroller.login(data as AuthLoginDto);
+      userStore.StoreAuthData(authData);
+      messageApi.success(
+        `Bienvenue, ${authData.account.firstName} ${authData.account.lastName}`
+      );
 
-      navigateTo("/auth/login");
+      // BUG: Navigation gets interrupted, hook page:finish never reached
+      // HARDFIX::TEMP : reload location once route is updated
+      // ?: Maybe nuxt 3 issue, never encountered with Vue Router
+      await nextTick();
+      await navigateTo("/map");
+      location.reload();
     } else {
       messageApi.error(GetErrorMessage(errorFlags));
     }
