@@ -10,7 +10,29 @@ import { AuthRegisterDto } from "@/types/auth";
 const emit = defineEmits<{
   (e: "onAuth", data: Omit<AuthRegisterDto, "type">): void;
 }>();
-const handleOnSuccess = async (response: AuthCodeFlowSuccessResponse) => {
+
+const isWindowFocused = useWindowFocus();
+const isLoading = ref<boolean>(false);
+const isAuthenticating = ref<boolean>(false);
+const { isReady, login } = useTokenClient({
+  onSuccess: RetriveProfileData,
+  onError: AuthenticationFailed,
+});
+
+watch(
+  () => isWindowFocused.value,
+  (newVal, oldVal) =>
+    newVal && !oldVal && !isAuthenticating.value && (isLoading.value = false),
+  { immediate: true }
+);
+
+function StartAuthenticate() {
+  isLoading.value = true;
+  login();
+}
+
+async function RetriveProfileData(response: AuthCodeFlowSuccessResponse) {
+  isAuthenticating.value = true;
   const { data } = await axios.get(
     "https://people.googleapis.com/v1/people/me",
     {
@@ -19,6 +41,8 @@ const handleOnSuccess = async (response: AuthCodeFlowSuccessResponse) => {
     }
   );
 
+  isLoading.value = false;
+  isAuthenticating.value = false;
   emit("onAuth", {
     email: data.emailAddresses[0].value,
     firstName: data.names[0].givenName,
@@ -26,20 +50,22 @@ const handleOnSuccess = async (response: AuthCodeFlowSuccessResponse) => {
     avatar: data.photos[0].url,
     userId: data.metadata.sources[0].id,
   });
-};
+}
 
-const handleOnError = (errorResponse: AuthCodeFlowErrorResponse) => {
+function AuthenticationFailed(errorResponse: AuthCodeFlowErrorResponse) {
+  isLoading.value = false;
   console.log("Error: ", errorResponse);
-};
-
-const { isReady, login } = useTokenClient({
-  onSuccess: handleOnSuccess,
-  onError: handleOnError,
-});
+}
 </script>
 
 <template>
-  <NButton :disabled="!isReady" secondary round @click="login">
+  <NButton
+    :disabled="!isReady || isLoading"
+    :loading="isLoading"
+    secondary
+    round
+    @click="StartAuthenticate"
+  >
     <template #icon>
       <i:logos:google-icon />
     </template>
