@@ -22,23 +22,28 @@ const formSchema: FormSchema = {
   fieldSize: "8 md:4",
   fields: [
     {
-      label: "Email address",
+      label: "Adresse email",
       key: "email",
       type: "text",
       size: 8,
       required: true,
     },
-    { label: "First name", key: "firstName", type: "text", required: true },
-    { label: "Last name", key: "lastName", type: "text", required: true },
-    { label: "Password", key: "password", type: "password", required: true },
+    { label: "Prénom", key: "firstName", type: "text", required: true },
+    { label: "Nom de famille", key: "lastName", type: "text", required: true },
     {
-      label: "Confirm password",
+      label: "Mot de passe",
+      key: "password",
+      type: "password",
+      required: true,
+    },
+    {
+      label: "Confirmez mot de passe",
       key: "confirmPassword",
       type: "password",
       dependencies: ["password"],
       validators: (dependencies) => ({
         sameAs: helpers.withMessage(
-          "Password & confirmation must be identical",
+          "Les mots de passe ne correspondent pas",
           sameAs(dependencies?.password)
         ),
       }),

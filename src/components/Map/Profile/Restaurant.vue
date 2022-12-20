@@ -33,9 +33,6 @@ async function CreateLunchGroup() {
     maxWidth: "650px",
     fieldSize: 9,
     gridSize: 9,
-    submitButtonText: "CONFIRMER",
-    cancelButtonText: "Annuler",
-    closeButtonText: "Fermer",
     allowClickOutside: false,
     fields: [
       {
