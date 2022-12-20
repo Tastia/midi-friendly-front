@@ -1,6 +1,10 @@
 <script setup lang="ts">
 const userStore = useUserStore();
 const appStore = useAppStore();
+const route = useRoute();
+const showLogin = computed(() => {
+  return route.meta?.showLogin ?? false;
+});
 </script>
 
 <template>
@@ -14,6 +18,14 @@ const appStore = useAppStore();
     />
     <img v-else src="@/assets/images/LogoLight.svg" class="h-8 w-auto" />
     <div class="flex items-center">
+      <NButton
+        v-if="showLogin && !userStore.user"
+        type="primary"
+        size="small"
+        @click="$router.push('/auth/login')"
+      >
+        Connexion
+      </NButton>
       <LayoutUserDropdown v-if="userStore.user" />
       <NDivider vertical />
       <LayoutToggleTheme />

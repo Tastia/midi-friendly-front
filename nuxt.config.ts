@@ -15,7 +15,7 @@ export default defineNuxtConfig({
   alias: {
     "@/.": "./",
   },
-  modules: ["@pinia/nuxt", "@vueuse/nuxt", "nuxt-windicss"],
+  modules: ["@pinia/nuxt", "@vueuse/nuxt", "nuxt-windicss", "@nuxt/image-edge"],
   css: ["@/assets/styles/main.scss"],
   vite: {
     plugins: [
@@ -33,6 +33,9 @@ export default defineNuxtConfig({
       // apiUrl: import.meta.env.VITE_API_URL,
       // gatewayUrl: import.meta.env.VITE_GATEWAY_URL
     },
+  },
+  routeRules: {
+    "/": { static: true },
   },
   app: {
     head: {
