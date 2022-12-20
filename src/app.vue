@@ -37,9 +37,16 @@ watch(
         <n-message-provider>
           <n-notification-provider>
             <n-loading-bar-provider>
-              <NuxtLayout>
-                <NuxtPage :key="$route.fullPath" />
-              </NuxtLayout>
+              <n-spin :show="appStore.isLoading">
+                <template v-if="appStore.isLoadingMessage" #description>
+                  <span class="font-black text-primary">
+                    {{ appStore.isLoadingMessage }}
+                  </span>
+                </template>
+                <NuxtLayout>
+                  <NuxtPage />
+                </NuxtLayout>
+              </n-spin>
             </n-loading-bar-provider>
           </n-notification-provider>
         </n-message-provider>
