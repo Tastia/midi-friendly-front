@@ -37,6 +37,12 @@ const restaurant = computed<Restaurant | undefined>(() =>
   )
 );
 
+const isLunchGroupExpired = computed<boolean>(() => {
+  const now = new Date();
+  const meetingTime = new Date(props.group.meetingTime);
+  return now > meetingTime;
+});
+
 async function JoinGroup() {
   const existingGroup = gatewayApi?.lunchGroups.value.find(
     (group) =>

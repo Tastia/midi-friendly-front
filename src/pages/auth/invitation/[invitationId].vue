@@ -10,6 +10,10 @@ import RegisterForm from "@/components/Auth/RegisterForm.vue";
 import LoginForm from "@/components/Auth/LoginForm.vue";
 import { useMessage } from "naive-ui";
 
+definePageMeta({
+  name: "auth.invitation",
+});
+
 const route = useRoute();
 const router = useRouter();
 const messageApi = useMessage();
@@ -71,7 +75,10 @@ async function FinaliseRegisterProcess(data: AuthRegisterDto | AuthLoginDto) {
   }
 }
 
-onMounted(() => FetchInvitation());
+onMounted(() => {
+  FetchInvitation();
+  if (userStore.user) userStore.ClearUserSession();
+});
 </script>
 
 <template>
