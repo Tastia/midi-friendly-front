@@ -53,6 +53,11 @@ export function useMapGateway() {
   );
 
   client.on(
+    LunchGroupReceivedEvents.addUserToOrganization,
+    ({ user }: { user: MapUser }) => users.value.push(user)
+  );
+
+  client.on(
     LunchGroupReceivedEvents.setUserList,
     ({ users: userList }: { users: MapUser[] }) => (users.value = userList)
   );
