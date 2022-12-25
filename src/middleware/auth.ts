@@ -9,6 +9,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
   );
 
   if (decodedToken?.exp < Date.now() / 1000) {
+    userStore.ClearUserSession();
     if (userStore.rememberMe)
       return navigateTo(`/auth/login${to?.path && `?redirect=${to.path}`}`);
     else return navigateTo(`/auth/login${to?.path && `?redirect=${to.path}`}`);

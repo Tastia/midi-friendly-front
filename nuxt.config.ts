@@ -10,7 +10,14 @@ export default defineNuxtConfig({
   pages: true,
   srcDir: "src",
   imports: {
-    dirs: ["stores", "config", "composables", "utils", "api/controllers"],
+    dirs: [
+      "stores",
+      "config",
+      "composables",
+      "utils",
+      "api/controllers",
+      "services",
+    ],
   },
   alias: {
     "@/.": "./",

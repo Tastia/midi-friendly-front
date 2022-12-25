@@ -4,7 +4,6 @@ import { helpers, sameAs } from "@vuelidate/validators";
 import {
   AuthEmailCredentials,
   AuthLoginDto,
-  AuthProviderCredentials,
   AuthRegisterDto,
 } from "@/types/auth";
 
