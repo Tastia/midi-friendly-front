@@ -45,6 +45,11 @@ async function FetchInvitation() {
 
 async function FinaliseRegisterProcess(data: AuthRegisterDto | AuthLoginDto) {
   try {
+    appStore.startLoading(
+      `${
+        registerMode.value === "link" ? "Association" : "Création"
+      } du compte en cours...`
+    );
     const { success, ...errorFlags } = await Authcontroller.accepInvitation({
       invitationId: route.params.invitationId as string,
       ...(route.query.hash && { emailHash: route.query.hash as string }),
@@ -58,6 +63,7 @@ async function FinaliseRegisterProcess(data: AuthRegisterDto | AuthLoginDto) {
         }),
       },
     });
+    appStore.stopLoading();
 
     if (success) {
       messageApi.success(
@@ -81,6 +87,7 @@ async function FinaliseRegisterProcess(data: AuthRegisterDto | AuthLoginDto) {
       messageApi.error(GetErrorMessage(errorFlags));
     }
   } catch (err) {
+    appStore.stopLoading();
     console.error(err);
   }
 }
