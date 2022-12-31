@@ -43,3 +43,41 @@ export const ExtractFromParenthesis = (string: string) => {
   const matches = regex.exec(string);
   return matches?.[1] ?? "";
 };
+export const getUserInitials = (firstName: string, lastName: string) =>
+  `${firstName.charAt(0).toUpperCase()}${lastName.charAt(0).toUpperCase()}`;
+export const formatRelativeDate = (val: string) => dayjs(val).fromNow();
+export const getTimeDiff = (
+  deadline: string,
+  start?: string,
+  percent?: boolean
+) => {
+  const deadlineDate = new Date(deadline);
+  const startDate = new Date(start ?? new Date());
+  const currentDate = new Date();
+
+  if (percent) {
+    const timeDifference = deadlineDate.getTime() - currentDate.getTime();
+    const totalTime = deadlineDate.getTime() - startDate.getTime();
+    const percentage = (timeDifference / totalTime) * 100;
+    return percentage < 0 ? 0 : +percentage.toFixed(2);
+  } else {
+    const timeDifference = deadlineDate.getTime() - startDate.getTime();
+    const hours = Math.floor(
+      (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+    );
+    const minutes = Math.floor(
+      (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
+    );
+    const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+    return (
+      (hours < 10 ? "0" : "") +
+      (hours < 0 ? "0" : hours) +
+      ":" +
+      (minutes < 10 ? "0" : "") +
+      (minutes < 0 ? "0" : minutes) +
+      ":" +
+      (seconds < 10 ? "0" : "") +
+      (seconds < 0 ? "0" : seconds)
+    );
+  }
+};
