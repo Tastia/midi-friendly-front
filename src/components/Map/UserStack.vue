@@ -1,9 +1,17 @@
 <script setup lang="ts">
 import { MapUser } from "~~/src/types/mapGateway";
-import { NBadge, useThemeVars } from "naive-ui";
+import { useThemeVars } from "naive-ui";
 
 const themeVars = useThemeVars();
-const props = defineProps<{ users: MapUser[] }>();
+const props = withDefaults(
+  defineProps<{
+    users: MapUser[];
+    size: "small" | "medium" | "large";
+  }>(),
+  {
+    size: "medium",
+  }
+);
 
 function createDropdownOptions(options: Array<{ name: string; src?: string }>) {
   return options.map((option, index) => ({
@@ -30,10 +38,12 @@ function mapUsersAvatar(users: typeof props.users) {
             v-if="src"
             :src="src"
             :class="isOnline ? 'avatar__online' : 'avatar__offline'"
+            :size="size"
           />
           <n-avatar
             v-else
             :class="isOnline ? 'avatar__online' : 'avatar__offline'"
+            :size="size"
           >
             {{
               name

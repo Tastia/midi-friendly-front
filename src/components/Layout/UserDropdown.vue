@@ -25,6 +25,7 @@ const dropdownOptions = useDropdownActions([
 <template>
   <NDropdown :options="(dropdownOptions as unknown as DropdownMixedOption[])">
     <NAvatar
+      size="small"
       round
       v-bind="{ ...(userStore.user?.avatar && { src: userStore.user.avatar }) }"
     >
