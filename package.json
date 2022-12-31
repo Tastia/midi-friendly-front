@@ -16,6 +16,7 @@
     "@iconify-json/logos": "^1.1.19",
     "@iconify-json/material-symbols": "^1.1.26",
     "@iconify-json/mdi": "^1.1.33",
+    "@iconify-json/ph": "^1.1.2",
     "@nuxt/image-edge": "^1.0.0-27840416.dc1ed65",
     "@rushstack/eslint-patch": "^1.1.4",
     "@vue/eslint-config-prettier": "^7.0.0",

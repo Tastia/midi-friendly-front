@@ -16,7 +16,8 @@ export const formatKey = (val: string) =>
       .join(" ") ?? "";
 export const formatDate = (val: string) => dayjs(val).format("MMM DD, YYYY");
 export const formatDateTime = (val: string | number) =>
-  dayjs(val).format("MMM DD, YYYY hh:mm");
+  dayjs(val).format("MMM DD, YYYY HH:mm");
+export const formatTimeHour = (val: string) => dayjs(val).format("HH:mm");
 export const formatDateToTimestamp = (val: string) => dayjs(val).valueOf();
 export const formatDateToISOstring = (val: string) =>
   dayjs(val).toISOString().toString().replaceAll("Z", "");

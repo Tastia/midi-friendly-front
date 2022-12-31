@@ -82,6 +82,35 @@ export function useMapGateway() {
   );
 
   client.on(
+    LunchGroupReceivedEvents.addGroupPollEntry,
+    (data: { pollId: string; vote: { user: string; restaurant: string } }) => {
+      const groupPoll = lunchGroupPolls.value.find(
+        (group) => group._id === data.pollId
+      );
+      if (!groupPoll) return;
+
+      if (!groupPoll.votes.some((vote) => vote.user === data.vote.user))
+        groupPoll.votes.push(data.vote);
+      else
+        groupPoll.votes = groupPoll.votes.reduce(
+          (acc: Array<{ restaurant: string; user: string }>, vote) => {
+            return [
+              ...acc,
+              ...[vote.user === data.vote.user ? data.vote : vote],
+            ];
+          },
+          []
+        );
+    }
+  );
+
+  client.on(
+    LunchGroupReceivedEvents.closeGroupPoll,
+    (data: { pollId: string }) =>
+      lunchGroupPolls.value.filter((group) => group._id !== data.pollId)
+  );
+
+  client.on(
     LunchGroupReceivedEvents.addGroup,
     ({ group }: { group: MapLunchGroup }) => lunchGroups.value.push(group)
   );
@@ -254,6 +283,28 @@ export function useMapGateway() {
     );
   }
 
+  function SaveUserPollVote(data: { pollId: string; restaurantId: string }) {
+    pendingOperation.value = LunchGroupEmittedEvents.voteGroupPoll;
+    const { setSuccess, setError } = useActionNotification(
+      "Enregistrement de votre vote en cours..."
+    );
+
+    client.emit(
+      LunchGroupEmittedEvents.voteGroupPoll,
+      data,
+      (response: GatewayEventResponse) => {
+        pendingOperation.value = null;
+        if (response.success) setSuccess("Vote enregistré");
+        else {
+          setError(
+            response?.messsage ?? "Une erreur est survenue, veuillez réessayer"
+          );
+          console.error(response?.messsage ?? "Unknown error");
+        }
+      }
+    );
+  }
+
   // function Place
 
   onUnmounted(() => {
@@ -272,5 +323,6 @@ export function useMapGateway() {
     JoinGroup,
     LeaveGroup,
     CreateGroupPoll,
+    SaveUserPollVote,
   };
 }

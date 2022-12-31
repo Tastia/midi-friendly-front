@@ -55,24 +55,53 @@ async function SetUserVote() {
     </template>
 
     <template #footer>
-      <div class="flex flex-col gap-2">
-        <div class="flex items-center justify-between">
-          <span class="text-xs text-gray-500">Temps restant</span>
-          <span class="text-xs text-gray-500">{{ timeLeft }}</span>
-        </div>
-        <NProgress
-          type="line"
-          :percentage="timeLeftPercentage"
-          :show-indicator="false"
-          :color="timerProgressColor"
-          :height="16"
-          :border-radius="themeVars.borderRadius"
-          processing
-        />
+      <div class="grid grid-cols-2 gap-2">
+        <NButton class="w-full" type="primary" secondary @click="SetUserVote">
+          <template #icon>
+            <i:fluent:vote-20-filled />
+          </template>
+          {{ userHasVoted ? "CHANGER MON VOTE" : "VOTER" }}
+        </NButton>
+
+        <NButton class="w-full" secondary>
+          <template #icon>
+            <i:ph:chat-teardrop-dots-fill />
+          </template>
+          DISCUSSION
+        </NButton>
       </div>
     </template>
 
     <div class="flex flex-col gap-4">
+      <div class="flex flex-col gap-2">
+        <li class="flex items-center justify-between">
+          <b class="font-medium">Heure de fin du vote:</b>
+          <span>{{ formatTimeHour(groupPoll.voteDeadline) }}</span>
+        </li>
+
+        <li class="flex items-center justify-between">
+          <b class="font-medium">Heure de rendez-vous:</b>
+          <span>{{ formatTimeHour(groupPoll.meetingTime) }}</span>
+        </li>
+
+        <li
+          class="flex gap-2 items-start justify-between"
+          :class="!groupPoll.description ? 'flex-row' : 'flex-col'"
+        >
+          <b class="font-medium">Description :</b>
+          <div
+            class="bg-blue-gray-500/10 w-full h-auto p-2 !pr-0.5"
+            :style="{ borderRadius: themeVars.borderRadius }"
+          >
+            <NScrollbar
+              class="max-h-32 italic text-gray-500 whitespace-pre pr-2"
+            >
+              {{ groupPoll.description || "N/A" }}
+            </NScrollbar>
+          </div>
+        </li>
+      </div>
+      <NDivider class="!m-0" />
       <div class="flex flex-col gap-3">
         <div
           v-for="voteItem in voteState"
@@ -97,12 +126,22 @@ async function SetUserVote() {
           />
         </div>
       </div>
-      <NButton type="primary" secondary class="w-full" @click="SetUserVote">
-        <template #icon>
-          <i:fluent:vote-20-filled />
-        </template>
-        {{ userHasVoted ? "CHANGER MON VOTE" : "VOTER" }}
-      </NButton>
+      <NDivider class="!m-0" />
+      <div class="flex flex-col gap-2">
+        <div class="flex items-center justify-between">
+          <span class="text-xs text-gray-500">Temps restant</span>
+          <span class="text-xs text-gray-500">{{ timeLeft }}</span>
+        </div>
+        <NProgress
+          type="line"
+          :percentage="timeLeftPercentage"
+          :show-indicator="false"
+          :color="timerProgressColor"
+          :height="16"
+          :border-radius="themeVars.borderRadius"
+          processing
+        />
+      </div>
     </div>
   </NCard>
 </template>

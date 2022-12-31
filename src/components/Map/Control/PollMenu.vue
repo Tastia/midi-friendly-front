@@ -74,6 +74,11 @@ async function SetUserVote(payload: {
 
     showMenu.value = true;
     if (!isCompleted) return;
+
+    mapGatewayApi?.SaveUserPollVote({
+      pollId: payload.groupId,
+      restaurantId: formData.restaurant,
+    });
   } catch (err) {
     console.error(err);
   }
