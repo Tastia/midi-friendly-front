@@ -10,7 +10,7 @@ ApiInstance.interceptors.request.use((config) => {
   const userStore = useUserStore();
   config.headers = {
     ...config.headers,
-    "x-application": "maps",
+    "x-application": "client",
     ...((userStore.accessToken && {
       Authorization: `Bearer ${userStore.accessToken}`,
     }) as any),
