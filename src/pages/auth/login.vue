@@ -9,11 +9,14 @@ definePageMeta({
 
 const router = useRouter();
 const userStore = useUserStore();
+const appStore = useAppStore();
 const messageApi = useMessage();
 
 async function Authenticate(data: AuthLoginDto) {
   try {
+    appStore.startLoading("Authentification en cours...");
     const authData = await Authcontroller.login(data);
+    appStore.stopLoading();
     userStore.StoreAuthData(authData);
     messageApi.success(
       `Bienvenue, ${authData.account.firstName} ${authData.account.lastName}`
@@ -21,6 +24,7 @@ async function Authenticate(data: AuthLoginDto) {
     router.push("/map");
   } catch (err) {
     console.error(err);
+    appStore.stopLoading();
   }
 }
 </script>
