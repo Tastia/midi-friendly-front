@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import { useSweetform } from "@chronicstone/vue-sweetforms";
 import { GoogleMap } from "vue3-google-map";
+import { OnboardingEvents } from "@/types/onboarding";
 
 definePageMeta({
   middleware: ["auth"],
@@ -19,10 +21,13 @@ const props = withDefaults(
     }),
   }
 );
-
+const formApi = useSweetform();
 const appStore = useAppStore();
 const mapGatewayApi = useMapGateway();
 provide(mapApiInjectionKey, mapGatewayApi);
+
+const chatGatewayApi = useChatGateway();
+provide(chatApiInjectionKey, chatGatewayApi);
 
 const GApiKey = import.meta.env.VITE_GOOGLE_API_KEY as string;
 const computedBoundaries = computed(() => ({
@@ -40,6 +45,26 @@ const mapStylesConfig = computed(() => [
   },
   ...(appStore.isDark ? [...GMapsThemeOverridesDark] : []),
 ]);
+
+const { SubscribeOnboardingEvent } = useOnboardingEvents();
+const cancelSubscription = SubscribeOnboardingEvent(
+  (event: OnboardingEvents) => {
+    if (event === OnboardingEvents.openCreateGroupForm)
+      formApi.createForm(LunchGroupFormSchema());
+
+    if (event === OnboardingEvents.closeCreateGroupForm)
+      (
+        document.querySelector(
+          "#sweetforms__form > div.n-card__footer > div > button.n-button.n-button--error-type.n-button--medium-type.n-button--secondary"
+        ) as HTMLButtonElement
+      )?.click();
+  }
+) as () => void;
+onUnmounted(() => cancelSubscription());
+
+onMounted(() => {
+  console.log(formApi);
+});
 </script>
 
 <template>
@@ -58,9 +83,10 @@ const mapStylesConfig = computed(() => [
   >
     <MapMarkerOrganization :position="orgaCoordinates" />
     <MapMarkerRestaurant
-      v-for="restaurant in mapGatewayApi.restaurants.value"
+      v-for="(restaurant, index) in mapGatewayApi.restaurants.value"
       :key="restaurant._id"
       :restaurant="restaurant"
+      :index="index"
     />
     <MapSideControls />
   </GoogleMap>

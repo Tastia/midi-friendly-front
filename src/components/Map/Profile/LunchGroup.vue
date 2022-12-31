@@ -213,6 +213,12 @@ async function DeleteGroup() {
         </h2>
       </template>
 
+      <template #footer>
+        <ChatLunchGroup :group="group" :drawer-position="drawerPosition">
+          <NButton> OPEN CHAT </NButton>
+        </ChatLunchGroup>
+      </template>
+
       <div class="flex flex-col gap-10">
         <div class="flex flex-col gap-4">
           <h3 class="text-xl font-black">Informations sur le groupe</h3>
@@ -261,18 +267,9 @@ async function DeleteGroup() {
                   :style="{ borderRadius: themeVars.borderRadius }"
                 >
                   <NScrollbar
-                    class="max-h-32 italic text-gray-500 whitespace-pre-line pr-2"
+                    class="max-h-32 italic text-gray-500 whitespace-pre pr-2"
                   >
                     {{ group.description || "N/A" }}
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Facilis atque dolores minima tempore odio nemo magni in
-                    voluptas maiores quaerat architecto cupiditate dicta, rerum
-                    illum quia? Sapiente laudantium ipsum placeat. qzdzd
-                    qzdzdzqd dzq dqz qzdzdqdz qzd Lorem, ipsum dolor sit amet
-                    consectetur adipisicing elit. Est id nemo repellat harum
-                    odio vero optio totam, amet accusantium atque quod accusamus
-                    delectus tempore quaerat numquam asperiores minima iste
-                    autem. \n
                   </NScrollbar>
                 </div>
               </li>

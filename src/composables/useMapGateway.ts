@@ -1,3 +1,4 @@
+import { CreateGroupPollDto } from "./../types/mapGateway";
 import { Restaurant } from "@/types/restaurant";
 import { LunchGroup } from "@/types/lunchGroups";
 import io from "socket.io-client";
@@ -6,12 +7,13 @@ import {
   LunchGroupEmittedEvents,
   LunchGroupReceivedEvents,
   MapLunchGroup,
+  MapLunchGroupPoll,
   MapUser,
 } from "@/types/mapGateway";
 
 export function useMapGateway() {
   const userStore = useUserStore();
-  const client = io(import.meta.env.VITE_GATEWAY_URL as string, {
+  const client = io(`${import.meta.env.VITE_GATEWAY_URL}/map` as string, {
     transportOptions: {
       polling: {
         extraHeaders: {
@@ -25,6 +27,7 @@ export function useMapGateway() {
   const users = ref<MapUser[]>([]);
   const restaurants = ref<Restaurant[]>([]);
   const lunchGroups = ref<MapLunchGroup[]>([]);
+  const lunchGroupPolls = ref<MapLunchGroupPoll[]>([]);
   const pendingOperation = ref<`${LunchGroupEmittedEvents}` | null>();
 
   onMounted(
@@ -64,6 +67,18 @@ export function useMapGateway() {
   client.on(
     LunchGroupReceivedEvents.setGroupList,
     ({ groups }: { groups: MapLunchGroup[] }) => (lunchGroups.value = groups)
+  );
+
+  client.on(
+    LunchGroupReceivedEvents.setGroupPollList,
+    ({ groups }: { groups: MapLunchGroupPoll[] }) =>
+      (lunchGroupPolls.value = groups)
+  );
+
+  client.on(
+    LunchGroupReceivedEvents.addGroupPoll,
+    ({ groupPoll }: { groupPoll: MapLunchGroupPoll }) =>
+      lunchGroupPolls.value.push(groupPoll)
   );
 
   client.on(
@@ -119,7 +134,7 @@ export function useMapGateway() {
   function CreateGroup(
     group: Omit<
       MapLunchGroup,
-      "_id" | "owner" | "users" | "createdAt" | "updatedAt"
+      "_id" | "owner" | "users" | "createdAt" | "updatedAt" | "chatRoom"
     >
   ) {
     pendingOperation.value = LunchGroupEmittedEvents.createGroup;
@@ -218,6 +233,29 @@ export function useMapGateway() {
     );
   }
 
+  function CreateGroupPoll(groupData: CreateGroupPollDto) {
+    pendingOperation.value = LunchGroupEmittedEvents.createGroupPoll;
+    const { setSuccess, setError } = useActionNotification(
+      "Création du groupe par vote en cours..."
+    );
+    client.emit(
+      LunchGroupEmittedEvents.createGroupPoll,
+      groupData,
+      (res: GatewayEventResponse) => {
+        pendingOperation.value = null;
+        if (res.success) setSuccess("Groupe par vote créé");
+        else {
+          setError(
+            res?.messsage ?? "Une erreur est survenue, veuillez réessayer"
+          );
+          console.error(res?.messsage ?? "Unknown error");
+        }
+      }
+    );
+  }
+
+  // function Place
+
   onUnmounted(() => {
     client.disconnect();
   });
@@ -225,6 +263,7 @@ export function useMapGateway() {
   return {
     users,
     lunchGroups,
+    lunchGroupPolls,
     restaurants,
     pendingOperation,
     CreateGroup,
@@ -232,5 +271,6 @@ export function useMapGateway() {
     DeleteGroup,
     JoinGroup,
     LeaveGroup,
+    CreateGroupPoll,
   };
 }

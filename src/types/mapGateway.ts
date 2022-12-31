@@ -7,6 +7,9 @@ export enum LunchGroupEmittedEvents {
   joinGroup = "JoinGroup",
   leaveGroup = "LeaveGroup",
   updateGroup = "UpdateGroup",
+  createGroupPoll = "CreateGroupPoll",
+  deleteGroupPoll = "DeleteGroupPoll",
+  voteGroupPoll = "VoteGroupPoll",
 }
 
 export enum LunchGroupReceivedEvents {
@@ -15,11 +18,17 @@ export enum LunchGroupReceivedEvents {
   userDisconnected = "UserDisconnected",
   setUserList = "SetUserList",
   setGroupList = "SetGroupList",
+  setGroupPollList = "SetGroupPollList",
   addGroup = "AddGroup",
   removeGroup = "RemoveGroup",
   updateGroup = "UpdateGroup",
   addUserToGroup = "AddUserToGroup",
   removeUserFromGroup = "RemoveUserFromGroup",
+  addGroupPoll = "AddGroupPoll",
+  removeGroupPoll = "RemoveGroupPoll",
+  updateGroupPoll = "UpdateGroupPoll",
+  addGroupPollEntry = "AddGroupPollEntry",
+  closeGroupPoll = "CloseGroupPoll",
 }
 
 export type MapUser = Omit<
@@ -38,9 +47,31 @@ export type MapLunchGroup = {
   restaurant: string;
   users: string[];
   owner: string;
+  chatRoom: string;
   createdAt: string;
   updatedAt: string;
 };
+
+export type MapLunchGroupPoll = {
+  _id: string;
+  label: string;
+  description?: string;
+  meetingTime: string;
+  userSlots?: number;
+  restaurant: string;
+  votes: Array<{ user: string; restaurant: string }>;
+  allowedRestaurants?: Array<string>;
+  voteDeadline: string;
+  owner: string;
+  chatRoom: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type CreateGroupPollDto = Omit<
+  MapLunchGroupPoll,
+  "_id" | "votes" | "owner" | "chatRoom" | "createdAt" | "updatedAt"
+> & { userVote: string };
 
 export type GatewayEventResponse<T = Record<string, any>> = {
   success: boolean;

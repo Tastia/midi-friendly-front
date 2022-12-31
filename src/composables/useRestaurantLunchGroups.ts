@@ -10,6 +10,7 @@ export interface ParsedMapLunchGroup {
   userSlots?: number;
   owner: MapUser;
   users: MapUser[];
+  chatRoom: string;
   createdAt: string;
   updatedAt: string;
 }

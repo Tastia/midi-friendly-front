@@ -100,7 +100,7 @@ function SortByMeetingTime(groups: ParsedMapLunchGroup[]) {
       <template #header>
         <h1 class="text-2xl font-black">{{ restaurant.name }}</h1>
       </template>
-      <div class="flex flex-col gap-6">
+      <div id="restaurant-profile-drawer" class="flex flex-col gap-6">
         <div class="w-full h-50 rounded bg-gray-400 grid place-items-center">
           IMAGE HERE
         </div>
@@ -120,6 +120,7 @@ function SortByMeetingTime(groups: ParsedMapLunchGroup[]) {
         </div>
 
         <NButton
+          id="create-group-trigger"
           size="large"
           type="primary"
           class="uppercase text-md w-full"
