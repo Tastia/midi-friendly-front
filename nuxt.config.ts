@@ -17,12 +17,19 @@ export default defineNuxtConfig({
       "utils",
       "api/controllers",
       "services",
+      "services/_utils",
     ],
   },
   alias: {
     "@/.": "./",
   },
-  modules: ["@pinia/nuxt", "@vueuse/nuxt", "nuxt-windicss", "@nuxt/image-edge"],
+  modules: [
+    "./src/modules/onboarding/module",
+    "@pinia/nuxt",
+    "@vueuse/nuxt",
+    "nuxt-windicss",
+    "@nuxt/image-edge",
+  ],
   css: ["@/assets/styles/main.scss"],
   vite: {
     plugins: [
@@ -34,6 +41,18 @@ export default defineNuxtConfig({
       }),
       PurgeIcons(),
     ],
+    server: {
+      fs: {
+        allow: [
+          "../../../PERSO/vue-onboarding/dist/v-onboarding.es.js",
+          "../../../PERSO/vue-onboarding/dist/v-onboarding.umd.js",
+          "../../../PERSO/vue-onboarding/dist/style.css",
+          "../../../PERSO/vue-onboarding/dist/*",
+          "../../../../PERSO/vue-onboarding/dist/",
+          "../../../../PERSO/vue-onboarding/dist/*",
+        ],
+      },
+    },
   },
   runtimeConfig: {
     public: {
@@ -68,5 +87,8 @@ export default defineNuxtConfig({
       script: [{ src: "https://code.iconify.design/1/1.0.0/iconify.min.js" }],
     },
     pageTransition: { name: "slide-fade-reverse", mode: "out-in" },
+  },
+  experimental: {
+    reactivityTransform: true,
   },
 });

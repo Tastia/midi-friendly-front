@@ -74,7 +74,8 @@ defineExpose({
   StartOnboarding,
   FinishOnboarding,
   SetStepIndex,
-  index: readonly(currentStepIndex),
+  index: computed(() => currentStepIndex.value),
+  isRunning: computed(() => isRunning.value),
 });
 </script>
 

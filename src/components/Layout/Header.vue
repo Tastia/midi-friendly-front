@@ -17,7 +17,7 @@ const showLogin = computed(() => {
       class="h-8 w-auto"
     />
     <img v-else src="@/assets/images/LogoLight.svg" class="h-8 w-auto" />
-    <div class="flex items-center">
+    <div class="flex items-center gap-1.5">
       <NButton
         v-if="showLogin && !userStore.user"
         type="primary"
@@ -27,7 +27,8 @@ const showLogin = computed(() => {
         Connexion
       </NButton>
       <LayoutUserDropdown v-if="userStore.user" />
-      <NDivider vertical />
+      <NDivider vertical class="!m-0" />
+      <LayoutOnboardingTrigger v-if="$route.name === 'map'" />
       <LayoutToggleTheme />
     </div>
   </n-el>

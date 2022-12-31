@@ -68,5 +68,6 @@ export const defaultVOnboardingWrapperOptions: VOnboardingWrapperOptions = {
 export type VOnboardingWrapper = {
   StartOnboarding(index?: number): void;
   FinishOnboarding(): void;
-  index: Ref<number>;
+  index: ComputedRef<number>;
+  isRunning: ComputedRef<boolean>;
 };

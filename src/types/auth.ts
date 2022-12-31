@@ -17,7 +17,7 @@ export type AuthLoginDto = AuthEmailCredentials | AuthProviderCredentials;
 
 export type AuthLoginData = {
   accessToken: string;
-  account: User;
+  account: User & { onboarded: boolean };
   organizations: Array<Organization>;
 };
 

@@ -5,12 +5,16 @@ import {
   NDialogProvider,
   NNotificationProvider,
   NLoadingBarProvider,
-  useLoadingBar,
 } from "naive-ui";
 import { FormProvider } from "@chronicstone/vue-sweetforms";
 import "@chronicstone/vue-sweetforms/dist/style.css";
+import { OnboardingEvents } from "./types/onboarding";
 
+const route = useRoute();
 const appStore = useAppStore();
+const userStore = useUserStore();
+
+const { DispatchOnboardingEvent } = useOnboardingEvents();
 
 watch(
   () => appStore.isDark,
@@ -20,10 +24,20 @@ watch(
   },
   { immediate: true }
 );
+
+watch(
+  () => route.name,
+  (name) => {
+    if (name === "map" && userStore.user && !userStore.user?.onboarded)
+      DispatchOnboardingEvent(OnboardingEvents.startOnboarding);
+  },
+  { immediate: true }
+);
 </script>
 
 <template>
   <n-config-provider
+    id="appRoot"
     class="demo"
     :locale="appStore.language"
     :theme="appStore.theme"
@@ -43,6 +57,12 @@ watch(
                     {{ appStore.isLoadingMessage }}
                   </span>
                 </template>
+                <UserOnboarding />
+                <div
+                  id="onboarding-start"
+                  class="fixed top-[40%] left-1/2 opacity-0"
+                  style="z-index: -1"
+                ></div>
                 <NuxtLayout>
                   <NuxtPage />
                 </NuxtLayout>
@@ -58,5 +78,9 @@ watch(
 <style>
 body {
   font-family: "Lato" !important;
+}
+
+.n-dialog {
+  z-index: 20000 !important;
 }
 </style>

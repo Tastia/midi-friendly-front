@@ -35,7 +35,13 @@ const mappedLunchGroups = computed(
   <NTooltip placement="left">
     Mes groupes actifs
     <template #trigger>
-      <NButton class="drop-shadow-xl" type="primary" @click="showMenu = true">
+      <NButton
+        id="group-menu-trigger"
+        class="drop-shadow-xl"
+        type="primary"
+        circle
+        @click="showMenu = true"
+      >
         <template #icon>
           <i:material-symbols:restaurant />
         </template>
@@ -52,7 +58,7 @@ const mappedLunchGroups = computed(
   >
     <NDrawerContent :native-scrollbar="false" closable>
       <template #header>
-        <span class="text-2xl font-black"> Mes groupes actifs </span>
+        <span class="text-xl font-black"> Mes groupes actifs </span>
       </template>
 
       <div class="flex flex-col gap-4">

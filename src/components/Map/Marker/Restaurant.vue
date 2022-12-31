@@ -2,8 +2,9 @@
 import { CustomMarker } from "vue3-google-map";
 import { NBadge, useThemeVars } from "naive-ui";
 import { Restaurant } from "@/types/restaurant";
+import { OnboardingEvents } from "@/types/onboarding";
 
-const props = defineProps<{ restaurant: Restaurant }>();
+const props = defineProps<{ restaurant: Restaurant; index: number }>();
 
 const userStore = useUserStore();
 const themeVars = useThemeVars();
@@ -15,6 +16,17 @@ const userLunchGroup = computed(() =>
     group.users.some((user) => user._id === userStore.user?._id)
   )
 );
+
+const { SubscribeOnboardingEvent } = useOnboardingEvents();
+const cancelSubscription = SubscribeOnboardingEvent(
+  (event: OnboardingEvents) => {
+    if (event === OnboardingEvents.openRestaurantProfile && props.index === 0)
+      showProfile.value = true;
+    if (event === OnboardingEvents.closeRestaurantProfile && props.index === 0)
+      showProfile.value = false;
+  }
+) as () => void;
+onUnmounted(() => cancelSubscription());
 </script>
 
 <template>

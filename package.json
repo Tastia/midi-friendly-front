@@ -2,7 +2,7 @@
   "private": true,
   "scripts": {
     "build": "nuxt build",
-    "dev": "nuxt dev",
+    "dev": "NODE_PRESERVE_SYMLINKS=1 nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
@@ -10,6 +10,7 @@
   "devDependencies": {
     "@commitlint/cli": "^17.3.0",
     "@commitlint/config-conventional": "^17.3.0",
+    "@iconify-json/fluent": "^1.1.16",
     "@iconify-json/ic": "^1.1.9",
     "@iconify-json/la": "^1.1.2",
     "@iconify-json/logos": "^1.1.19",
@@ -34,8 +35,9 @@
     "vite-plugin-purge-icons": "^0.9.2"
   },
   "dependencies": {
-    "@chronicstone/vue-sweetforms": "^1.0.2-rc1",
+    "@chronicstone/vue-sweetforms": "^1.0.4",
     "@pinia/nuxt": "^0.4.6",
+    "@popperjs/core": "^2.11.6",
     "@vuelidate/validators": "^2.0.0",
     "@vueuse/core": "^9.6.0",
     "@vueuse/nuxt": "^9.6.0",
