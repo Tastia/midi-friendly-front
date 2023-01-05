@@ -14,6 +14,7 @@ watch(
 </script>
 
 <template>
+  <LayoutUserSatisfaction />
   <n-layout>
     <n-layout-header>
       <LayoutHeader />

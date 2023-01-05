@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { CollectUserSatisfaction } from "@/services/user";
+import { CollectUserSatisfaction } from "~~/src/services/user.jsx";
 </script>
 
 <template>
