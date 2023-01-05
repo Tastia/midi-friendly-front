@@ -28,32 +28,36 @@ export function useLunchGroupPoll(poll: MapLunchGroupPoll) {
       ]),
     ];
 
-    console.log({ restaurantIds });
+    return restaurantIds
+      .map((restaurantId) => ({
+        restaurant: mapGatewayApi?.restaurants.value.find(
+          (restaurant) => restaurant._id === restaurantId
+        ) as Restaurant,
+        voteCount: {
+          total: poll.votes.filter((vote) => vote.restaurant === restaurantId)
+            .length,
+          percentage: Math.round(
+            (poll.votes.filter((vote) => vote.restaurant === restaurantId)
+              .length /
+              poll.votes.length) *
+              100
+          ),
+        },
 
-    return restaurantIds.map((restaurantId) => ({
-      restaurant: mapGatewayApi?.restaurants.value.find(
-        (restaurant) => restaurant._id === restaurantId
-      ) as Restaurant,
-      voteCount: {
-        total: poll.votes.filter((vote) => vote.restaurant === restaurantId)
-          .length,
-        percentage: Math.round(
-          (poll.votes.filter((vote) => vote.restaurant === restaurantId)
-            .length /
-            poll.votes.length) *
-            100
-        ),
-      },
-
-      users: poll.votes
-        .filter((vote) => vote.restaurant === restaurantId)
-        .map(
-          (vote) =>
-            mapGatewayApi?.users.value.find(
-              (user) => user._id === vote.user
-            ) as MapUser
-        ),
-    }));
+        users: poll.votes
+          .filter((vote) => vote.restaurant === restaurantId)
+          .map(
+            (vote) =>
+              mapGatewayApi?.users.value.find(
+                (user) => user._id === vote.user
+              ) as MapUser
+          ),
+      })) // SORT BY NAME
+      .sort((a, b) => {
+        if (a.restaurant.name < b.restaurant.name) return -1;
+        if (a.restaurant.name > b.restaurant.name) return 1;
+        return 0;
+      });
   });
 
   const timeLeft = useTimer(poll.voteDeadline);

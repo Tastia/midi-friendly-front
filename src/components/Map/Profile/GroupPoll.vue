@@ -74,6 +74,22 @@ async function SetUserVote() {
 
     <div class="flex flex-col gap-4">
       <div class="flex flex-col gap-2">
+        <div class="flex items-center justify-between">
+          <span class="font-semibold">Temps restant</span>
+          <span class="font-semibold">{{ timeLeft }}</span>
+        </div>
+        <NProgress
+          type="line"
+          :percentage="timeLeftPercentage"
+          :show-indicator="false"
+          :color="timerProgressColor"
+          :height="10"
+          :border-radius="themeVars.borderRadius"
+          processing
+        />
+      </div>
+      <NDivider class="!m-0" />
+      <div class="flex flex-col gap-2">
         <li class="flex items-center justify-between">
           <b class="font-medium">Heure de fin du vote:</b>
           <span>{{ formatTimeHour(groupPoll.voteDeadline) }}</span>
@@ -125,22 +141,6 @@ async function SetUserVote() {
             :border-radius="themeVars.borderRadius"
           />
         </div>
-      </div>
-      <NDivider class="!m-0" />
-      <div class="flex flex-col gap-2">
-        <div class="flex items-center justify-between">
-          <span class="text-xs text-gray-500">Temps restant</span>
-          <span class="text-xs text-gray-500">{{ timeLeft }}</span>
-        </div>
-        <NProgress
-          type="line"
-          :percentage="timeLeftPercentage"
-          :show-indicator="false"
-          :color="timerProgressColor"
-          :height="16"
-          :border-radius="themeVars.borderRadius"
-          processing
-        />
       </div>
     </div>
   </NCard>
