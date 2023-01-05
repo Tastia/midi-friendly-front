@@ -41,18 +41,6 @@ export default defineNuxtConfig({
       }),
       PurgeIcons(),
     ],
-    server: {
-      fs: {
-        allow: [
-          "../../../PERSO/vue-onboarding/dist/v-onboarding.es.js",
-          "../../../PERSO/vue-onboarding/dist/v-onboarding.umd.js",
-          "../../../PERSO/vue-onboarding/dist/style.css",
-          "../../../PERSO/vue-onboarding/dist/*",
-          "../../../../PERSO/vue-onboarding/dist/",
-          "../../../../PERSO/vue-onboarding/dist/*",
-        ],
-      },
-    },
   },
   runtimeConfig: {
     public: {

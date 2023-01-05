@@ -14,6 +14,9 @@ ApiInstance.interceptors.request.use((config) => {
     ...((userStore.accessToken && {
       Authorization: `Bearer ${userStore.accessToken}`,
     }) as any),
+    ...(userStore.activeOrganization && {
+      organizationId: userStore.activeOrganization._id,
+    }),
   };
   return config;
 });
