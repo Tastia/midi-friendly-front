@@ -33,6 +33,9 @@ watch(
   },
   { immediate: true }
 );
+
+const chatGatewayApi = useChatGateway();
+provide(chatApiInjectionKey, chatGatewayApi);
 </script>
 
 <template>

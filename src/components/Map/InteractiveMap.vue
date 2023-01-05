@@ -26,9 +26,6 @@ const appStore = useAppStore();
 const mapGatewayApi = useMapGateway();
 provide(mapApiInjectionKey, mapGatewayApi);
 
-const chatGatewayApi = useChatGateway();
-provide(chatApiInjectionKey, chatGatewayApi);
-
 const GApiKey = import.meta.env.VITE_GOOGLE_API_KEY as string;
 const computedBoundaries = computed(() => ({
   north: props.orgaCoordinates.latitude + props.boundaries.latitude,

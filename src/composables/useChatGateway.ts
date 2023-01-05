@@ -1,4 +1,4 @@
-import { ChatGatewayEmittedEvents } from "./../types/chat";
+import { ChatGatewayEmittedEvents, ChatRoom } from "@/types/chat";
 import {
   ChatGatewayReceivedEvents,
   ChatMessage,
@@ -6,10 +6,12 @@ import {
 } from "@/types/chat";
 import io from "socket.io-client";
 import { GatewayEventResponse } from "@/types/mapGateway";
+import { c } from "naive-ui";
 
 export function useChatGateway() {
   const userStore = useUserStore();
   const client = io(`${import.meta.env.VITE_GATEWAY_URL}/chat` as string, {
+    forceNew: true,
     autoConnect: false,
     transportOptions: {
       polling: {
@@ -20,6 +22,8 @@ export function useChatGateway() {
       },
     },
   });
+
+  const rooms = ref<ChatRoom[]>([]);
 
   // TODO: FIX type inferrence on event dispatcher
   const [SubscribeToNewMessage, dispatchNewMessage] = useEventDispatcher<any>();
@@ -43,17 +47,21 @@ export function useChatGateway() {
     );
   }
 
-  function _disconnect() {
-    client.disconnect();
-  }
-
   onUnmounted(() => {
-    _disconnect();
+    client.disconnect();
   });
+
+  watch(
+    () => userStore.user,
+    (user) => (user ? client.connect() : client.disconnect()),
+    { immediate: true }
+  );
+
+  client.on("connect", () => console.log("connected"));
+  client.on("disconnect", () => console.log("disconnected"));
 
   return {
     SubscribeToNewMessage,
     SendMessage,
-    _disconnect,
   };
 }
