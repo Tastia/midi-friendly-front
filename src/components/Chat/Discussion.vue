@@ -17,7 +17,8 @@ type PendingChatMessage = {
 
 const props = withDefaults(
   defineProps<{
-    group: ParsedMapLunchGroup;
+    label: string;
+    roomId: string;
     drawerPosition?: "left" | "right";
   }>(),
   {
@@ -54,13 +55,13 @@ async function ScrollToBottom() {
 }
 
 const LoadRoomData = async () =>
-  (chatroom.value = await ChatController.getRoomData(props.group.chatRoom));
+  (chatroom.value = await ChatController.getRoomData(props.roomId));
 
 async function LoadMoreMessages() {
   try {
     isLoading.value = true;
     const newMessagesBatch = await ChatController.getRoomMessages(
-      props.group.chatRoom,
+      props.roomId,
       {
         limit: 20,
         offset: messages.value.filter(
@@ -93,7 +94,7 @@ async function SendMessage(message: ChatMessageDto["message"]) {
 
   const { success, messsage, data } = await chatGatewayApi.SendMessage({
     userId: userStore.user?._id as string,
-    roomId: props.group.chatRoom,
+    roomId: props.roomId,
     message,
   });
 
@@ -131,10 +132,10 @@ function HasSameAuthor(
 
 const cancelSubscription = chatGatewayApi?.SubscribeToNewMessage(
   (data: { roomId: string; message: ChatMessage2 }) => {
-    if (data.roomId === props.group.chatRoom) messages.value.push(data.message);
+    if (data.roomId === props.roomId) messages.value.push(data.message);
     ScrollToBottom();
   }
-);
+) as () => void;
 
 watch(
   () => isOpen.value,
@@ -167,7 +168,7 @@ onMounted(async () => {
             class="text-md text-primary font-black uppercase"
             style="max-width: 50%"
           >
-            {{ group.label }}
+            {{ label }}
           </NEllipsis>
           <NDivider vertical />
           <MapUserStack

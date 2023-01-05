@@ -214,9 +214,13 @@ async function DeleteGroup() {
       </template>
 
       <template #footer>
-        <ChatLunchGroup :group="group" :drawer-position="drawerPosition">
+        <ChatDiscussion
+          :label="group.label"
+          :room-id="group.chatRoom"
+          :drawer-position="drawerPosition"
+        >
           <NButton> OPEN CHAT </NButton>
-        </ChatLunchGroup>
+        </ChatDiscussion>
       </template>
 
       <div class="flex flex-col gap-10">

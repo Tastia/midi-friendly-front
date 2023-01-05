@@ -52,7 +52,7 @@ export function UserSatisfactionSchema(): FormSchema {
             ],
           },
           {
-            key: "question2_2",
+            key: "mostAppreciatedOther",
             label: "Autre",
             type: "textarea",
           },
@@ -61,7 +61,7 @@ export function UserSatisfactionSchema(): FormSchema {
       {
         fields: [
           {
-            key: "question4",
+            key: "solveProblem",
             label:
               "Est-ce que Midi Friendly résout une problématique du quotidien ?",
             type: "radio",

@@ -3,6 +3,9 @@ import { ChatRoom } from "@/types/chat";
 import { ApiInstance } from "@/api/instance";
 
 export const ChatController = {
+  getUserRooms: (params: { limit: number; offset: number }) =>
+    ApiInstance.get<ChatRoom[]>("/chat", { params }).then((res) => res.data),
+
   getRoomData: (chatRoomId: string) =>
     ApiInstance.get<ChatRoom>(`/chat/${chatRoomId}`).then((res) => res.data),
 

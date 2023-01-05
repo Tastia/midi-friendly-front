@@ -31,6 +31,8 @@ export type ChatRoom = {
   _id: string;
   users: User[];
   messages: ChatMessage[];
+  lunchGroup?: { label: string };
+  lunchGroupPoll?: { label: string };
   createdAt: string;
   updatedAt: string;
 };
@@ -42,6 +44,9 @@ export type ChatMessageDto = {
 };
 
 export enum ChatGatewayReceivedEvents {
+  setChatRooms = "setChatRooms",
+  addChatRoom = "addChatRoom",
+  removeChatRoom = "removeChatRoom",
   messageReceived = "addNewMessage",
 }
 
