@@ -42,10 +42,11 @@ async function LoadRooms() {
   isLoading.value = false;
 }
 
-function GetRoomUsers(userIds: string[]) {
-  return (
-    chatApi?.users.value.filter((user) => userIds.includes(user._id)) ?? []
-  );
+function OpenRoom(roomId: string) {
+  showMenu.value = false;
+  rooms.value
+    .find((room) => room._id === roomId)
+    ?.lastMessage?.readBy?.push(userStore?.user?._id ?? "");
 }
 
 function GetUserFullName(source: string | User) {
@@ -67,11 +68,9 @@ function GetUserAvatar(source: string | User) {
   };
 }
 
-const cancelSubscription = chatApi?.SubscribeToNewMessage(
+const cancelSubscriptionMessage = chatApi?.SubscribeToNewMessage(
   (data: { roomId: string; message: ChatMessage }) => {
-    console.log("New message", data);
     if (rooms.value.some((room) => room._id === data.roomId)) {
-      console.log("Update room");
       rooms.value = [
         {
           ...rooms.value.find((room) => room._id === data.roomId),
@@ -83,8 +82,15 @@ const cancelSubscription = chatApi?.SubscribeToNewMessage(
   }
 ) as () => void;
 
+const cancelSubscriptionRoom = chatApi?.SubscribeToNewRoom((room: ChatRoom) => {
+  rooms.value = [room, ...rooms.value];
+}) as () => void;
+
 onMounted(() => LoadRooms());
-onUnmounted(() => cancelSubscription());
+onUnmounted(() => {
+  cancelSubscriptionMessage();
+  cancelSubscriptionRoom();
+});
 </script>
 
 <template>
@@ -137,7 +143,7 @@ onUnmounted(() => cancelSubscription());
           <div
             class="cursor-pointer rounded hover:bg-gray-700/8 dark:hover:bg-gray-200/8 transition-all ease-in-out duration-100"
             style="padding: 10px"
-            @click="showMenu = false"
+            @click="OpenRoom(room._id)"
           >
             <div class="flex items-center gap-4 w-full">
               <NAvatar v-if="!room?.lastMessage" round size="large">

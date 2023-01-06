@@ -37,6 +37,12 @@ const messageElements = ref<HTMLElement[]>([]);
 
 const chatroom = ref<ChatRoom>();
 const messages = ref<Array<ChatMessage2 | PendingChatMessage>>([]);
+const roomUsers = computed(
+  () =>
+    chatroom.value?.users.map((userId) =>
+      chatGatewayApi?.users.value.find((user) => user._id === userId)
+    ) ?? []
+);
 
 useInfiniteScroll(messagesContainer, LoadMoreMessages, {
   direction: "top",
@@ -48,7 +54,6 @@ useInfiniteScroll(messagesContainer, LoadMoreMessages, {
 async function ScrollToBottom() {
   await nextTick();
   await sleep(10);
-  console.log("Scroll to bottom", messageElements.value.length);
   messageElements.value[messageElements.value.length - 1]?.scrollIntoView?.({
     behavior: "smooth",
   });
@@ -141,6 +146,7 @@ const cancelSubscription = chatGatewayApi?.SubscribeToNewMessage(
     if (data.roomId === props.roomId && !data.self)
       messages.value.push(data.message);
     ScrollToBottom();
+    if (isOpen.value) ChatController.markRoomMessagesAsRead(props.roomId);
   }
 ) as () => void;
 
@@ -183,7 +189,7 @@ onMounted(async () => {
           </NEllipsis>
           <NDivider vertical />
           <MapUserStack
-            :users="((chatroom?.users ?? []) as unknown as GatewayUser[])"
+            :users="((roomUsers) as unknown as GatewayUser[])"
             size="small"
           />
         </div>

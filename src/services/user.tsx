@@ -6,6 +6,7 @@ export function UserSatisfactionSchema(): FormSchema {
     gridSize: 8,
     fieldSize: 8,
     requiredMessage: "Ce champ est obligatoire",
+    stepperLayout: "full",
     steps: [
       {
         fields: [
@@ -120,7 +121,6 @@ export async function CollectUserSatisfaction() {
     );
 
     if (!isCompleted) return false;
-    console.log(formData);
   } catch (error) {
     console.error(error);
   }

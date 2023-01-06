@@ -148,7 +148,6 @@ export function useMapGateway() {
     LunchGroupReceivedEvents.removeUserFromGroup,
     ({ groupId, userId }: { groupId: string; userId: string }) => {
       const group = lunchGroups.value.find((group) => group._id === groupId);
-      console.log({ group, groupId, userId });
       lunchGroups.value = lunchGroups.value.map((group) =>
         group._id === groupId
           ? ({

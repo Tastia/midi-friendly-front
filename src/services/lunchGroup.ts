@@ -99,7 +99,6 @@ export function LunchGroupPollFormSchema(): FormSchema {
         size: 9,
         dependencies: ["allowedRestaurants"],
         options: async (dependencies) => {
-          console.log("allowed", dependencies?.allowedRestaurants);
           const restaurants = await GetRestaurants();
           if (!dependencies?.allowedRestaurants?.length ?? false)
             return restaurants;

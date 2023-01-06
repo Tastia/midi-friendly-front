@@ -156,7 +156,6 @@ const steps: OnboardingStep[] = [
         await DispatchOnboardingEvent(OnboardingEvents.openRestaurantProfile);
         await nextTick();
         await sleep(2000);
-        console.log("afterStep, timeout ok");
       },
     },
   },

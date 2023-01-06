@@ -58,10 +58,6 @@ const cancelSubscription = SubscribeOnboardingEvent(
   }
 ) as () => void;
 onUnmounted(() => cancelSubscription());
-
-onMounted(() => {
-  console.log(formApi);
-});
 </script>
 
 <template>

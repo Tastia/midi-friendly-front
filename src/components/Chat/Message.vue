@@ -11,7 +11,7 @@ defineProps<{
     <NEl
       class="p-2.5 rounded-md w-full"
       :class="{
-        'bg-gray-400 dark:bg-gray-600': !isOwner,
+        'bg-gray-200 dark:bg-gray-700/30': !isOwner,
         'bg-primary': isOwner,
       }"
     >

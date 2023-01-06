@@ -1,3 +1,4 @@
+import { ChatRoom } from "./../types/chat";
 import { ChatGatewayEmittedEvents } from "@/types/chat";
 import {
   ChatGatewayReceivedEvents,
@@ -26,6 +27,7 @@ export function useChatGateway() {
 
   // TODO: FIX type inferrence on event dispatcher
   const [SubscribeToNewMessage, dispatchNewMessage] = useEventDispatcher<any>();
+  const [SubscribeToNewRoom, dispatchNewRoom] = useEventDispatcher<any>();
 
   client.on(
     ChatGatewayReceivedEvents.setUserList,
@@ -55,6 +57,11 @@ export function useChatGateway() {
     }
   );
 
+  client.on(
+    ChatGatewayReceivedEvents.addChatRoom,
+    ({ room }: { room: ChatRoom }) => dispatchNewRoom(room)
+  );
+
   function SendMessage(
     data: ChatMessageDto
   ): Promise<{ success: boolean; message: ChatMessage }> {
@@ -78,13 +85,11 @@ export function useChatGateway() {
     { immediate: true }
   );
 
-  client.on("connect", () => console.log("connected"));
-  client.on("disconnect", () => console.log("disconnected"));
-
   return {
     users,
     dispatchNewMessage,
     SubscribeToNewMessage,
+    SubscribeToNewRoom,
     SendMessage,
   };
 }
