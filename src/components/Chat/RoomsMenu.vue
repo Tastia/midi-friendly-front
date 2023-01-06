@@ -18,8 +18,7 @@ const nbOfUnreadMessages = computed(
     rooms.value
       .map(
         (room) =>
-          !room.lastMessage?.readBy?.includes(userStore?.user?._id ?? "") ??
-          false
+          !room.lastMessage?.readBy?.includes(userStore?.user?._id ?? "")
       )
       .filter(Boolean).length
 );
@@ -140,7 +139,7 @@ onUnmounted(() => cancelSubscription());
             style="padding: 10px"
             @click="showMenu = false"
           >
-            <div class="flex items-center gap-4">
+            <div class="flex items-center gap-4 w-full">
               <NAvatar v-if="!room?.lastMessage" round size="large">
                 {{ room.users.length }}
               </NAvatar>
@@ -176,6 +175,17 @@ onUnmounted(() => cancelSubscription());
                   <i>Aucun message</i>
                 </span>
               </div>
+              <NBadge
+                v-if="
+                  !(room?.lastMessage?.readBy ?? []).includes(
+                    userStore.user?._id ?? ''
+                  )
+                "
+                processing
+                dot
+                type="info"
+                class="ml-auto"
+              />
             </div>
           </div>
         </ChatDiscussion>
