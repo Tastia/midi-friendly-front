@@ -1,15 +1,18 @@
 <script setup lang="ts">
-import { MapUser } from "~~/src/types/mapGateway";
+import { GatewayUser } from "~~/src/types/mapGateway";
 import { useThemeVars } from "naive-ui";
 
+const userStore = useUserStore();
 const themeVars = useThemeVars();
 const props = withDefaults(
   defineProps<{
-    users: MapUser[];
-    size: "small" | "medium" | "large";
+    users: GatewayUser[];
+    size?: "small" | "medium" | "large" | number;
+    maxDisplayed?: number;
   }>(),
   {
-    size: "medium",
+    maxDisplayed: 3,
+    size: 40,
   }
 );
 
@@ -24,13 +27,17 @@ function mapUsersAvatar(users: typeof props.users) {
   return users.map((user) => ({
     name: `${user.firstName} ${user.lastName}`,
     src: user?.avatar ?? "",
-    isOnline: user.isOnline,
+    isOnline: user.isOnline || userStore.user?._id === user._id,
   }));
 }
 </script>
 
 <template>
-  <n-avatar-group :options="mapUsersAvatar(users)" :size="40" :max="3">
+  <n-avatar-group
+    :options="mapUsersAvatar(users)"
+    :size="size"
+    :max="maxDisplayed"
+  >
     <template #avatar="{ option: { name, src, isOnline } }">
       <n-tooltip>
         <template #trigger>

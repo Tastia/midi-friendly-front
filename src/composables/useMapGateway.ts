@@ -8,7 +8,7 @@ import {
   LunchGroupReceivedEvents,
   MapLunchGroup,
   MapLunchGroupPoll,
-  MapUser,
+  GatewayUser,
 } from "@/types/mapGateway";
 
 export function useMapGateway() {
@@ -24,7 +24,7 @@ export function useMapGateway() {
     },
   });
 
-  const users = ref<MapUser[]>([]);
+  const users = ref<GatewayUser[]>([]);
   const restaurants = ref<Restaurant[]>([]);
   const lunchGroups = ref<MapLunchGroup[]>([]);
   const lunchGroupPolls = ref<MapLunchGroupPoll[]>([]);
@@ -36,6 +36,11 @@ export function useMapGateway() {
         await RestaurantController.getOrganizationRestaurants(
           userStore.activeOrganization?._id as string
         ).then((data) => data.restaurants))
+  );
+
+  client.on(
+    LunchGroupReceivedEvents.setUserList,
+    ({ users: userList }: { users: GatewayUser[] }) => (users.value = userList)
   );
 
   client.on(
@@ -56,12 +61,7 @@ export function useMapGateway() {
 
   client.on(
     LunchGroupReceivedEvents.addUserToOrganization,
-    ({ user }: { user: MapUser }) => users.value.push(user)
-  );
-
-  client.on(
-    LunchGroupReceivedEvents.setUserList,
-    ({ users: userList }: { users: MapUser[] }) => (users.value = userList)
+    ({ user }: { user: GatewayUser }) => users.value.push(user)
   );
 
   client.on(

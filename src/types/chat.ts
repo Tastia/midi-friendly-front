@@ -12,6 +12,7 @@ export type ChatMessage = {
     type: `${MessageType}`;
     content: string;
   };
+  readBy: string[];
   createdAt: string;
   updatedat: string;
 };
@@ -29,10 +30,11 @@ export type ChatMessage2 = {
 
 export type ChatRoom = {
   _id: string;
-  users: User[];
+  users: string[];
   messages: ChatMessage[];
   lunchGroup?: { label: string };
   lunchGroupPoll?: { label: string };
+  lastMessage?: ChatMessage;
   createdAt: string;
   updatedAt: string;
 };
@@ -48,6 +50,9 @@ export enum ChatGatewayReceivedEvents {
   addChatRoom = "addChatRoom",
   removeChatRoom = "removeChatRoom",
   messageReceived = "addNewMessage",
+  setUserList = "setUserList",
+  userConnected = "userConnected",
+  userDisconnected = "userDisconnected",
 }
 
 export enum ChatGatewayEmittedEvents {

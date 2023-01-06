@@ -1,5 +1,5 @@
 import { Restaurant } from "@/types/restaurant";
-import { MapUser } from "@/types/mapGateway";
+import { GatewayUser } from "@/types/mapGateway";
 import { MapLunchGroupPoll } from "@/types/mapGateway";
 import { useTimer, useTimerPercentage } from "./useTimer";
 
@@ -7,7 +7,7 @@ export function useLunchGroupPoll(poll: MapLunchGroupPoll) {
   const mapGatewayApi = inject(mapApiInjectionKey);
   const userStore = useUserStore();
 
-  const users = computed<MapUser[]>(
+  const users = computed<GatewayUser[]>(
     () =>
       poll.votes
         .map(
@@ -15,7 +15,7 @@ export function useLunchGroupPoll(poll: MapLunchGroupPoll) {
             mapGatewayApi?.users.value.find((user) => user._id === vote.user) ??
             null
         )
-        .filter((user) => user !== null) as MapUser[]
+        .filter((user) => user !== null) as GatewayUser[]
   );
 
   const voteCount = computed<number>(() => poll.votes.length);
@@ -50,7 +50,7 @@ export function useLunchGroupPoll(poll: MapLunchGroupPoll) {
             (vote) =>
               mapGatewayApi?.users.value.find(
                 (user) => user._id === vote.user
-              ) as MapUser
+              ) as GatewayUser
           ),
       })) // SORT BY NAME
       .sort((a, b) => {

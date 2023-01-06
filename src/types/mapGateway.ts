@@ -31,7 +31,7 @@ export enum LunchGroupReceivedEvents {
   closeGroupPoll = "CloseGroupPoll",
 }
 
-export type MapUser = Omit<
+export type GatewayUser = Omit<
   User,
   "organizations" | "credentials.password" | "credentials.userId"
 > & {

@@ -4,7 +4,7 @@ import { ChatMessage2, ChatMessageDto, ChatRoom } from "@/types/chat";
 import { generateUUID } from "@/utils/generator/uuid";
 import { User } from "@/types/user";
 import { sleep } from "seemly";
-import { MapUser } from "@/types/mapGateway";
+import { GatewayUser } from "@/types/mapGateway";
 
 type PendingChatMessage = {
   _id: string;
@@ -92,24 +92,30 @@ async function SendMessage(message: ChatMessageDto["message"]) {
 
   ScrollToBottom();
 
-  const { success, messsage, data } = await chatGatewayApi.SendMessage({
+  const response = await chatGatewayApi.SendMessage({
     userId: userStore.user?._id as string,
     roomId: props.roomId,
     message,
   });
 
-  if (success)
+  if (response.success) {
+    chatGatewayApi.dispatchNewMessage({
+      roomId: props.roomId,
+      message: response.message,
+      self: true,
+    });
+
     messages.value = messages.value.map((message) =>
       message._id !== temporaryId
         ? message
         : {
             ...message,
             pending: false,
-            _id: data?._id as string,
+            _id: response.message?._id as string,
           }
     );
-  else {
-    console.error(`Send message failed: ${messsage}`);
+  } else {
+    // console.error(`Send message failed: ${messsage}`);
     messages.value = messages.value.filter(
       (message) => message._id !== temporaryId
     );
@@ -131,15 +137,20 @@ function HasSameAuthor(
 }
 
 const cancelSubscription = chatGatewayApi?.SubscribeToNewMessage(
-  (data: { roomId: string; message: ChatMessage2 }) => {
-    if (data.roomId === props.roomId) messages.value.push(data.message);
+  (data: { roomId: string; message: ChatMessage2; self: boolean }) => {
+    if (data.roomId === props.roomId && !data.self)
+      messages.value.push(data.message);
     ScrollToBottom();
   }
 ) as () => void;
 
 watch(
   () => isOpen.value,
-  (open) => open && ScrollToBottom()
+  (open) => {
+    if (!open) return;
+    ScrollToBottom();
+    ChatController.markRoomMessagesAsRead(props.roomId);
+  }
 );
 
 onUnmounted(() => cancelSubscription?.());
@@ -172,7 +183,7 @@ onMounted(async () => {
           </NEllipsis>
           <NDivider vertical />
           <MapUserStack
-            :users="((chatroom?.users ?? []) as unknown as MapUser[])"
+            :users="((chatroom?.users ?? []) as unknown as GatewayUser[])"
             size="small"
           />
         </div>

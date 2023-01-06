@@ -16,4 +16,9 @@ export const ChatController = {
     ApiInstance.get<ChatMessage2[]>(`/chat/${chatRoomId}/messages`, {
       params,
     }).then((res) => res.data),
+
+  markRoomMessagesAsRead: (chatRoomId: string) =>
+    ApiInstance.post(`/chat/mark-room-as-read/${chatRoomId}`).then(
+      (res) => res.data
+    ),
 };

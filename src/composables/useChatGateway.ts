@@ -1,12 +1,11 @@
-import { ChatGatewayEmittedEvents, ChatRoom } from "@/types/chat";
+import { ChatGatewayEmittedEvents } from "@/types/chat";
 import {
   ChatGatewayReceivedEvents,
   ChatMessage,
   ChatMessageDto,
 } from "@/types/chat";
 import io from "socket.io-client";
-import { GatewayEventResponse } from "@/types/mapGateway";
-import { c } from "naive-ui";
+import { GatewayEventResponse, GatewayUser } from "@/types/mapGateway";
 
 export function useChatGateway() {
   const userStore = useUserStore();
@@ -23,10 +22,31 @@ export function useChatGateway() {
     },
   });
 
-  const rooms = ref<ChatRoom[]>([]);
+  const users = ref<GatewayUser[]>([]);
 
   // TODO: FIX type inferrence on event dispatcher
   const [SubscribeToNewMessage, dispatchNewMessage] = useEventDispatcher<any>();
+
+  client.on(
+    ChatGatewayReceivedEvents.setUserList,
+    ({ users: userList }: { users: GatewayUser[] }) => (users.value = userList)
+  );
+
+  client.on(
+    ChatGatewayReceivedEvents.userConnected,
+    ({ userId }: { userId: string }) =>
+      (users.value = users.value.map((user) =>
+        user._id === userId ? { ...user, isOnline: true } : user
+      ))
+  );
+
+  client.on(
+    ChatGatewayReceivedEvents.userDisconnected,
+    ({ userId }: { userId: string }) =>
+      (users.value = users.value.map((user) =>
+        user._id === userId ? { ...user, isOnline: false } : user
+      ))
+  );
 
   client.on(
     ChatGatewayReceivedEvents.messageReceived,
@@ -37,12 +57,13 @@ export function useChatGateway() {
 
   function SendMessage(
     data: ChatMessageDto
-  ): Promise<GatewayEventResponse<ChatMessage>> {
+  ): Promise<{ success: boolean; message: ChatMessage }> {
     return new Promise((resolve) =>
       client.emit(
         ChatGatewayEmittedEvents.sendMessage,
         data,
-        (response: GatewayEventResponse<ChatMessage>) => resolve(response)
+        (response: { success: boolean; message: ChatMessage }) =>
+          resolve(response)
       )
     );
   }
@@ -61,6 +82,8 @@ export function useChatGateway() {
   client.on("disconnect", () => console.log("disconnected"));
 
   return {
+    users,
+    dispatchNewMessage,
     SubscribeToNewMessage,
     SendMessage,
   };

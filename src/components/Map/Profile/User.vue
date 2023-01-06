@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { MapUser } from "@/types/mapGateway";
+import { GatewayUser } from "@/types/mapGateway";
 import { useThemeVars } from "naive-ui";
 
 const themeVars = useThemeVars();
-withDefaults(defineProps<{ user: MapUser; highlight: boolean }>(), {
+withDefaults(defineProps<{ user: GatewayUser; highlight: boolean }>(), {
   highlight: false,
 });
 </script>

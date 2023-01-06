@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { MapUser } from "@/types/mapGateway";
+import { GatewayUser } from "@/types/mapGateway";
 import { OnboardingEvents } from "@/types/onboarding";
 
 const showMenu = ref<boolean>(false);

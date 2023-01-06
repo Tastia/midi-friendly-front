@@ -1,5 +1,5 @@
 import { ComputedRef } from "vue";
-import { MapUser } from "@/types/mapGateway";
+import { GatewayUser } from "@/types/mapGateway";
 
 export interface ParsedMapLunchGroup {
   _id: string;
@@ -8,8 +8,8 @@ export interface ParsedMapLunchGroup {
   restaurant: string;
   meetingTime: string;
   userSlots?: number;
-  owner: MapUser;
-  users: MapUser[];
+  owner: GatewayUser;
+  users: GatewayUser[];
   chatRoom: string;
   createdAt: string;
   updatedAt: string;
@@ -34,10 +34,10 @@ export function useRestaurantLunchGroups(
             (userId) =>
               gatewayApi?.users.value.find((user) => user._id === userId) ??
               userId
-          ) as MapUser[],
+          ) as GatewayUser[],
           owner: gatewayApi?.users.value.find(
             (user) => user._id === group.owner
-          ) as MapUser,
+          ) as GatewayUser,
         } as ParsedMapLunchGroup)
     );
   });
