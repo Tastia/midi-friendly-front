@@ -69,7 +69,7 @@ function GetUserAvatar(source: string | User) {
 }
 
 const cancelSubscriptionMessage = chatApi?.SubscribeToNewMessage(
-  (data: { roomId: string; message: ChatMessage }) => {
+  async (data: { roomId: string; message: ChatMessage }) => {
     if (rooms.value.some((room) => room._id === data.roomId)) {
       rooms.value = [
         {
@@ -78,6 +78,9 @@ const cancelSubscriptionMessage = chatApi?.SubscribeToNewMessage(
         } as ChatRoom,
         ...rooms.value.filter((room) => room._id !== data.roomId),
       ];
+    } else {
+      const room = await ChatController.getRoomData(data.roomId);
+      rooms.value = [room, ...rooms.value];
     }
   }
 ) as () => void;
