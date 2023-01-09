@@ -14,13 +14,11 @@ import {
 export function useMapGateway() {
   const userStore = useUserStore();
   const client = io(`${import.meta.env.VITE_GATEWAY_URL}/map` as string, {
-    transportOptions: {
-      polling: {
-        extraHeaders: {
-          Authorization: `Bearer ${userStore.accessToken}`,
-          organizationId: userStore.activeOrganization?._id,
-        },
-      },
+    auth: (callback) => {
+      callback({
+        accessToken: userStore.accessToken,
+        organizationId: userStore.activeOrganization?._id,
+      });
     },
   });
 

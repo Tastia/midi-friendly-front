@@ -13,14 +13,11 @@ export function useChatGateway() {
   const client = io(`${import.meta.env.VITE_GATEWAY_URL}/chat` as string, {
     forceNew: true,
     autoConnect: false,
-    transportOptions: {
-      polling: {
-        extraHeaders: {
-          Authorization: `Bearer ${userStore.accessToken}`,
-          organizationId: userStore.activeOrganization?._id,
-        },
-      },
-    },
+    auth: (callback) =>
+      callback({
+        accessToken: userStore.accessToken,
+        organizationId: userStore.activeOrganization?._id,
+      }),
   });
 
   const users = ref<GatewayUser[]>([]);
@@ -81,7 +78,7 @@ export function useChatGateway() {
 
   watch(
     () => userStore.user,
-    (user) => (user ? client.connect() : client.disconnect()),
+    (user) => (user ? client.disconnect().connect() : client.disconnect()),
     { immediate: true }
   );
 
