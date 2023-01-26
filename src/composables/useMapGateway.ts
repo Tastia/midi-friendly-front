@@ -1,3 +1,4 @@
+import { CreateGroupPollDto } from "./../types/mapGateway";
 import { Restaurant } from "@/types/restaurant";
 import { LunchGroup } from "@/types/lunchGroups";
 import io from "socket.io-client";
@@ -6,27 +7,26 @@ import {
   LunchGroupEmittedEvents,
   LunchGroupReceivedEvents,
   MapLunchGroup,
-  MapUser,
+  MapLunchGroupPoll,
+  GatewayUser,
 } from "@/types/mapGateway";
-import { useMessage } from "naive-ui";
 
 export function useMapGateway() {
-  const message = useMessage();
   const userStore = useUserStore();
-  const client = io(import.meta.env.VITE_GATEWAY_URL as string, {
-    transportOptions: {
-      polling: {
-        extraHeaders: {
-          Authorization: `Bearer ${userStore.accessToken}`,
-          organizationId: userStore.activeOrganization?._id,
-        },
-      },
+  const client = io(`${import.meta.env.VITE_GATEWAY_URL}/map` as string, {
+    auth: (callback) => {
+      callback({
+        accessToken: userStore.accessToken,
+        organizationId: userStore.activeOrganization?._id,
+      });
     },
   });
 
-  const users = ref<MapUser[]>([]);
+  const users = ref<GatewayUser[]>([]);
   const restaurants = ref<Restaurant[]>([]);
   const lunchGroups = ref<MapLunchGroup[]>([]);
+  const lunchGroupPolls = ref<MapLunchGroupPoll[]>([]);
+  const pendingOperation = ref<`${LunchGroupEmittedEvents}` | null>();
 
   onMounted(
     async () =>
@@ -34,6 +34,11 @@ export function useMapGateway() {
         await RestaurantController.getOrganizationRestaurants(
           userStore.activeOrganization?._id as string
         ).then((data) => data.restaurants))
+  );
+
+  client.on(
+    LunchGroupReceivedEvents.setUserList,
+    ({ users: userList }: { users: GatewayUser[] }) => (users.value = userList)
   );
 
   client.on(
@@ -53,13 +58,54 @@ export function useMapGateway() {
   );
 
   client.on(
-    LunchGroupReceivedEvents.setUserList,
-    ({ users: userList }: { users: MapUser[] }) => (users.value = userList)
+    LunchGroupReceivedEvents.addUserToOrganization,
+    ({ user }: { user: GatewayUser }) => users.value.push(user)
   );
 
   client.on(
     LunchGroupReceivedEvents.setGroupList,
     ({ groups }: { groups: MapLunchGroup[] }) => (lunchGroups.value = groups)
+  );
+
+  client.on(
+    LunchGroupReceivedEvents.setGroupPollList,
+    ({ groups }: { groups: MapLunchGroupPoll[] }) =>
+      (lunchGroupPolls.value = groups)
+  );
+
+  client.on(
+    LunchGroupReceivedEvents.addGroupPoll,
+    ({ groupPoll }: { groupPoll: MapLunchGroupPoll }) =>
+      lunchGroupPolls.value.push(groupPoll)
+  );
+
+  client.on(
+    LunchGroupReceivedEvents.addGroupPollEntry,
+    (data: { pollId: string; vote: { user: string; restaurant: string } }) => {
+      const groupPoll = lunchGroupPolls.value.find(
+        (group) => group._id === data.pollId
+      );
+      if (!groupPoll) return;
+
+      if (!groupPoll.votes.some((vote) => vote.user === data.vote.user))
+        groupPoll.votes.push(data.vote);
+      else
+        groupPoll.votes = groupPoll.votes.reduce(
+          (acc: Array<{ restaurant: string; user: string }>, vote) => {
+            return [
+              ...acc,
+              ...[vote.user === data.vote.user ? data.vote : vote],
+            ];
+          },
+          []
+        );
+    }
+  );
+
+  client.on(
+    LunchGroupReceivedEvents.closeGroupPoll,
+    (data: { pollId: string }) =>
+      lunchGroupPolls.value.filter((group) => group._id !== data.pollId)
   );
 
   client.on(
@@ -100,7 +146,6 @@ export function useMapGateway() {
     LunchGroupReceivedEvents.removeUserFromGroup,
     ({ groupId, userId }: { groupId: string; userId: string }) => {
       const group = lunchGroups.value.find((group) => group._id === groupId);
-      console.log({ group, groupId, userId });
       lunchGroups.value = lunchGroups.value.map((group) =>
         group._id === groupId
           ? ({
@@ -115,9 +160,10 @@ export function useMapGateway() {
   function CreateGroup(
     group: Omit<
       MapLunchGroup,
-      "_id" | "owner" | "users" | "createdAt" | "updatedAt"
+      "_id" | "owner" | "users" | "createdAt" | "updatedAt" | "chatRoom"
     >
   ) {
+    pendingOperation.value = LunchGroupEmittedEvents.createGroup;
     const { setSuccess, setError } = useActionNotification(
       "Création du groupe..."
     );
@@ -125,6 +171,7 @@ export function useMapGateway() {
       LunchGroupEmittedEvents.createGroup,
       group,
       (res: GatewayEventResponse) => {
+        pendingOperation.value = null;
         if (res.success) setSuccess("Groupe créé");
         else {
           setError("Une erreur est survenue, veuillez réessayer");
@@ -138,6 +185,7 @@ export function useMapGateway() {
     groupId: string;
     groupData: Omit<LunchGroup, "_id" | "owner" | "users" | "restaurant">;
   }) {
+    pendingOperation.value = LunchGroupEmittedEvents.updateGroup;
     const { setSuccess, setError } = useActionNotification(
       "Mise à jour du groupe..."
     );
@@ -145,6 +193,7 @@ export function useMapGateway() {
       LunchGroupEmittedEvents.updateGroup,
       group,
       (res: GatewayEventResponse) => {
+        pendingOperation.value = null;
         if (res.success) setSuccess("Groupe mis à jour");
         else {
           setError("Une erreur est survenue, veuillez réessayer");
@@ -155,6 +204,7 @@ export function useMapGateway() {
   }
 
   function DeleteGroup(groupId: string) {
+    pendingOperation.value = LunchGroupEmittedEvents.deleteGroup;
     const { setSuccess, setError } = useActionNotification(
       "Suppression du groupe..."
     );
@@ -162,6 +212,7 @@ export function useMapGateway() {
       LunchGroupEmittedEvents.deleteGroup,
       { groupId },
       (res: GatewayEventResponse) => {
+        pendingOperation.value = null;
         if (res.success) setSuccess("Groupe supprimé");
         else {
           setError("Une erreur est survenue, veuillez réessayer");
@@ -172,12 +223,14 @@ export function useMapGateway() {
   }
 
   function JoinGroup(groupId: string) {
+    pendingOperation.value = LunchGroupEmittedEvents.joinGroup;
     const { setError, setSuccess } =
       useActionNotification("Ajout au groupe...");
     client.emit(
       LunchGroupEmittedEvents.joinGroup,
       { groupId },
       (res: GatewayEventResponse) => {
+        pendingOperation.value = null;
         if (res.success) setSuccess("Groupe rejoint");
         else {
           setError("Une erreur est survenue, veuillez réessayer");
@@ -188,6 +241,7 @@ export function useMapGateway() {
   }
 
   function LeaveGroup(groupId: string) {
+    pendingOperation.value = LunchGroupEmittedEvents.leaveGroup;
     const { setSuccess, setError } = useActionNotification(
       "Sortie du groupe..."
     );
@@ -195,6 +249,7 @@ export function useMapGateway() {
       LunchGroupEmittedEvents.leaveGroup,
       { groupId },
       (res: GatewayEventResponse) => {
+        pendingOperation.value = null;
         if (res.success) setSuccess("Groupe quitté");
         else {
           setError("Une erreur est survenue, veuillez réessayer");
@@ -204,6 +259,51 @@ export function useMapGateway() {
     );
   }
 
+  function CreateGroupPoll(groupData: CreateGroupPollDto) {
+    pendingOperation.value = LunchGroupEmittedEvents.createGroupPoll;
+    const { setSuccess, setError } = useActionNotification(
+      "Création du groupe par vote en cours..."
+    );
+    client.emit(
+      LunchGroupEmittedEvents.createGroupPoll,
+      groupData,
+      (res: GatewayEventResponse) => {
+        pendingOperation.value = null;
+        if (res.success) setSuccess("Groupe par vote créé");
+        else {
+          setError(
+            res?.messsage ?? "Une erreur est survenue, veuillez réessayer"
+          );
+          console.error(res?.messsage ?? "Unknown error");
+        }
+      }
+    );
+  }
+
+  function SaveUserPollVote(data: { pollId: string; restaurantId: string }) {
+    pendingOperation.value = LunchGroupEmittedEvents.voteGroupPoll;
+    const { setSuccess, setError } = useActionNotification(
+      "Enregistrement de votre vote en cours..."
+    );
+
+    client.emit(
+      LunchGroupEmittedEvents.voteGroupPoll,
+      data,
+      (response: GatewayEventResponse) => {
+        pendingOperation.value = null;
+        if (response.success) setSuccess("Vote enregistré");
+        else {
+          setError(
+            response?.messsage ?? "Une erreur est survenue, veuillez réessayer"
+          );
+          console.error(response?.messsage ?? "Unknown error");
+        }
+      }
+    );
+  }
+
+  // function Place
+
   onUnmounted(() => {
     client.disconnect();
   });
@@ -211,11 +311,15 @@ export function useMapGateway() {
   return {
     users,
     lunchGroups,
+    lunchGroupPolls,
     restaurants,
+    pendingOperation,
     CreateGroup,
     UpdateGroup,
     DeleteGroup,
     JoinGroup,
     LeaveGroup,
+    CreateGroupPoll,
+    SaveUserPollVote,
   };
 }

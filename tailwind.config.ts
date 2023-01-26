@@ -7,7 +7,7 @@ module.exports = {
         layout: "calc(100vh - 4rem)",
       },
       colors: {
-        'primary': '#F18669',
+        primary: "#F18669",
       },
     },
   },

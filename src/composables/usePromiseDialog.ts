@@ -8,6 +8,7 @@ interface DialogOptions {
   positiveText?: string;
   negativeText?: string;
   closable?: boolean;
+  style?: string | Record<string, string>;
 }
 
 export const useConfirmDialog = ({
@@ -16,6 +17,7 @@ export const useConfirmDialog = ({
   content,
   positiveText = "Oui",
   negativeText = "Non",
+  style = "",
 }: DialogOptions) =>
   new Promise((resolve, reject) => {
     const { dialogApi } = useReactifiedApi();
@@ -28,5 +30,6 @@ export const useConfirmDialog = ({
       onNegativeClick: () => resolve(false),
       onClose: () => resolve(false),
       onMaskClick: () => resolve(false),
+      style: { zIndex: 20000 },
     });
   });

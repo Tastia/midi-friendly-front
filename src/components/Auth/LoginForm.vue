@@ -22,13 +22,18 @@ const formSchema: FormSchema = {
   fieldSize: 8,
   fields: [
     {
-      label: "Email address",
+      label: "Adresse email",
       key: "email",
       type: "text",
       size: 8,
       required: true,
     },
-    { label: "Password", key: "password", type: "password", required: true },
+    {
+      label: "Mot de passe",
+      key: "password",
+      type: "password",
+      required: true,
+    },
   ],
 };
 </script>

@@ -2,12 +2,16 @@
 import { CustomMarker } from "vue3-google-map";
 import { NBadge, useThemeVars } from "naive-ui";
 import { Restaurant } from "@/types/restaurant";
+import { OnboardingEvents } from "@/types/onboarding";
 
-const props = defineProps<{ restaurant: Restaurant }>();
+const props = defineProps<{ restaurant: Restaurant; index: number }>();
 
 const userStore = useUserStore();
 const themeVars = useThemeVars();
 const showProfile = ref<boolean>(false);
+
+const markerElement = ref<HTMLElement>();
+const isHovered = useElementHover(markerElement);
 
 const lunchGroups = useRestaurantLunchGroups(props.restaurant._id);
 const userLunchGroup = computed(() =>
@@ -15,6 +19,17 @@ const userLunchGroup = computed(() =>
     group.users.some((user) => user._id === userStore.user?._id)
   )
 );
+
+const { SubscribeOnboardingEvent } = useOnboardingEvents();
+const cancelSubscription = SubscribeOnboardingEvent(
+  (event: OnboardingEvents) => {
+    if (event === OnboardingEvents.openRestaurantProfile && props.index === 0)
+      showProfile.value = true;
+    if (event === OnboardingEvents.closeRestaurantProfile && props.index === 0)
+      showProfile.value = false;
+  }
+) as () => void;
+onUnmounted(() => cancelSubscription());
 </script>
 
 <template>
@@ -25,6 +40,7 @@ const userLunchGroup = computed(() =>
         lng: restaurant.coordinates.longitude,
       },
       anchorPoint: 'BOTTOM_CENTER',
+      zIndex: isHovered ? 1000 : 10,
     }"
   >
     <NTooltip>
@@ -35,7 +51,11 @@ const userLunchGroup = computed(() =>
         </span>
       </div>
       <template #trigger>
-        <div class="relative !cursor-pointer" @click="showProfile = true">
+        <div
+          ref="markerElement"
+          class="relative !cursor-pointer"
+          @click="showProfile = true"
+        >
           <component
             :is="lunchGroups.length > 0 ? NBadge : 'div'"
             type="warning"

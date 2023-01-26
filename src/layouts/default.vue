@@ -1,11 +1,20 @@
 <script setup lang="ts">
-import { useThemeVars } from "naive-ui";
+import { useLoadingBar, useThemeVars } from "naive-ui";
 
 useReactifiedApi();
+
+const route = useRoute();
 const themeVars = useThemeVars();
+const loadingApi = useLoadingBar();
+
+watch(
+  () => route.name,
+  () => loadingApi.finish()
+);
 </script>
 
 <template>
+  <LayoutUserSatisfaction />
   <n-layout>
     <n-layout-header>
       <LayoutHeader />

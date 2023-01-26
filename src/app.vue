@@ -8,7 +8,13 @@ import {
 } from "naive-ui";
 import { FormProvider } from "@chronicstone/vue-sweetforms";
 import "@chronicstone/vue-sweetforms/dist/style.css";
+import { OnboardingEvents } from "./types/onboarding";
+
+const route = useRoute();
 const appStore = useAppStore();
+const userStore = useUserStore();
+
+const { DispatchOnboardingEvent } = useOnboardingEvents();
 
 watch(
   () => appStore.isDark,
@@ -18,10 +24,23 @@ watch(
   },
   { immediate: true }
 );
+
+watch(
+  () => route.name,
+  (name) => {
+    if (name === "map" && userStore.user && !userStore.user?.onboarded)
+      DispatchOnboardingEvent(OnboardingEvents.startOnboarding);
+  },
+  { immediate: true }
+);
+
+const chatGatewayApi = useChatGateway();
+provide(chatApiInjectionKey, chatGatewayApi);
 </script>
 
 <template>
   <n-config-provider
+    id="appRoot"
     class="demo"
     :locale="appStore.language"
     :theme="appStore.theme"
@@ -35,9 +54,22 @@ watch(
         <n-message-provider>
           <n-notification-provider>
             <n-loading-bar-provider>
-              <NuxtLayout>
-                <NuxtPage />
-              </NuxtLayout>
+              <n-spin :show="appStore.isLoading">
+                <template v-if="appStore.isLoadingMessage" #description>
+                  <span class="font-black text-primary">
+                    {{ appStore.isLoadingMessage }}
+                  </span>
+                </template>
+                <UserOnboarding />
+                <div
+                  id="onboarding-start"
+                  class="fixed top-[40%] left-1/2 opacity-0"
+                  style="z-index: -1"
+                ></div>
+                <NuxtLayout>
+                  <NuxtPage />
+                </NuxtLayout>
+              </n-spin>
             </n-loading-bar-provider>
           </n-notification-provider>
         </n-message-provider>
@@ -49,5 +81,9 @@ watch(
 <style>
 body {
   font-family: "Lato" !important;
+}
+
+.n-dialog {
+  z-index: 20000 !important;
 }
 </style>

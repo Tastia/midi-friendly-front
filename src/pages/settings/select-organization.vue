@@ -2,6 +2,7 @@
 import { useThemeVars } from "naive-ui";
 
 definePageMeta({
+  name: "settings.selectOrganization",
   middleware: ["auth"],
 });
 
@@ -10,7 +11,7 @@ const themeVars = useThemeVars();
 
 function SelectOrganization(id: string) {
   userStore.SetActiveOrganization(id);
-  navigateTo("/");
+  navigateTo("/map");
 }
 </script>
 

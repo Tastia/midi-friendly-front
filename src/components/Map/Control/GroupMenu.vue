@@ -4,7 +4,6 @@ import { ParsedMapLunchGroup } from "@/composables/useRestaurantLunchGroups";
 const showMenu = ref<boolean>(false);
 const { width } = useWindowSize();
 
-const appStore = useAppStore();
 const userStore = useUserStore();
 const gatewayApi = inject(mapApiInjectionKey);
 
@@ -36,7 +35,13 @@ const mappedLunchGroups = computed(
   <NTooltip placement="left">
     Mes groupes actifs
     <template #trigger>
-      <NButton class="drop-shadow-xl" type="primary" @click="showMenu = true">
+      <NButton
+        id="group-menu-trigger"
+        class="drop-shadow-xl"
+        type="primary"
+        circle
+        @click="showMenu = true"
+      >
         <template #icon>
           <i:material-symbols:restaurant />
         </template>
@@ -47,13 +52,13 @@ const mappedLunchGroups = computed(
   <NDrawer
     v-model:show="showMenu"
     :width="width < 580 ? width : 580"
-    :z-index="900"
+    :z-index="800"
     placement="right"
     mask-closable
   >
-    <NDrawerContent closable>
+    <NDrawerContent :native-scrollbar="false" closable>
       <template #header>
-        <span class="text-2xl font-black"> Mes groupes actifs </span>
+        <span class="text-xl font-black"> Mes groupes actifs </span>
       </template>
 
       <div class="flex flex-col gap-4">

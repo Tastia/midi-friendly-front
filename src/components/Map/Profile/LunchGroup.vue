@@ -37,6 +37,12 @@ const restaurant = computed<Restaurant | undefined>(() =>
   )
 );
 
+const isLunchGroupExpired = computed<boolean>(() => {
+  const now = new Date();
+  const meetingTime = new Date(props.group.meetingTime);
+  return now > meetingTime;
+});
+
 async function JoinGroup() {
   const existingGroup = gatewayApi?.lunchGroups.value.find(
     (group) =>
@@ -105,11 +111,14 @@ async function DeleteGroup() {
         : {}
     "
   >
-    <template v-if="showRestaurantInfo" #header>
-      {{ restaurant?.name }}
+    <template #header>
+      <div v-if="showRestaurantInfo" class="flex flex-col gap-2">
+        <span>{{ restaurant?.name }}</span>
+      </div>
     </template>
     <div class="flex gap-4 items-center justify-between">
-      <div class="flex flex-col">
+      <div class="flex flex-col gap-2">
+        <span class="font-bold">{{ group.label }}</span>
         <span>
           Réservation prévue pour
           <NEl tag="b" class="text-[var(--primary-color)]">
@@ -133,7 +142,14 @@ async function DeleteGroup() {
         <NTooltip v-if="!userBelongsToGroup">
           Rejoindre le groupe
           <template #trigger>
-            <NButton size="small" secondary type="primary" @click="JoinGroup">
+            <NButton
+              size="small"
+              secondary
+              type="primary"
+              :disabled="!!gatewayApi?.pendingOperation.value"
+              :loading="gatewayApi?.pendingOperation.value === 'JoinGroup'"
+              @click="JoinGroup"
+            >
               <template #icon>
                 <i:ic:baseline-log-in />
               </template>
@@ -144,7 +160,14 @@ async function DeleteGroup() {
         <NTooltip v-if="userBelongsToGroup && !userOwnsGroup">
           Quitte le groupe
           <template #trigger>
-            <NButton size="small" secondary type="error" @click="LeaveGroup">
+            <NButton
+              size="small"
+              secondary
+              type="error"
+              :disabled="!!gatewayApi?.pendingOperation.value"
+              :loading="gatewayApi?.pendingOperation.value === 'LeaveGroup'"
+              @click="LeaveGroup"
+            >
               <template #icon>
                 <i:ic:baseline-log-out />
               </template>
@@ -155,7 +178,14 @@ async function DeleteGroup() {
         <NTooltip v-if="userOwnsGroup">
           Supprimer le groupe
           <template #trigger>
-            <NButton size="small" secondary type="error" @click="DeleteGroup">
+            <NButton
+              size="small"
+              secondary
+              type="error"
+              :disabled="!!gatewayApi?.pendingOperation.value"
+              :loading="gatewayApi?.pendingOperation.value === 'DeleteGroup'"
+              @click="DeleteGroup"
+            >
               <template #icon>
                 <i:mdi:trash />
               </template>
@@ -168,12 +198,12 @@ async function DeleteGroup() {
 
   <NDrawer
     v-model:show="showDetails"
-    :z-index="950"
+    :z-index="850"
     mask-closable
     :width="width < 580 ? width : 580"
     :placement="drawerPosition"
   >
-    <NDrawerContent closable>
+    <NDrawerContent :native-scrollbar="false" closable>
       <template #header>
         <h2 class="text-2xl font-black">
           <span>Restaurant </span>
@@ -188,6 +218,11 @@ async function DeleteGroup() {
           <h3 class="text-xl font-black">Informations sur le groupe</h3>
           <NCard embedded>
             <ul class="flex flex-col gap-4">
+              <li class="flex items-center justify-between">
+                <b class="font-black">Label du groupe :</b>
+                <span>{{ group.label }}</span>
+              </li>
+
               <li class="flex items-center justify-between">
                 <b class="font-black">Créateur du groupe :</b>
                 <NEl
@@ -214,6 +249,23 @@ async function DeleteGroup() {
               <li class="flex items-center justify-between">
                 <b class="font-black">Nom du restaurant :</b>
                 <span>{{ restaurant?.name }}</span>
+              </li>
+
+              <li
+                class="flex gap-2 items-start justify-between"
+                :class="!group.description ? 'flex-row' : 'flex-col'"
+              >
+                <b class="font-black">Description :</b>
+                <div
+                  class="bg-blue-gray-500/10 w-full h-auto p-2 !pr-0.5"
+                  :style="{ borderRadius: themeVars.borderRadius }"
+                >
+                  <NScrollbar
+                    class="max-h-32 italic text-gray-500 whitespace-pre pr-2"
+                  >
+                    {{ group.description || "N/A" }}
+                  </NScrollbar>
+                </div>
               </li>
             </ul>
           </NCard>

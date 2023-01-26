@@ -10,11 +10,16 @@ import RegisterForm from "@/components/Auth/RegisterForm.vue";
 import LoginForm from "@/components/Auth/LoginForm.vue";
 import { useMessage } from "naive-ui";
 
+definePageMeta({
+  name: "auth.invitation",
+});
+
 const route = useRoute();
-const router = useRouter();
 const messageApi = useMessage();
 const invitation = ref<InvitationPayload>();
 const registerMode = ref<"link" | "register">();
+const userStore = useUserStore();
+const appStore = useAppStore();
 
 const errorMessage = computed<string>(() =>
   invitation.value ? GetErrorMessage(invitation.value) : ""
@@ -40,6 +45,11 @@ async function FetchInvitation() {
 
 async function FinaliseRegisterProcess(data: AuthRegisterDto | AuthLoginDto) {
   try {
+    appStore.startLoading(
+      `${
+        registerMode.value === "link" ? "Association" : "Création"
+      } du compte en cours...`
+    );
     const { success, ...errorFlags } = await Authcontroller.accepInvitation({
       invitationId: route.params.invitationId as string,
       ...(route.query.hash && { emailHash: route.query.hash as string }),
@@ -53,6 +63,7 @@ async function FinaliseRegisterProcess(data: AuthRegisterDto | AuthLoginDto) {
         }),
       },
     });
+    appStore.stopLoading();
 
     if (success) {
       messageApi.success(
@@ -60,16 +71,31 @@ async function FinaliseRegisterProcess(data: AuthRegisterDto | AuthLoginDto) {
           registerMode.value === "link" ? "Association" : "Création"
         } du compte réussie !`
       );
-      router.go("/auth/login");
+      const authData = await Authcontroller.login(data as AuthLoginDto);
+      userStore.StoreAuthData(authData);
+      messageApi.success(
+        `Bienvenue, ${authData.account.firstName} ${authData.account.lastName}`
+      );
+
+      // BUG: Navigation gets interrupted, hook page:finish never reached
+      // HARDFIX::TEMP : reload location once route is updated
+      // ?: Maybe nuxt 3 issue, never encountered with Vue Router
+      await nextTick();
+      await navigateTo("/map");
+      location.reload();
     } else {
       messageApi.error(GetErrorMessage(errorFlags));
     }
   } catch (err) {
+    appStore.stopLoading();
     console.error(err);
   }
 }
 
-onMounted(() => FetchInvitation());
+onMounted(() => {
+  FetchInvitation();
+  if (userStore.user) userStore.ClearUserSession();
+});
 </script>
 
 <template>

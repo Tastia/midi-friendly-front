@@ -10,12 +10,26 @@ export default defineNuxtConfig({
   pages: true,
   srcDir: "src",
   imports: {
-    dirs: ["stores", "config", "composables", "utils", "api/controllers"],
+    dirs: [
+      "stores",
+      "config",
+      "composables",
+      "utils",
+      "api/controllers",
+      "services",
+      "services/_utils",
+    ],
   },
   alias: {
     "@/.": "./",
   },
-  modules: ["@pinia/nuxt", "@vueuse/nuxt", "nuxt-windicss"],
+  modules: [
+    "./src/modules/onboarding/module",
+    "@pinia/nuxt",
+    "@vueuse/nuxt",
+    "nuxt-windicss",
+    "@nuxt/image-edge",
+  ],
   css: ["@/assets/styles/main.scss"],
   vite: {
     plugins: [
@@ -33,6 +47,14 @@ export default defineNuxtConfig({
       // apiUrl: import.meta.env.VITE_API_URL,
       // gatewayUrl: import.meta.env.VITE_GATEWAY_URL
     },
+  },
+  nitro: {
+    prerender: {
+      routes: ["/"],
+    },
+  },
+  routeRules: {
+    "/": { ssr: true },
   },
   app: {
     head: {
@@ -53,5 +75,8 @@ export default defineNuxtConfig({
       script: [{ src: "https://code.iconify.design/1/1.0.0/iconify.min.js" }],
     },
     pageTransition: { name: "slide-fade-reverse", mode: "out-in" },
+  },
+  experimental: {
+    reactivityTransform: true,
   },
 });

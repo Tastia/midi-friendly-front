@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import CollapsibleText from "../components/Layout/CollapsibleText";
 
 const collapsibleRefs = ref();
 const collapsibleSectionTexts = [
@@ -47,7 +46,7 @@ function CollapseNonActiveSections(openedIndex: number) {
         </h1>
         <div class="flex gap-4">
           <NButton type="primary">Détails de la réservation</NButton>
-          <NButton type="secondary">Détails de la réservation</NButton>
+          <NButton secondary>Détails de la réservation</NButton>
         </div>
       </div>
       <div class="w-full h-4/6 lg:w-1/2 image-container rounded-md"></div>
@@ -100,7 +99,8 @@ function CollapseNonActiveSections(openedIndex: number) {
 <style lang="scss" scoped>
 #first-section {
   .image-container {
-    background: url("@/assets/images/homepage/midi-friendly-group.jpg") no-repeat;
+    background: url("@/assets/images/homepage/midi-friendly-group.jpg")
+      no-repeat;
     background-size: cover;
     background-position: center;
   }

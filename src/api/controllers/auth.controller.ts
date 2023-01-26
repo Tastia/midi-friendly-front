@@ -15,12 +15,12 @@ export const Authcontroller = {
     ),
   validateInvitation: (invitationDto: ValidateInvitationDto) =>
     ApiInstance.post<InvitationPayload>(
-      "/auth/invitation/validate-invitation",
+      "/users/invitation/validate-invitation",
       invitationDto
     ).then((res) => res.data),
   accepInvitation: (invitationDto: AcceptInvitationDto) =>
     ApiInstance.post<AcceptInvitationResponse>(
-      "/auth/invitation/accept-invitation",
+      "/users/invitation/accept-invitation",
       invitationDto
     ).then((res) => res.data),
 };

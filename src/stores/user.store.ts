@@ -12,25 +12,30 @@ export const useUserStore = defineStore("userStore", () => {
   const organizations = useCStorage<Organization[]>(
     "organizations",
     [],
-    sessionStorage,
+    localStorage,
     { serializer: ObjectSerializer as Serializer<Organization[]> }
   );
 
   const activeOrganizationId = useCStorage<string | null>(
     "activeOrganizationId",
     null,
-    sessionStorage
+    localStorage
   );
 
   const accessToken = useCStorage<string | null>(
     "refreshToken",
     null,
-    sessionStorage
+    localStorage
   );
 
-  const user = useCStorage<User | null>("user", null, sessionStorage, {
-    serializer: ObjectSerializer as Serializer<User>,
-  });
+  const user = useCStorage<(User & { onboarded: boolean }) | null>(
+    "user",
+    null,
+    localStorage,
+    {
+      serializer: ObjectSerializer as Serializer<User & { onboarded: boolean }>,
+    }
+  );
 
   const activeOrganization = computed<Organization | null>(() =>
     user.value
@@ -59,6 +64,14 @@ export const useUserStore = defineStore("userStore", () => {
     activeOrganizationId.value = id;
   }
 
+  function SetOnboardingCompleted() {
+    if (user.value?.onboarded) return;
+    UserController.completeOnboarding();
+    user.value = { ...user.value, onboarded: true } as User & {
+      onboarded: boolean;
+    };
+  }
+
   return {
     accessToken,
     refreshToken,
@@ -69,5 +82,6 @@ export const useUserStore = defineStore("userStore", () => {
     StoreAuthData,
     ClearUserSession,
     SetActiveOrganization,
+    SetOnboardingCompleted,
   };
 });
