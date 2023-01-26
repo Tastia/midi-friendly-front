@@ -2,12 +2,15 @@
 import { ref, watch, computed, defineExpose } from "vue";
 import { NCollapseTransition } from "naive-ui";
 
+// eslint-disable-next-line vue/no-setup-props-destructure
+const { defaultState = false } = defineProps<{ defaultState?: boolean }>();
+
 const emit = defineEmits<{
   (e: "expand"): void;
   (e: "collapse"): void;
 }>();
 
-const isExpanded = ref<boolean>(false);
+const isExpanded = ref<boolean>(defaultState);
 const titleElement = ref<HTMLElement>();
 const isHovered = useElementHover(titleElement);
 

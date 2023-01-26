@@ -77,6 +77,7 @@ function CollapseNonActiveSections(openedIndex: number) {
             v-for="(item, index) in collapsibleSectionTexts"
             :key="index"
             ref="collapsibleRefs"
+            :default-state="index === 0"
             @expand="CollapseNonActiveSections(index)"
           >
             <template #title>{{ item.title }}</template>
