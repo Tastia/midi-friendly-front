@@ -44,7 +44,7 @@
 
     <div class="join-us">
       <div
-        class="flex bg-slate-100 border border-black/10 rounded-md relative overflow-hidden"
+        class="flex bg-slate-100 dark:bg-[#353535] border border-black/10 rounded-md relative overflow-hidden"
       >
         <div class="flex flex-col w-3/5 gap-5 p-8">
           <h2 class="font-600 text-3xl">Rejoindre MidiFriendly</h2>
