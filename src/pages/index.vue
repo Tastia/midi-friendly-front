@@ -63,6 +63,7 @@
         <div class="h-100 w-100 image-container absolute right-0 top-0"></div>
       </div>
     </div>
+    <LayoutFooter />
   </div>
 </template>
 
