@@ -18,14 +18,14 @@ const nbOfUnreadMessages = computed(
     rooms.value
       .map(
         (room) =>
+          room.lastMessage &&
           !room.lastMessage?.readBy?.includes(userStore?.user?._id ?? "")
       )
       .filter(Boolean).length
 );
 
 useInfiniteScroll(scrollContainer, LoadRooms, {
-  direction: "top",
-  distance: 0,
+  distance: 15,
   preserveScrollPosition: true,
   behavior: "smooth",
 });
@@ -186,6 +186,7 @@ onUnmounted(() => {
               </div>
               <NBadge
                 v-if="
+                  room.lastMessage &&
                   !(room?.lastMessage?.readBy ?? []).includes(
                     userStore.user?._id ?? ''
                   )
@@ -198,10 +199,6 @@ onUnmounted(() => {
             </div>
           </div>
         </ChatDiscussion>
-
-        <template v-if="isLoading">
-          <NSkeleton height="40px" :sharp="false" />
-        </template>
       </div>
     </NCard>
   </NPopover>

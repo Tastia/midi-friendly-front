@@ -6,6 +6,7 @@ import {
   defaultVOnboardingWrapperOptions,
 } from "../types/onboardingWrapper";
 import VOnboardingStep from "./VOnboardingStep.vue";
+import { sleep } from "@/utils/other/sleep";
 
 const emit = defineEmits<{ (e: "completed"): void }>();
 // eslint-disable-next-line vue/no-setup-props-destructure
@@ -56,6 +57,7 @@ async function NextStep() {
   await activeStep?.value?.on?.afterStep?.();
   await steps?.[currentStepIndex.value + 1]?.on?.beforeStep?.();
   await nextTick();
+  await sleep(50);
   isOperationPending.value = false;
   currentStepIndex.value = currentStepIndex.value + 1;
 }
@@ -66,6 +68,8 @@ async function PreviousStep() {
   isOperationPending.value = true;
   await activeStep.value?.on?.afterStep?.();
   await steps[currentStepIndex.value - 1]?.on?.beforeStep?.();
+  await nextTick();
+  await sleep(50);
   isOperationPending.value = false;
   currentStepIndex.value = currentStepIndex.value - 1;
 }

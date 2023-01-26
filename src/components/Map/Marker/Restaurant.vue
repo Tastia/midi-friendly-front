@@ -10,6 +10,9 @@ const userStore = useUserStore();
 const themeVars = useThemeVars();
 const showProfile = ref<boolean>(false);
 
+const markerElement = ref<HTMLElement>();
+const isHovered = useElementHover(markerElement);
+
 const lunchGroups = useRestaurantLunchGroups(props.restaurant._id);
 const userLunchGroup = computed(() =>
   lunchGroups.value.find((group) =>
@@ -37,6 +40,7 @@ onUnmounted(() => cancelSubscription());
         lng: restaurant.coordinates.longitude,
       },
       anchorPoint: 'BOTTOM_CENTER',
+      zIndex: isHovered ? 1000 : 10,
     }"
   >
     <NTooltip>
@@ -47,7 +51,11 @@ onUnmounted(() => cancelSubscription());
         </span>
       </div>
       <template #trigger>
-        <div class="relative !cursor-pointer" @click="showProfile = true">
+        <div
+          ref="markerElement"
+          class="relative !cursor-pointer"
+          @click="showProfile = true"
+        >
           <component
             :is="lunchGroups.length > 0 ? NBadge : 'div'"
             type="warning"

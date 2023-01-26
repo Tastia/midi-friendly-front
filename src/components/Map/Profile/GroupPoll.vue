@@ -62,13 +62,6 @@ async function SetUserVote() {
           </template>
           {{ userHasVoted ? "CHANGER MON VOTE" : "VOTER" }}
         </NButton>
-
-        <NButton class="w-full" secondary>
-          <template #icon>
-            <i:ph:chat-teardrop-dots-fill />
-          </template>
-          DISCUSSION
-        </NButton>
       </div>
     </template>
 

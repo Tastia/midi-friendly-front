@@ -25,6 +25,38 @@ const isUserInAGroup = computed<boolean>(() =>
   )
 );
 
+const restaurantTags = computed(() =>
+  Object.entries(props.restaurant?.services ?? [])
+    .filter(([_, value]) => !!value)
+    .map(([key]) => {
+      switch (key) {
+        case "delivery":
+          return "Livraison";
+        case "takeout":
+          return "À emporter";
+        case "dineIn":
+          return "Sur place";
+        case "reservable":
+          return "Réservation";
+        case "beer":
+          return "Bières";
+        case "wine":
+          return "Vins";
+        case "vegetarian":
+          return "Nourriture végératienne";
+        case "breakfast":
+          return "Petit déjeuner";
+        case "lunch":
+          return "Déjeuner";
+        case "dinner":
+          return "Dîner";
+        default:
+          return null;
+      }
+    })
+    .filter(Boolean)
+);
+
 async function CreateLunchGroup() {
   isOpen.value = false;
   await nextTick();
@@ -86,6 +118,19 @@ function SortByMeetingTime(groups: ParsedMapLunchGroup[]) {
     return 0;
   });
 }
+
+function GeneratePhotoAlt(index: number) {
+  return `${props.restaurant.name} - ${index + 1}/${
+    props.restaurant.photos.length
+  }`;
+}
+
+function OpenGoogleMaps() {
+  window.open(
+    `https://www.google.com/maps/search/?api=1&query=Google&query_place_id=${props.restaurant.placeId}`,
+    "_blank"
+  );
+}
 </script>
 
 <template>
@@ -101,8 +146,37 @@ function SortByMeetingTime(groups: ParsedMapLunchGroup[]) {
         <h1 class="text-2xl font-black">{{ restaurant.name }}</h1>
       </template>
       <div id="restaurant-profile-drawer" class="flex flex-col gap-6">
-        <div class="w-full h-50 rounded bg-gray-400 grid place-items-center">
-          IMAGE HERE
+        <div
+          v-if="!restaurant.photos.length"
+          class="w-full h-50 rounded bg-gray-400 grid place-items-center"
+        >
+          <NEmpty> Aucune photo disponnible </NEmpty>
+        </div>
+
+        <NImageGroup v-else>
+          <NCarousel draggable show-arrow style="height: 200px">
+            <NImage
+              v-for="(image, index) in restaurant.photos"
+              :key="index"
+              :src="
+                'https://midi-friendly-dev.s3.eu-central-1.amazonaws.com/' +
+                image.url
+              "
+              :alt="GeneratePhotoAlt(index)"
+              class="rounded"
+              object-fit="cover"
+            />
+          </NCarousel>
+        </NImageGroup>
+
+        <div v-if="restaurantTags.length" class="flex flex-wrap gap-2">
+          <NTag
+            v-for="(tag, index) in restaurantTags"
+            :key="index"
+            type="primary"
+          >
+            {{ tag }}
+          </NTag>
         </div>
 
         <p class="font-black text-lg">Groupes :</p>
@@ -139,13 +213,20 @@ function SortByMeetingTime(groups: ParsedMapLunchGroup[]) {
           molestias impedit repellat quasi voluptates assumenda.
         </span>
 
-        <p class="whitespace-pre-line">
-          <span class="font-semibold">Addresse :</span> 12 avenue Leonard de
-          Vinci, 75013 Paris
-          <!-- <span>
-            {{ restaurant.address.street }} {{ restaurant.address.city }},
-            {{ restaurant.address.zip }} {{ restaurant.address.country }}
-          </span> -->
+        <p class="whitespace-pre-line flex flex-wrap gap-1">
+          <span class="font-semibold">Addresse :</span>
+          <NTooltip>
+            <template #trigger>
+              <span
+                class="hover:text-primary transition-all ease-in-out duration-100 cursor-pointer"
+                @click="OpenGoogleMaps"
+              >
+                {{ restaurant.address.street }} {{ restaurant.address.city }},
+                {{ restaurant.address.zip }} {{ restaurant.address.country }}
+              </span>
+            </template>
+            Ouvrir dans Google Maps
+          </NTooltip>
         </p>
 
         <span class="font-semibold">Horaires :</span>
