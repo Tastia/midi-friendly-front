@@ -3,6 +3,8 @@ import { Restaurant } from "@/types/restaurant";
 import { useSweetform } from "@chronicstone/vue-sweetforms";
 import { ParsedMapLunchGroup } from "@/composables/useRestaurantLunchGroups";
 
+const S3_URL = import.meta.env.VITE_S3_BUCKET_URL;
+
 const emit = defineEmits<{
   (event: "update:modelValue", val: boolean): void;
 }>();
@@ -158,10 +160,7 @@ function OpenGoogleMaps() {
             <NImage
               v-for="(image, index) in restaurant.photos"
               :key="index"
-              :src="
-                'https://midi-friendly-dev.s3.eu-central-1.amazonaws.com/' +
-                image.url
-              "
+              :src="S3_URL + image.url"
               :alt="GeneratePhotoAlt(index)"
               class="rounded"
               object-fit="cover"
@@ -207,11 +206,6 @@ function OpenGoogleMaps() {
           </template>
           Créer un groupe
         </NButton>
-
-        <span class="text-gray-500 text-sm">
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cumque
-          molestias impedit repellat quasi voluptates assumenda.
-        </span>
 
         <p class="whitespace-pre-line flex flex-wrap gap-1">
           <span class="font-semibold">Addresse :</span>

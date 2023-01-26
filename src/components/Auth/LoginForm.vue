@@ -52,7 +52,7 @@ const formSchema: FormSchema = {
           type="primary"
           @click="toggleSubmit"
         >
-          SIGN IN
+          CONNEXION
         </NButton>
       </template>
     </Form>

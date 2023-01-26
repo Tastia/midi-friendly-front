@@ -34,8 +34,8 @@ async function Authenticate(data: AuthLoginDto) {
     <div class="h-layout w-full !lg:w-2/5 p-16 flex flex-col gap-8">
       <h1 class="font-600 text-lg">Connexion à Midi Friendly</h1>
       <p class="text-gray-500">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis,
-        minus tenetur odio quas architecto reprehenderit impedit fuga qui quod
+        Connectez-vous à votre compte pour accéder à la carte interactive des
+        restaurants Midi Friendly.
       </p>
       <AuthLoginForm @on-submit="Authenticate" />
     </div>

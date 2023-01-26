@@ -120,12 +120,12 @@ onMounted(() => {
           Vous avez été invité a rejoindre
           {{ invitation.invitation.organization.name }}
         </h1>
-        <p class="text-gray-400">
+        <!-- <p class="text-gray-400">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. At possimus
           placeat ipsa ex consequatur ratione quis eos quam quibusdam! Provident
           praesentium non numquam recusandae rerum cumque, quaerat unde dicta
           officia!
-        </p>
+        </p> -->
       </div>
 
       <div
@@ -171,11 +171,11 @@ onMounted(() => {
                 : "compte existant"
             }}.
           </h1>
-          <p class="text-gray-500">
+          <!-- <p class="text-gray-500">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis,
             minus tenetur odio quas architecto reprehenderit impedit fuga qui
             quod
-          </p>
+          </p> -->
           <Transition name="slide-fade" mode="out-in">
             <component
               :is="registerMode === 'register' ? RegisterForm : LoginForm"
