@@ -5,7 +5,7 @@ definePageMeta({
   showLogin: true,
 });
 
-const collapsibleRefs = ref();
+const collapsibleRefs = ref<Array<{ setExpanded: (value: boolean) => void }>>();
 const collapsibleSectionTexts = [
   {
     title: "Favoris",
@@ -30,7 +30,7 @@ const collapsibleSectionTexts = [
 ];
 
 function CollapseNonActiveSections(openedIndex: number) {
-  for (const [index, section] of collapsibleRefs.value.entries()) {
+  for (const [index, section] of collapsibleRefs.value?.entries() ?? []) {
     if (index === openedIndex) continue;
     section.setExpanded(false);
   }

@@ -28,6 +28,12 @@ const showLogin = computed(() => {
         </NButton>
         <NDivider vertical class="!m-0" />
       </template>
+      <template v-if="showLogin && userStore.user">
+        <NButton type="primary" size="small" @click="$router.push('/map')">
+          Ouvrir l'app
+        </NButton>
+        <NDivider vertical class="!m-0" />
+      </template>
       <ChatRoomsMenu v-if="userStore.user" />
       <LayoutOnboardingTrigger v-if="$route.name === 'map'" />
       <LayoutToggleTheme />
