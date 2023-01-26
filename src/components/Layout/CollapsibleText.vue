@@ -9,6 +9,7 @@ const emit = defineEmits<{
 
 const isExpanded = ref<boolean>(false);
 const titleElement = ref<HTMLElement>();
+const isHovered = useElementHover(titleElement);
 
 defineExpose({
   isExpanded: computed(() => isExpanded.value),
@@ -17,8 +18,13 @@ defineExpose({
 });
 
 watch(
+  () => isHovered.value,
+  (value: boolean) => value && (isExpanded.value = true)
+);
+
+watch(
   () => isExpanded.value,
-  (value: boolean) => emit(value ? "expand" : "collapse")
+  (value: boolean) => (value ? emit("expand") : emit("collapse"))
 );
 </script>
 

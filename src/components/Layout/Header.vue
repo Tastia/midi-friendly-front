@@ -9,7 +9,7 @@ const showLogin = computed(() => {
 
 <template>
   <n-el
-    class="bg-[var(--body-color)] border-b border-[var(--border-color)] h-16 w-full"
+    class="bg-[var(--body-color)] border-b border-[var(--border-color)] h-16 w-full flex items-center justify-between p-2"
   >
     <img
       v-if="appStore.isDark"

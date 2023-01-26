@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
+definePageMeta({
+  showLogin: true,
+});
+
 const collapsibleRefs = ref();
 const collapsibleSectionTexts = [
   {
@@ -69,7 +73,7 @@ function CollapseNonActiveSections(openedIndex: number) {
       <div class="w-full lg:w-1/2 flex flex-col gap-8">
         <h2 class="font-600 text-3xl">Un outil de gestion</h2>
         <div class="flex flex-col gap-4">
-          <CollapsibleText
+          <LayoutCollapsibleText
             v-for="(item, index) in collapsibleSectionTexts"
             :key="index"
             ref="collapsibleRefs"
@@ -77,7 +81,7 @@ function CollapseNonActiveSections(openedIndex: number) {
           >
             <template #title>{{ item.title }}</template>
             {{ item.content }}
-          </CollapsibleText>
+          </LayoutCollapsibleText>
         </div>
       </div>
       <div class="w-full h-4/6 lg:w-1/2 image-container rounded-md"></div>
