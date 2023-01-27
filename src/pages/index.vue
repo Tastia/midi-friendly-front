@@ -5,7 +5,12 @@ definePageMeta({
   showLogin: true,
 });
 
-const collapsibleRefs = ref<Array<{ setExpanded: (value: boolean) => void }>>();
+const collapsibleRefs =
+  ref<Array<{ setExpanded: (value: boolean) => void; isExpanded: boolean }>>();
+const activeCollapsibleSection = computed(
+  () =>
+    collapsibleRefs.value?.findIndex((itemRef) => itemRef.isExpanded) ?? null
+);
 const collapsibleSectionTexts = [
   {
     title: "Favoris",
@@ -41,30 +46,39 @@ function CollapseNonActiveSections(openedIndex: number) {
   <div class="max-w-screen-xl w-full p-8 mx-auto h-full">
     <div
       id="first-section"
-      class="flex overflow-hidden gap-12 h-4/5 items-center"
+      class="flex overflow-hidden gap-12 lg:h-4/5 flex-col !lg:flex-row items-center"
     >
       <div class="w-full lg:w-1/2 flex flex-col gap-8">
-        <h1 class="font-600 text-5xl">
+        <h1 class="font-600 text-5xl text-center !lg:text-left">
           Enfin un moyen pour vous et vos collègues de
           <span class="text-primary">trouver à manger</span>
         </h1>
-        <div class="flex gap-4">
+        <div class="flex gap-4 justify-center !lg:justify-start">
           <NButton type="primary">Détails de la réservation</NButton>
           <NButton>Détails de la réservation</NButton>
         </div>
       </div>
       <nuxt-img
-        class="w-1/2 h-4/6 rounded-md"
+        class="rounded-md"
         src="/homepage/midi-friendly-group.jpg"
+        sizes="sm:100vw lg:80vw xl:50vw"
+        height="400"
       />
     </div>
 
-    <div id="about" class="flex overflow-hidden gap-12 h-4/5 items-center">
+    <div
+      id="about"
+      class="flex overflow-hidden flex-col !lg:flex-row gap-12 h-4/5 items-center"
+    >
       <nuxt-img
-        class="w-1/2 h-4/6 rounded-md"
+        class="rounded-md order-2 lg:order-1"
         src="/homepage/midi-friendly-group.jpg"
+        sizes="sm:100vw lg:80vw xl:50vw"
+        height="400"
       />
-      <div class="w-full lg:w-1/2 flex flex-col gap-8">
+      <div
+        class="w-full lg:w-1/2 flex flex-col gap-8 text-center lg:text-left mt-20 lg:mt-0"
+      >
         <h2 class="font-600 text-3xl">A propos de MidiFriendly</h2>
         <p>
           Le moment le plus important d’une journée de travail n’est pas la
@@ -75,8 +89,13 @@ function CollapseNonActiveSections(openedIndex: number) {
       </div>
     </div>
 
-    <div id="manage" class="flex overflow-hidden gap-12 h-4/5 items-center">
-      <div class="w-full lg:w-1/2 flex flex-col gap-8">
+    <div
+      id="manage"
+      class="flex overflow-hidden flex-col !lg:flex-row gap-12 h-4/5 items-center"
+    >
+      <div
+        class="w-full lg:w-1/2 flex flex-col gap-8 text-center lg:text-left mt-20 lg:mt-0"
+      >
         <h2 class="font-600 text-3xl">Un outil de gestion</h2>
         <div class="flex flex-col gap-4">
           <LayoutCollapsibleText
@@ -94,6 +113,8 @@ function CollapseNonActiveSections(openedIndex: number) {
       <nuxt-img
         class="w-1/2 h-4/6 rounded-md"
         src="/homepage/organisation.jpg"
+        sizes="sm:100vw lg:80vw xl:50vw"
+        height="400"
       />
     </div>
 
