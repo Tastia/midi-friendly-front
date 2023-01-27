@@ -14,7 +14,7 @@ export default {
     <div
       class="flex bg-slate-100 dark:bg-[#353535] border border-black/10 rounded-md relative overflow-hidden"
     >
-      <div class="flex flex-col w-full lg:w-3/5 gap-5 p-8">
+      <div class="flex flex-col w-full !lg:w-3/5 gap-5 p-8">
         <h2 class="font-600 text-3xl">{{ title }}</h2>
         <p>{{ description }}</p>
         <NButton type="primary" class="w-min">{{ cta }}</NButton>

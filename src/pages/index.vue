@@ -16,21 +16,25 @@ const collapsibleSectionTexts = [
     title: "Favoris",
     content:
       "Vous cherchez chaque jour vers quel restaurant se tourner ? Ajouter ses restaurants favoris et pouvoir, d’un coup d’oeil, connaître les goûts de chacun.",
+    image: "/homepage/favoris.jpg",
   },
   {
     title: "Groupes",
     content:
       "MidiFriendly est un outil fait pour se regrouper entre collègues. La rencontre et le partage sont les valeurs que nous voulons partager.",
+    image: "/homepage/group.jpg",
   },
   {
     title: "Organisation",
     content:
       "Vous cherchez chaque jour vers quel restaurant se tourner ? Ajouter ses restaurants favoris et pouvoir, d’un coup d’oeil, connaître les goûts de chacun.",
+    image: "/homepage/organisation.jpg",
   },
   {
     title: "Canal d’entreprise",
     content:
       "MidiFriendly est un outil fait pour se regrouper entre collègues. La rencontre et le partage sont les valeurs que nous voulons partager.",
+    image: "/homepage/canal_entreprise.jpg",
   },
 ];
 
@@ -46,39 +50,35 @@ function CollapseNonActiveSections(openedIndex: number) {
   <div class="max-w-screen-xl w-full p-8 mx-auto h-full">
     <div
       id="first-section"
-      class="flex overflow-hidden gap-12 lg:h-4/5 flex-col !lg:flex-row items-center"
+      class="flex overflow-hidden gap-6 md:gap-12 md:h-4/5 flex-col-reverse !md:flex-row items-center"
     >
-      <div class="w-full lg:w-1/2 flex flex-col gap-8">
-        <h1 class="font-600 text-5xl text-center !lg:text-left">
+      <div class="w-full !md:w-1/2 flex flex-col gap-8">
+        <h1 class="font-600 text-4xl lg:text-5xl">
           Enfin un moyen pour vous et vos collègues de
           <span class="text-primary">trouver à manger</span>
         </h1>
-        <div class="flex gap-4 justify-center !lg:justify-start">
+        <div class="flex gap-4 !sm:flex-row flex-col">
           <NButton type="primary">Détails de la réservation</NButton>
           <NButton>Détails de la réservation</NButton>
         </div>
       </div>
-      <nuxt-img
-        class="rounded-md"
+      <img
         src="/homepage/midi-friendly-group.jpg"
-        sizes="sm:100vw lg:80vw xl:50vw"
-        height="400"
+        alt="miudi roupe"
+        class="w-full !md:w-1/2 max-h-60 !md:max-h-4/6 object-cover rounded-md"
       />
     </div>
 
     <div
       id="about"
-      class="flex overflow-hidden flex-col !lg:flex-row gap-12 h-4/5 items-center"
+      class="flex overflow-hidden flex-col-reverse !md:flex-row gap-12 md:h-4/5 items-center"
     >
-      <nuxt-img
-        class="rounded-md order-2 lg:order-1"
+      <img
         src="/homepage/midi-friendly-group.jpg"
-        sizes="sm:100vw lg:80vw xl:50vw"
-        height="400"
+        alt="miudi roupe"
+        class="w-full !md:w-1/2 max-h-80 !md:max-h-4/6 object-cover rounded-md"
       />
-      <div
-        class="w-full lg:w-1/2 flex flex-col gap-8 text-center lg:text-left mt-20 lg:mt-0"
-      >
+      <div class="w-full !md:w-1/2 flex flex-col gap-8 mt-20 md:mt-0">
         <h2 class="font-600 text-3xl">A propos de MidiFriendly</h2>
         <p>
           Le moment le plus important d’une journée de travail n’est pas la
@@ -91,11 +91,9 @@ function CollapseNonActiveSections(openedIndex: number) {
 
     <div
       id="manage"
-      class="flex overflow-hidden flex-col !lg:flex-row gap-12 h-4/5 items-center"
+      class="flex overflow-hidden flex-col !md:flex-row gap-12 md:h-4/5 items-center"
     >
-      <div
-        class="w-full lg:w-1/2 flex flex-col gap-8 text-center lg:text-left mt-20 lg:mt-0"
-      >
+      <div class="w-full !md:w-1/2 flex flex-col gap-8 mt-20 md:mt-0">
         <h2 class="font-600 text-3xl">Un outil de gestion</h2>
         <div class="flex flex-col gap-4">
           <LayoutCollapsibleText
@@ -110,11 +108,14 @@ function CollapseNonActiveSections(openedIndex: number) {
           </LayoutCollapsibleText>
         </div>
       </div>
-      <nuxt-img
-        class="w-1/2 h-4/6 rounded-md"
-        src="/homepage/organisation.jpg"
-        sizes="sm:100vw lg:80vw xl:50vw"
-        height="400"
+
+      <img
+        :src="
+          collapsibleSectionTexts[activeCollapsibleSection]?.image ??
+          collapsibleSectionTexts[0].image
+        "
+        alt="miudi roupe"
+        class="w-full !md:w-1/2 max-h-60 !md:max-h-4/6 object-cover rounded-md"
       />
     </div>
 
