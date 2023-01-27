@@ -61,26 +61,29 @@ onUnmounted(() => cancelSubscription());
 </script>
 
 <template>
-  <GoogleMap
-    :api-key="GApiKey"
-    class="h-layout w-screen"
-    :center="{
-      lat: orgaCoordinates.latitude,
-      lng: orgaCoordinates.longitude,
-    }"
-    :styles="mapStylesConfig"
-    :zoom="zoom"
-    :clickable-icons="false"
-    :restriction="{ latLngBounds: computedBoundaries }"
-    disable-default-ui
-  >
-    <MapMarkerOrganization :position="orgaCoordinates" />
-    <MapMarkerRestaurant
-      v-for="(restaurant, index) in mapGatewayApi.restaurants.value"
-      :key="restaurant._id"
-      :restaurant="restaurant"
-      :index="index"
-    />
-    <MapSideControls />
-  </GoogleMap>
+  <NSpin :show="mapGatewayApi?.isRestaurantLoading.value ?? true">
+    <template #description> Chargement des restaurants... </template>
+    <GoogleMap
+      :api-key="GApiKey"
+      class="h-layout w-screen"
+      :center="{
+        lat: orgaCoordinates.latitude,
+        lng: orgaCoordinates.longitude,
+      }"
+      :styles="mapStylesConfig"
+      :zoom="zoom"
+      :clickable-icons="false"
+      :restriction="{ latLngBounds: computedBoundaries }"
+      disable-default-ui
+    >
+      <MapMarkerOrganization :position="orgaCoordinates" />
+      <MapMarkerRestaurant
+        v-for="(restaurant, index) in mapGatewayApi.restaurants.value"
+        :key="restaurant._id"
+        :restaurant="restaurant"
+        :index="index"
+      />
+      <MapSideControls />
+    </GoogleMap>
+  </NSpin>
 </template>

@@ -27,7 +27,7 @@ function SelectOrganization(id: string) {
       v-if="!userStore.organizations.length"
       class="w-full h-[50vh] grid place-items-center"
     >
-      <NEmpty> Aucune organisation disponnible sur votre compte. </NEmpty>
+      <NEmpty> Aucune organisation disponible sur votre compte. </NEmpty>
     </div>
 
     <div v-else class="flex flex-col gap-8">

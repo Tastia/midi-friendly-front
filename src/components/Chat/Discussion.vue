@@ -134,6 +134,16 @@ function DateOffsetPrevMessage(currentMessage: string, prevMessage: string) {
   );
 }
 
+function SortDiscussionMessages(
+  messages: Array<ChatMessage2 | PendingChatMessage>
+) {
+  return messages.sort((a, b) => {
+    if (a.createdAt < b.createdAt) return -1;
+    if (a.createdAt > b.createdAt) return 1;
+    return 0;
+  });
+}
+
 function HasSameAuthor(
   currentMessage: ChatMessage2 | PendingChatMessage,
   previousMessage: ChatMessage2 | PendingChatMessage
@@ -207,7 +217,10 @@ onMounted(async () => {
           <NSpin> Chargement du chat ... </NSpin>
         </div>
 
-        <template v-for="(message, index) in messages" :key="message._id">
+        <template
+          v-for="(message, index) in SortDiscussionMessages(messages)"
+          :key="message._id"
+        >
           <span
             v-if="
               !messages[index - 1] ||

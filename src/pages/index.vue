@@ -7,6 +7,7 @@ definePageMeta({
 
 const collapsibleRefs =
   ref<Array<{ setExpanded: (value: boolean) => void; isExpanded: boolean }>>();
+
 const activeCollapsibleSection = computed(
   () =>
     collapsibleRefs.value?.findIndex((itemRef) => itemRef.isExpanded) ?? null
@@ -111,7 +112,7 @@ function CollapseNonActiveSections(openedIndex: number) {
 
       <img
         :src="
-          collapsibleSectionTexts[activeCollapsibleSection]?.image ??
+          collapsibleSectionTexts?.[activeCollapsibleSection ?? -1]?.image ??
           collapsibleSectionTexts[0].image
         "
         alt="miudi roupe"
