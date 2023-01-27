@@ -59,8 +59,12 @@ function CollapseNonActiveSections(openedIndex: number) {
           <span class="text-primary">trouver à manger</span>
         </h1>
         <div class="flex gap-4 !sm:flex-row flex-col">
-          <NButton type="primary" class="text-base">Détails de la réservation</NButton>
-          <NButton class="text-base">Détails de la réservation</NButton>
+          <router-link to="/auth/login">
+            <NButton type="primary" class="text-base">Connexion</NButton>
+          </router-link>
+          <a href="mailto:pro.tastia@gmail.com">
+            <NButton class="text-base">Nous contacter</NButton>
+          </a>
         </div>
       </div>
       <img

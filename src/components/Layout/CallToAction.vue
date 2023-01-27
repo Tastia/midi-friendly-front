@@ -17,7 +17,9 @@ export default {
       <div class="flex flex-col w-full !lg:w-3/5 gap-5 p-8">
         <h2 class="font-600 text-3xl">{{ title }}</h2>
         <p>{{ description }}</p>
-        <NButton type="primary" class="w-min">{{ cta }}</NButton>
+        <a href="mailto:pro.tastia@gmail.com">
+          <NButton type="primary" class="w-min">{{ cta }}</NButton>
+        </a>
       </div>
       <div class="absolute -right-10 top-10 hidden lg:block">
         <nuxt-img :src="'/'+image" width="450" />
