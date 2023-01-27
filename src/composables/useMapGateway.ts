@@ -1,4 +1,4 @@
-import { CreateGroupPollDto } from "./../types/mapGateway";
+import { CreateGroupPollDto } from "@/types/mapGateway";
 import { Restaurant } from "@/types/restaurant";
 import { LunchGroup } from "@/types/lunchGroups";
 import io from "socket.io-client";
@@ -10,6 +10,7 @@ import {
   MapLunchGroupPoll,
   GatewayUser,
 } from "@/types/mapGateway";
+import { useAsyncState } from "@vueuse/core";
 
 export function useMapGateway() {
   const userStore = useUserStore();
@@ -23,17 +24,17 @@ export function useMapGateway() {
   });
 
   const users = ref<GatewayUser[]>([]);
-  const restaurants = ref<Restaurant[]>([]);
   const lunchGroups = ref<MapLunchGroup[]>([]);
   const lunchGroupPolls = ref<MapLunchGroupPoll[]>([]);
   const pendingOperation = ref<`${LunchGroupEmittedEvents}` | null>();
-
-  onMounted(
-    async () =>
-      (restaurants.value =
-        await RestaurantController.getOrganizationRestaurants(
-          userStore.activeOrganization?._id as string
-        ).then((data) => data.restaurants))
+  const { state: restaurants, isLoading: isRestaurantLoading } = useAsyncState<
+    Restaurant[]
+  >(
+    () =>
+      RestaurantController.getOrganizationRestaurants(
+        userStore.activeOrganization?._id as string
+      ).then((data) => data.restaurants),
+    []
   );
 
   client.on(
@@ -313,6 +314,7 @@ export function useMapGateway() {
     lunchGroups,
     lunchGroupPolls,
     restaurants,
+    isRestaurantLoading,
     pendingOperation,
     CreateGroup,
     UpdateGroup,

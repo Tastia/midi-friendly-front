@@ -5,7 +5,9 @@ definePageMeta({
   showLogin: true,
 });
 
-const collapsibleRefs = ref<Array<{ setExpanded: (value: boolean) => void }>>();
+const collapsibleRefs =
+  ref<Array<{ setExpanded: (value: boolean) => void; isExpanded: boolean }>>();
+
 const collapsibleSectionTexts = [
   {
     title: "Favoris",
