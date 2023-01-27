@@ -7,11 +7,8 @@
     >
       <p>@MidiFriendly</p>
       <div class="flex gap-4 align-center">
-        <router-link to="/">Home</router-link>
-        <router-link to="/">Blog</router-link>
         <router-link to="/">Mentions légales</router-link>
         <router-link to="/">Contact</router-link>
-        <router-link to="/">Compte</router-link>
       </div>
     </div>
   </n-el>
