@@ -152,7 +152,7 @@ function OpenGoogleMaps() {
           v-if="!restaurant.photos.length"
           class="w-full h-50 rounded bg-gray-400 grid place-items-center"
         >
-          <NEmpty> Aucune photo disponnible </NEmpty>
+          <NEmpty> Aucune photo disponible </NEmpty>
         </div>
 
         <NImageGroup v-else>
@@ -181,7 +181,7 @@ function OpenGoogleMaps() {
         <p class="font-black text-lg">Groupes :</p>
 
         <div v-if="!lunchGroups.length" class="flex justify-center">
-          <NEmpty> Aucun groupe disponnible </NEmpty>
+          <NEmpty> Aucun groupe disponible </NEmpty>
         </div>
 
         <div v-else class="flex flex-col gap-3">
@@ -208,7 +208,7 @@ function OpenGoogleMaps() {
         </NButton>
 
         <p class="whitespace-pre-line flex flex-wrap gap-1">
-          <span class="font-semibold">Addresse :</span>
+          <span class="font-semibold">Adresse :</span>
           <NTooltip>
             <template #trigger>
               <span
@@ -225,7 +225,7 @@ function OpenGoogleMaps() {
 
         <span class="font-semibold">Horaires :</span>
         <NEmpty v-if="!restaurant.openingHours.length">
-          Horaires d'ouverture non renseignées
+          Horaires d'ouverture non renseignés
         </NEmpty>
         <div v-else>
           <div
