@@ -215,8 +215,8 @@ function OpenGoogleMaps() {
                 class="hover:text-primary transition-all ease-in-out duration-100 cursor-pointer"
                 @click="OpenGoogleMaps"
               >
-                {{ restaurant.address.street }} {{ restaurant.address.city }},
-                {{ restaurant.address.zip }} {{ restaurant.address.country }}
+                {{ restaurant.address?.street }} {{ restaurant.address?.city }},
+                {{ restaurant.address?.zip }} {{ restaurant.address?.country }}
               </span>
             </template>
             Ouvrir dans Google Maps
