@@ -12,6 +12,7 @@ import { useMessage } from "naive-ui";
 
 definePageMeta({
   name: "auth.invitation",
+  middleware: ["clear-session"],
 });
 
 const route = useRoute();
