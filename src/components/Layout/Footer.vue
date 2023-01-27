@@ -7,8 +7,17 @@
     >
       <p>@MidiFriendly</p>
       <div class="flex gap-4 align-center">
-        <router-link to="/">Mentions légales</router-link>
-        <router-link to="/">Contact</router-link>
+        <nuxt-link
+          to="/legal-mentions"
+          class="transition-all ease-in-out duration-100 hover:text-primary"
+        >
+          Mentions légales
+        </nuxt-link>
+        <nuxt-link
+          class="transition-all ease-in-out duration-100 hover:text-primary"
+          to="/"
+          >Contact</nuxt-link
+        >
       </div>
     </div>
   </n-el>

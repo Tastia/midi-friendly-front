@@ -11,12 +11,14 @@ const showLogin = computed(() => {
   <n-el
     class="bg-[var(--body-color)] border-b border-[var(--border-color)] h-16 w-full flex items-center justify-between p-2"
   >
-    <img
-      v-if="appStore.isDark"
-      src="@/assets/images/LogoDark.svg"
-      class="h-8 w-auto"
-    />
-    <img v-else src="@/assets/images/LogoLight.svg" class="h-8 w-auto" />
+    <NuxtLink to="/">
+      <img
+        v-if="appStore.isDark"
+        src="@/assets/images/LogoDark.svg"
+        class="h-8 w-auto"
+      />
+      <img v-else src="@/assets/images/LogoLight.svg" class="h-8 w-auto" />
+    </NuxtLink>
     <div class="flex items-center gap-2">
       <template v-if="showLogin && !userStore.user">
         <NButton
