@@ -50,14 +50,20 @@ function CollapseNonActiveSections(openedIndex: number) {
         </h1>
         <div class="flex gap-4">
           <NButton type="primary">Détails de la réservation</NButton>
-          <NButton secondary>Détails de la réservation</NButton>
+          <NButton>Détails de la réservation</NButton>
         </div>
       </div>
-      <div class="w-full h-4/6 lg:w-1/2 image-container rounded-md"></div>
+      <nuxt-img
+        class="w-1/2 h-4/6 rounded-md"
+        src="/homepage/midi-friendly-group.jpg"
+      />
     </div>
 
     <div id="about" class="flex overflow-hidden gap-12 h-4/5 items-center">
-      <div class="w-full h-4/6 lg:w-1/2 image-container rounded-md"></div>
+      <nuxt-img
+        class="w-1/2 h-4/6 rounded-md"
+        src="/homepage/midi-friendly-group.jpg"
+      />
       <div class="w-full lg:w-1/2 flex flex-col gap-8">
         <h2 class="font-600 text-3xl">A propos de MidiFriendly</h2>
         <p>
@@ -85,7 +91,10 @@ function CollapseNonActiveSections(openedIndex: number) {
           </LayoutCollapsibleText>
         </div>
       </div>
-      <div class="w-full h-4/6 lg:w-1/2 image-container rounded-md"></div>
+      <nuxt-img
+        class="w-1/2 h-4/6 rounded-md"
+        src="/homepage/organisation.jpg"
+      />
     </div>
 
     <LayoutCallToAction
@@ -100,30 +109,3 @@ function CollapseNonActiveSections(openedIndex: number) {
     <LayoutFooter />
   </div>
 </template>
-
-<style lang="scss" scoped>
-#first-section {
-  .image-container {
-    background: url("@/assets/images/homepage/midi-friendly-group.jpg")
-      no-repeat;
-    background-size: cover;
-    background-position: center;
-  }
-}
-
-#about {
-  .image-container {
-    background: url("@/assets/images/homepage/about.jpg") no-repeat;
-    background-size: cover;
-    background-position: center;
-  }
-}
-
-#manage {
-  .image-container {
-    background: url("@/assets/images/homepage/manage.jpg") no-repeat;
-    background-size: cover;
-    background-position: center;
-  }
-}
-</style>

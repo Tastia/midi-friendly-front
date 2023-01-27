@@ -20,11 +20,7 @@ export default {
         <NButton type="primary" class="w-min">{{ cta }}</NButton>
       </div>
       <div class="absolute -right-10 top-10">
-        <n-image
-          width="450"
-          :src="'http://localhost:3000/_nuxt/assets/images/'+image"
-          preview-disabled
-        />
+        <nuxt-img :src="'/'+image" width="450" />
       </div>
     </div>
   </div>
