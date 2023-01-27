@@ -47,7 +47,7 @@ function CollapseNonActiveSections(openedIndex: number) {
 </script>
 
 <template>
-  <div class="max-w-screen-xl w-full p-8 mx-auto h-full">
+  <div class="max-w-screen-xl w-full p-8 mx-auto h-full text-base">
     <div
       id="first-section"
       class="flex overflow-hidden gap-6 md:gap-12 md:h-4/5 flex-col-reverse !md:flex-row items-center"
@@ -58,8 +58,8 @@ function CollapseNonActiveSections(openedIndex: number) {
           <span class="text-primary">trouver à manger</span>
         </h1>
         <div class="flex gap-4 !sm:flex-row flex-col">
-          <NButton type="primary">Détails de la réservation</NButton>
-          <NButton>Détails de la réservation</NButton>
+          <NButton type="primary" class="text-base">Détails de la réservation</NButton>
+          <NButton class="text-base">Détails de la réservation</NButton>
         </div>
       </div>
       <img
