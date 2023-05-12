@@ -39,9 +39,8 @@ const chatroom = ref<ChatRoom>();
 const messages = ref<Array<ChatMessage2 | PendingChatMessage>>([]);
 const roomUsers = computed(
   () =>
-    chatroom.value?.users.map((userId) =>
-      chatGatewayApi?.users.value.find((user) => user._id === userId)
-    ) ?? []
+    chatroom.value?.users.map((userId) => chatGatewayApi?.users.value.find((user) => user._id === userId)) ??
+    []
 );
 
 useInfiniteScroll(messagesContainer, LoadMoreMessages, {
@@ -59,21 +58,15 @@ async function ScrollToBottom() {
   });
 }
 
-const LoadRoomData = async () =>
-  (chatroom.value = await ChatController.getRoomData(props.roomId));
+const LoadRoomData = async () => (chatroom.value = await ChatController.getRoomData(props.roomId));
 
 async function LoadMoreMessages() {
   try {
     isLoading.value = true;
-    const newMessagesBatch = await ChatController.getRoomMessages(
-      props.roomId,
-      {
-        limit: 20,
-        offset: messages.value.filter(
-          (message) => !(message as PendingChatMessage).pending
-        ).length,
-      }
-    );
+    const newMessagesBatch = await ChatController.getRoomMessages(props.roomId, {
+      limit: 20,
+      offset: messages.value.filter((message) => !(message as PendingChatMessage).pending).length,
+    });
 
     isLoading.value = false;
     messages.value = [...newMessagesBatch, ...messages.value];
@@ -121,22 +114,17 @@ async function SendMessage(message: ChatMessageDto["message"]) {
     );
   } else {
     // console.error(`Send message failed: ${messsage}`);
-    messages.value = messages.value.filter(
-      (message) => message._id !== temporaryId
-    );
+    messages.value = messages.value.filter((message) => message._id !== temporaryId);
   }
 }
 
 function DateOffsetPrevMessage(currentMessage: string, prevMessage: string) {
   return (
-    new Date(currentMessage).getTime() - new Date(prevMessage).getTime() >
-    30 * 60 * 1000 // 30 minutes
+    new Date(currentMessage).getTime() - new Date(prevMessage).getTime() > 30 * 60 * 1000 // 30 minutes
   );
 }
 
-function SortDiscussionMessages(
-  messages: Array<ChatMessage2 | PendingChatMessage>
-) {
+function SortDiscussionMessages(messages: Array<ChatMessage2 | PendingChatMessage>) {
   return messages.sort((a, b) => {
     if (a.createdAt < b.createdAt) return -1;
     if (a.createdAt > b.createdAt) return 1;
@@ -153,8 +141,7 @@ function HasSameAuthor(
 
 const cancelSubscription = chatGatewayApi?.SubscribeToNewMessage(
   (data: { roomId: string; message: ChatMessage2; self: boolean }) => {
-    if (data.roomId === props.roomId && !data.self)
-      messages.value.push(data.message);
+    if (data.roomId === props.roomId && !data.self) messages.value.push(data.message);
     ScrollToBottom();
     if (isOpen.value) ChatController.markRoomMessagesAsRead(props.roomId);
   }
@@ -191,17 +178,11 @@ onMounted(async () => {
     <NDrawerContent :native-scrollbar="false" closable>
       <template #header>
         <div class="flex items-center gap-2">
-          <NEllipsis
-            class="text-md text-primary font-black uppercase"
-            style="max-width: 50%"
-          >
+          <NEllipsis class="text-md text-primary font-black uppercase" style="max-width: 50%">
             {{ label }}
           </NEllipsis>
           <NDivider vertical />
-          <MapUserStack
-            :users="((roomUsers) as unknown as GatewayUser[])"
-            size="small"
-          />
+          <MapUserStack :users="((roomUsers) as unknown as GatewayUser[])" size="small" />
         </div>
       </template>
 
@@ -209,25 +190,15 @@ onMounted(async () => {
         <ChatInput :users="chatroom?.users ?? []" @send-message="SendMessage" />
       </template>
 
-      <div
-        ref="messagesContainer"
-        class="flex flex-col w-full h-[calc(79vh)] overflow-y-scroll pr-4"
-      >
+      <div ref="messagesContainer" class="flex flex-col w-full h-[calc(79vh)] overflow-y-scroll pr-4">
         <div v-if="isLoading" class="w-full grid place-items-center">
           <NSpin> Chargement du chat ... </NSpin>
         </div>
 
-        <template
-          v-for="(message, index) in SortDiscussionMessages(messages)"
-          :key="message._id"
-        >
+        <template v-for="(message, index) in SortDiscussionMessages(messages)" :key="message._id">
           <span
             v-if="
-              !messages[index - 1] ||
-              DateOffsetPrevMessage(
-                message.createdAt,
-                messages[index - 1].createdAt
-              )
+              !messages[index - 1] || DateOffsetPrevMessage(message.createdAt, messages[index - 1].createdAt)
             "
             class="w-auto self-center text-sm text-gray-500 font-medium mt-6"
             round
@@ -245,9 +216,7 @@ onMounted(async () => {
                   {
                     'self-end': message.user._id === userStore.user?._id,
                   },
-                  HasSameAuthor(message, messages[index - 1])
-                    ? 'mt-2.5'
-                    : 'mt-6',
+                  HasSameAuthor(message, messages[index - 1]) ? 'mt-2.5' : 'mt-6',
                 ]"
               >
                 <NAvatar
@@ -257,12 +226,7 @@ onMounted(async () => {
                   size="small"
                 >
                   <template v-if="!message.user.avatar">
-                    {{
-                      getUserInitials(
-                        message.user.firstName,
-                        message.user.lastName
-                      )
-                    }}
+                    {{ getUserInitials(message.user.firstName, message.user.lastName) }}
                   </template>
                 </NAvatar>
                 <ChatMessage

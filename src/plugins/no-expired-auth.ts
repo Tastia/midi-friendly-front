@@ -6,9 +6,7 @@ export default defineNuxtPlugin(() => {
     () => {
       const userStore = useUserStore();
       if (userStore.accessToken) {
-        const decodedToken = JwtDecode<{ exp: number }>(
-          userStore.accessToken as string
-        );
+        const decodedToken = JwtDecode<{ exp: number }>(userStore.accessToken as string);
         if (decodedToken?.exp < Date.now() / 1000) userStore.ClearUserSession();
       }
     },

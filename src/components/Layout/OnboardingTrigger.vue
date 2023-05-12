@@ -4,9 +4,7 @@
     <template #trigger>
       <NButton size="small" secondary circle @click="ShowOnboarding">
         <template #icon>
-          <i:material-symbols:question-mark
-            class="transition-all ease-in-out duration-150 transform"
-          />
+          <i:material-symbols:question-mark class="transition-all ease-in-out duration-150 transform" />
         </template>
       </NButton>
     </template>

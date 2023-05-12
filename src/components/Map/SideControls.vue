@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { useSweetform } from "@chronicstone/vue-sweetforms";
+import { useFormApi } from "@chronicstone/vue-sweettools";
 import { CustomControl } from "vue3-google-map";
 
-const formApi = useSweetform();
+const formApi = useFormApi();
 
 function GetForm() {
   formApi.createForm(LunchGroupPollFormSchema());

@@ -27,14 +27,10 @@ const userBelongsToGroup = computed<boolean>(() =>
   props.group.users.some((user) => user._id === userStore.user?._id)
 );
 
-const userOwnsGroup = computed<boolean>(
-  () => props.group.owner._id === userStore.user?._id
-);
+const userOwnsGroup = computed<boolean>(() => props.group.owner._id === userStore.user?._id);
 
 const restaurant = computed<Restaurant | undefined>(() =>
-  gatewayApi?.restaurants.value.find(
-    (restaurant) => restaurant._id === props.group.restaurant
-  )
+  gatewayApi?.restaurants.value.find((restaurant) => restaurant._id === props.group.restaurant)
 );
 
 const isLunchGroupExpired = computed<boolean>(() => {
@@ -46,8 +42,7 @@ const isLunchGroupExpired = computed<boolean>(() => {
 async function JoinGroup() {
   const existingGroup = gatewayApi?.lunchGroups.value.find(
     (group) =>
-      group.users.some((user) => user === userStore.user?._id) &&
-      group.restaurant === props.group.restaurant
+      group.users.some((user) => user === userStore.user?._id) && group.restaurant === props.group.restaurant
   );
   if (existingGroup) {
     const proceed = await useConfirmDialog({
@@ -57,21 +52,19 @@ async function JoinGroup() {
         <div class="flex flex-col gap-2">
           <span>
             Vous êtes déjà dans un groupe pour ce restaurant, prévu à
-            {formatTimeFromTimestamp(existingGroup.meetingTime)}. Voulez-vous
-            quitter ce groupe pour rejoindre celui-ci ?
+            {formatTimeFromTimestamp(existingGroup.meetingTime)}. Voulez-vous quitter ce groupe pour rejoindre
+            celui-ci ?
           </span>
           {existingGroup.owner === userStore.user?._id && (
             <span class="text-red-500">
-              Vous êtes le propriétaire du groupe existant, si vous quittez ce
-              groupe, il sera supprimé.
+              Vous êtes le propriétaire du groupe existant, si vous quittez ce groupe, il sera supprimé.
             </span>
           )}
         </div>
       ),
     });
     if (!proceed) return;
-    if (existingGroup.owner === userStore.user?._id)
-      gatewayApi?.DeleteGroup(existingGroup._id);
+    if (existingGroup.owner === userStore.user?._id) gatewayApi?.DeleteGroup(existingGroup._id);
     else gatewayApi?.LeaveGroup(existingGroup._id);
   }
 
@@ -105,11 +98,7 @@ async function DeleteGroup() {
   <NCard
     :segmented="{ content: true }"
     embedded
-    :theme-overrides="
-      userBelongsToGroup && highlightActive
-        ? { borderColor: themeVars.primaryColor }
-        : {}
-    "
+    :theme-overrides="userBelongsToGroup && highlightActive ? { borderColor: themeVars.primaryColor } : {}"
   >
     <template #header>
       <div v-if="showRestaurantInfo" class="flex flex-col gap-2">
@@ -228,8 +217,7 @@ async function DeleteGroup() {
                 <NEl
                   tag="span"
                   :class="{
-                    'text-[var(--primary-color)]':
-                      group.owner._id === userStore.user?._id,
+                    'text-[var(--primary-color)]': group.owner._id === userStore.user?._id,
                   }"
                 >
                   {{ group.owner.firstName }} {{ group.owner.lastName }}
@@ -260,9 +248,7 @@ async function DeleteGroup() {
                   class="bg-blue-gray-500/10 w-full h-auto p-2 !pr-0.5"
                   :style="{ borderRadius: themeVars.borderRadius }"
                 >
-                  <NScrollbar
-                    class="max-h-32 italic text-gray-500 whitespace-pre pr-2"
-                  >
+                  <NScrollbar class="max-h-32 italic text-gray-500 whitespace-pre pr-2">
                     {{ group.description || "N/A" }}
                   </NScrollbar>
                 </div>

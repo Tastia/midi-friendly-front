@@ -18,12 +18,7 @@ function SendTextMessage() {
 
 <template>
   <div class="flex items-center gap-1.5 w-full">
-    <NInput
-      v-model:value="textMessage"
-      class="w-full"
-      round
-      placeholder="Entrez votre message..."
-    />
+    <NInput v-model:value="textMessage" class="w-full" round placeholder="Entrez votre message..." />
     <NButton type="primary" circle @click="SendTextMessage">
       <template #icon>
         <NIcon>

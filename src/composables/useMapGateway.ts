@@ -27,13 +27,11 @@ export function useMapGateway() {
   const lunchGroups = ref<MapLunchGroup[]>([]);
   const lunchGroupPolls = ref<MapLunchGroupPoll[]>([]);
   const pendingOperation = ref<`${LunchGroupEmittedEvents}` | null>();
-  const { state: restaurants, isLoading: isRestaurantLoading } = useAsyncState<
-    Restaurant[]
-  >(
+  const { state: restaurants, isLoading: isRestaurantLoading } = useAsyncState<Restaurant[]>(
     () =>
-      RestaurantController.getOrganizationRestaurants(
-        userStore.activeOrganization?._id as string
-      ).then((data) => data.restaurants),
+      RestaurantController.getOrganizationRestaurants(userStore.activeOrganization?._id as string).then(
+        (data) => data.restaurants
+      ),
     []
   );
 
@@ -45,22 +43,17 @@ export function useMapGateway() {
   client.on(
     LunchGroupReceivedEvents.userConnected,
     ({ userId }: { userId: string }) =>
-      (users.value = users.value.map((user) =>
-        user._id === userId ? { ...user, isOnline: true } : user
-      ))
+      (users.value = users.value.map((user) => (user._id === userId ? { ...user, isOnline: true } : user)))
   );
 
   client.on(
     LunchGroupReceivedEvents.userDisconnected,
     ({ userId }: { userId: string }) =>
-      (users.value = users.value.map((user) =>
-        user._id === userId ? { ...user, isOnline: false } : user
-      ))
+      (users.value = users.value.map((user) => (user._id === userId ? { ...user, isOnline: false } : user)))
   );
 
-  client.on(
-    LunchGroupReceivedEvents.addUserToOrganization,
-    ({ user }: { user: GatewayUser }) => users.value.push(user)
+  client.on(LunchGroupReceivedEvents.addUserToOrganization, ({ user }: { user: GatewayUser }) =>
+    users.value.push(user)
   );
 
   client.on(
@@ -70,56 +63,39 @@ export function useMapGateway() {
 
   client.on(
     LunchGroupReceivedEvents.setGroupPollList,
-    ({ groups }: { groups: MapLunchGroupPoll[] }) =>
-      (lunchGroupPolls.value = groups)
+    ({ groups }: { groups: MapLunchGroupPoll[] }) => (lunchGroupPolls.value = groups)
   );
 
-  client.on(
-    LunchGroupReceivedEvents.addGroupPoll,
-    ({ groupPoll }: { groupPoll: MapLunchGroupPoll }) =>
-      lunchGroupPolls.value.push(groupPoll)
+  client.on(LunchGroupReceivedEvents.addGroupPoll, ({ groupPoll }: { groupPoll: MapLunchGroupPoll }) =>
+    lunchGroupPolls.value.push(groupPoll)
   );
 
   client.on(
     LunchGroupReceivedEvents.addGroupPollEntry,
     (data: { pollId: string; vote: { user: string; restaurant: string } }) => {
-      const groupPoll = lunchGroupPolls.value.find(
-        (group) => group._id === data.pollId
-      );
+      const groupPoll = lunchGroupPolls.value.find((group) => group._id === data.pollId);
       if (!groupPoll) return;
 
-      if (!groupPoll.votes.some((vote) => vote.user === data.vote.user))
-        groupPoll.votes.push(data.vote);
+      if (!groupPoll.votes.some((vote) => vote.user === data.vote.user)) groupPoll.votes.push(data.vote);
       else
-        groupPoll.votes = groupPoll.votes.reduce(
-          (acc: Array<{ restaurant: string; user: string }>, vote) => {
-            return [
-              ...acc,
-              ...[vote.user === data.vote.user ? data.vote : vote],
-            ];
-          },
-          []
-        );
+        groupPoll.votes = groupPoll.votes.reduce((acc: Array<{ restaurant: string; user: string }>, vote) => {
+          return [...acc, ...[vote.user === data.vote.user ? data.vote : vote]];
+        }, []);
     }
   );
 
-  client.on(
-    LunchGroupReceivedEvents.closeGroupPoll,
-    (data: { pollId: string }) =>
-      lunchGroupPolls.value.filter((group) => group._id !== data.pollId)
+  client.on(LunchGroupReceivedEvents.closeGroupPoll, (data: { pollId: string }) =>
+    lunchGroupPolls.value.filter((group) => group._id !== data.pollId)
   );
 
-  client.on(
-    LunchGroupReceivedEvents.addGroup,
-    ({ group }: { group: MapLunchGroup }) => lunchGroups.value.push(group)
+  client.on(LunchGroupReceivedEvents.addGroup, ({ group }: { group: MapLunchGroup }) =>
+    lunchGroups.value.push(group)
   );
 
   client.on(
     LunchGroupReceivedEvents.removeGroup,
     ({ groupId }: { groupId: string }) =>
-      (lunchGroups.value = lunchGroups.value.filter(
-        (group) => group._id !== groupId
-      ))
+      (lunchGroups.value = lunchGroups.value.filter((group) => group._id !== groupId))
   );
 
   client.on(
@@ -159,27 +135,18 @@ export function useMapGateway() {
   );
 
   function CreateGroup(
-    group: Omit<
-      MapLunchGroup,
-      "_id" | "owner" | "users" | "createdAt" | "updatedAt" | "chatRoom"
-    >
+    group: Omit<MapLunchGroup, "_id" | "owner" | "users" | "createdAt" | "updatedAt" | "chatRoom">
   ) {
     pendingOperation.value = LunchGroupEmittedEvents.createGroup;
-    const { setSuccess, setError } = useActionNotification(
-      "Création du groupe..."
-    );
-    client.emit(
-      LunchGroupEmittedEvents.createGroup,
-      group,
-      (res: GatewayEventResponse) => {
-        pendingOperation.value = null;
-        if (res.success) setSuccess("Groupe créé");
-        else {
-          setError("Une erreur est survenue, veuillez réessayer");
-          console.error(res?.messsage ?? "Unknown error");
-        }
+    const { setSuccess, setError } = useActionNotification("Création du groupe...");
+    client.emit(LunchGroupEmittedEvents.createGroup, group, (res: GatewayEventResponse) => {
+      pendingOperation.value = null;
+      if (res.success) setSuccess("Groupe créé");
+      else {
+        setError("Une erreur est survenue, veuillez réessayer");
+        console.error(res?.messsage ?? "Unknown error");
       }
-    );
+    });
   }
 
   function UpdateGroup(group: {
@@ -187,120 +154,81 @@ export function useMapGateway() {
     groupData: Omit<LunchGroup, "_id" | "owner" | "users" | "restaurant">;
   }) {
     pendingOperation.value = LunchGroupEmittedEvents.updateGroup;
-    const { setSuccess, setError } = useActionNotification(
-      "Mise à jour du groupe..."
-    );
-    client.emit(
-      LunchGroupEmittedEvents.updateGroup,
-      group,
-      (res: GatewayEventResponse) => {
-        pendingOperation.value = null;
-        if (res.success) setSuccess("Groupe mis à jour");
-        else {
-          setError("Une erreur est survenue, veuillez réessayer");
-          console.error(res?.messsage ?? "Unknown error");
-        }
+    const { setSuccess, setError } = useActionNotification("Mise à jour du groupe...");
+    client.emit(LunchGroupEmittedEvents.updateGroup, group, (res: GatewayEventResponse) => {
+      pendingOperation.value = null;
+      if (res.success) setSuccess("Groupe mis à jour");
+      else {
+        setError("Une erreur est survenue, veuillez réessayer");
+        console.error(res?.messsage ?? "Unknown error");
       }
-    );
+    });
   }
 
   function DeleteGroup(groupId: string) {
     pendingOperation.value = LunchGroupEmittedEvents.deleteGroup;
-    const { setSuccess, setError } = useActionNotification(
-      "Suppression du groupe..."
-    );
-    client.emit(
-      LunchGroupEmittedEvents.deleteGroup,
-      { groupId },
-      (res: GatewayEventResponse) => {
-        pendingOperation.value = null;
-        if (res.success) setSuccess("Groupe supprimé");
-        else {
-          setError("Une erreur est survenue, veuillez réessayer");
-          console.error(res?.messsage ?? "Unknown error");
-        }
+    const { setSuccess, setError } = useActionNotification("Suppression du groupe...");
+    client.emit(LunchGroupEmittedEvents.deleteGroup, { groupId }, (res: GatewayEventResponse) => {
+      pendingOperation.value = null;
+      if (res.success) setSuccess("Groupe supprimé");
+      else {
+        setError("Une erreur est survenue, veuillez réessayer");
+        console.error(res?.messsage ?? "Unknown error");
       }
-    );
+    });
   }
 
   function JoinGroup(groupId: string) {
     pendingOperation.value = LunchGroupEmittedEvents.joinGroup;
-    const { setError, setSuccess } =
-      useActionNotification("Ajout au groupe...");
-    client.emit(
-      LunchGroupEmittedEvents.joinGroup,
-      { groupId },
-      (res: GatewayEventResponse) => {
-        pendingOperation.value = null;
-        if (res.success) setSuccess("Groupe rejoint");
-        else {
-          setError("Une erreur est survenue, veuillez réessayer");
-          console.error(res?.messsage ?? "Unknown error");
-        }
+    const { setError, setSuccess } = useActionNotification("Ajout au groupe...");
+    client.emit(LunchGroupEmittedEvents.joinGroup, { groupId }, (res: GatewayEventResponse) => {
+      pendingOperation.value = null;
+      if (res.success) setSuccess("Groupe rejoint");
+      else {
+        setError("Une erreur est survenue, veuillez réessayer");
+        console.error(res?.messsage ?? "Unknown error");
       }
-    );
+    });
   }
 
   function LeaveGroup(groupId: string) {
     pendingOperation.value = LunchGroupEmittedEvents.leaveGroup;
-    const { setSuccess, setError } = useActionNotification(
-      "Sortie du groupe..."
-    );
-    client.emit(
-      LunchGroupEmittedEvents.leaveGroup,
-      { groupId },
-      (res: GatewayEventResponse) => {
-        pendingOperation.value = null;
-        if (res.success) setSuccess("Groupe quitté");
-        else {
-          setError("Une erreur est survenue, veuillez réessayer");
-          console.error(res?.messsage ?? "Unknown error");
-        }
+    const { setSuccess, setError } = useActionNotification("Sortie du groupe...");
+    client.emit(LunchGroupEmittedEvents.leaveGroup, { groupId }, (res: GatewayEventResponse) => {
+      pendingOperation.value = null;
+      if (res.success) setSuccess("Groupe quitté");
+      else {
+        setError("Une erreur est survenue, veuillez réessayer");
+        console.error(res?.messsage ?? "Unknown error");
       }
-    );
+    });
   }
 
   function CreateGroupPoll(groupData: CreateGroupPollDto) {
     pendingOperation.value = LunchGroupEmittedEvents.createGroupPoll;
-    const { setSuccess, setError } = useActionNotification(
-      "Création du groupe par vote en cours..."
-    );
-    client.emit(
-      LunchGroupEmittedEvents.createGroupPoll,
-      groupData,
-      (res: GatewayEventResponse) => {
-        pendingOperation.value = null;
-        if (res.success) setSuccess("Groupe par vote créé");
-        else {
-          setError(
-            res?.messsage ?? "Une erreur est survenue, veuillez réessayer"
-          );
-          console.error(res?.messsage ?? "Unknown error");
-        }
+    const { setSuccess, setError } = useActionNotification("Création du groupe par vote en cours...");
+    client.emit(LunchGroupEmittedEvents.createGroupPoll, groupData, (res: GatewayEventResponse) => {
+      pendingOperation.value = null;
+      if (res.success) setSuccess("Groupe par vote créé");
+      else {
+        setError(res?.messsage ?? "Une erreur est survenue, veuillez réessayer");
+        console.error(res?.messsage ?? "Unknown error");
       }
-    );
+    });
   }
 
   function SaveUserPollVote(data: { pollId: string; restaurantId: string }) {
     pendingOperation.value = LunchGroupEmittedEvents.voteGroupPoll;
-    const { setSuccess, setError } = useActionNotification(
-      "Enregistrement de votre vote en cours..."
-    );
+    const { setSuccess, setError } = useActionNotification("Enregistrement de votre vote en cours...");
 
-    client.emit(
-      LunchGroupEmittedEvents.voteGroupPoll,
-      data,
-      (response: GatewayEventResponse) => {
-        pendingOperation.value = null;
-        if (response.success) setSuccess("Vote enregistré");
-        else {
-          setError(
-            response?.messsage ?? "Une erreur est survenue, veuillez réessayer"
-          );
-          console.error(response?.messsage ?? "Unknown error");
-        }
+    client.emit(LunchGroupEmittedEvents.voteGroupPoll, data, (response: GatewayEventResponse) => {
+      pendingOperation.value = null;
+      if (response.success) setSuccess("Vote enregistré");
+      else {
+        setError(response?.messsage ?? "Une erreur est survenue, veuillez réessayer");
+        console.error(response?.messsage ?? "Unknown error");
       }
-    );
+    });
   }
 
   // function Place

@@ -23,20 +23,15 @@ export interface MappedDropdownAction {
   };
 }
 
-export const useDropdownActions: (
-  actions: DropdownAction[]
-) => ComputedRef<MappedDropdownAction[]> = (actions) => {
+export const useDropdownActions: (actions: DropdownAction[]) => ComputedRef<MappedDropdownAction[]> = (
+  actions
+) => {
   return computed(() =>
     actions
       .map((action: DropdownAction) => ({
-        label: action.link
-          ? () => <nuxt-link to={action.link}>{action.label}</nuxt-link>
-          : action.label,
+        label: action.link ? () => <nuxt-link to={action.link}>{action.label}</nuxt-link> : action.label,
         ...(action.icon && { icon: renderIcon(action.icon) }),
-        disabled:
-          typeof action.disable === "function"
-            ? action.disable()
-            : action?.disable ?? false,
+        disabled: typeof action.disable === "function" ? action.disable() : action?.disable ?? false,
         hidden: typeof action.show === "function" ? !action.show() : false,
         props: {
           onClick: () => action?.action?.(),

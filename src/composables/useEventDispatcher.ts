@@ -1,7 +1,5 @@
 import { generateUUID } from "@/utils/generator/uuid";
-export function useEventDispatcher<
-  T extends (...args: any[]) => any | Promise<(...args: any[]) => any>
->() {
+export function useEventDispatcher<T extends (...args: any[]) => any | Promise<(...args: any[]) => any>>() {
   const subscribers = shallowRef<{ _id: string; handler: T }[]>([]);
 
   function removeSubscriber(id: string) {

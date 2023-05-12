@@ -1,7 +1,7 @@
-import { FormSchema } from "@chronicstone/vue-sweetforms";
+import { buildFormSchema } from "@chronicstone/vue-sweettools";
 
-export function UserSatisfactionSchema(): FormSchema {
-  return {
+export function UserSatisfactionSchema() {
+  return buildFormSchema({
     maxWidth: "600px",
     gridSize: 8,
     fieldSize: 8,
@@ -16,8 +16,8 @@ export function UserSatisfactionSchema(): FormSchema {
             content: () => (
               <div class="flex flex-col gap-4">
                 <span>
-                  Laissez votre avis ! <br /> Répondez à ces quelques questions,
-                  afin de nous aider à améliorer notre produit !
+                  Laissez votre avis ! <br /> Répondez à ces quelques questions, afin de nous aider à
+                  améliorer notre produit !
                 </span>
               </div>
             ),
@@ -63,8 +63,7 @@ export function UserSatisfactionSchema(): FormSchema {
         fields: [
           {
             key: "solveProblem",
-            label:
-              "Est-ce que Midi Friendly résout une problématique du quotidien ?",
+            label: "Est-ce que Midi Friendly résout une problématique du quotidien ?",
             type: "radio",
             options: [
               { label: "Oui", value: "Oui" },
@@ -78,8 +77,7 @@ export function UserSatisfactionSchema(): FormSchema {
         fields: [
           {
             key: "question5",
-            label:
-              "Avez-vous trouvé des éléments bloquants lors de votre navigation  ?",
+            label: "Avez-vous trouvé des éléments bloquants lors de votre navigation  ?",
             type: "radio",
             options: [
               { label: "Oui", value: "Oui" },
@@ -110,15 +108,15 @@ export function UserSatisfactionSchema(): FormSchema {
         ],
       },
     ],
-  };
+  });
 }
 
 export async function CollectUserSatisfaction() {
   try {
-    const { formApi } = useReactifiedApi();
-    const { formData, isCompleted } = await formApi.createForm(
-      UserSatisfactionSchema()
-    );
+    const schema = UserSatisfactionSchema();
+    console.log(schema);
+    const { $formApi } = useNuxtApp();
+    const { formData, isCompleted } = await $formApi.createForm(schema);
 
     if (!isCompleted) return false;
   } catch (error) {

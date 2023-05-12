@@ -1,53 +1,56 @@
+import { buildFormSchema } from "@chronicstone/vue-sweettools";
 import { FormSchema } from "@chronicstone/vue-sweetforms";
 import { GetRestaurants } from "./_utils.ts/resolvers";
 import { helpers, maxValue } from "@vuelidate/validators";
 import { FormDivider, FormSectionTitle } from "./_utils.ts/form";
 import { getFutureDate } from "../utils/data/date";
 
-const LunchGroupBaseFormFields = [
-  {
-    label: "Label",
-    key: "label",
-    type: "text",
-    required: true,
-    placeholder: "Afterwork IT",
-    size: "9 md:6",
-  },
-  {
-    key: "meetingTime",
-    label: "Heure de rendez-vous",
-    type: "time",
-    required: true,
-    default: getFutureDate(30).valueOf(),
-    size: "9 md:3",
-    fieldParams: {
-      format: "HH:mm",
-      minuteStep: 5,
+const LunchGroupBaseFormFields = buildFormSchema({
+  fields: [
+    {
+      label: "Label",
+      key: "label",
+      type: "text",
+      required: true,
+      placeholder: "Afterwork IT",
+      size: "9 md:6",
     },
-    transform: (value: number) => new Date(value).toISOString(),
-  },
-  {
-    key: "description",
-    label: "Description",
-    type: "textarea",
-    required: false,
-    placeholder: "Description du groupe (optionnel)",
-  },
-];
+    {
+      key: "meetingTime",
+      label: "Heure de rendez-vous",
+      type: "time",
+      required: true,
+      default: getFutureDate(30).valueOf(),
+      size: "9 md:3",
+      fieldParams: {
+        format: "HH:mm",
+        minuteStep: 5,
+      },
+      transform: (value: number) => new Date(value).toISOString(),
+    },
+    {
+      key: "description",
+      label: "Description",
+      type: "textarea",
+      required: false,
+      placeholder: "Description du groupe (optionnel)",
+    },
+  ],
+});
 
-export function LunchGroupFormSchema(): FormSchema {
-  return {
+export function LunchGroupFormSchema() {
+  return buildFormSchema({
     title: "Créer un groupe",
     maxWidth: "650px",
     fieldSize: 9,
     gridSize: 9,
     allowClickOutside: false,
-    fields: [...LunchGroupBaseFormFields],
-  } as FormSchema;
+    fields: [...LunchGroupBaseFormFields.fields],
+  });
 }
 
-export function LunchGroupPollFormSchema(): FormSchema {
-  return {
+export function LunchGroupPollFormSchema() {
+  return buildFormSchema({
     title: "Initier un vote",
     maxWidth: "700px",
     fieldSize: 9,
@@ -69,7 +72,7 @@ export function LunchGroupPollFormSchema(): FormSchema {
         dependencies: ["meetingTime"],
         transform: (value: number) => new Date(value).toISOString(),
         validators: (dependencies) => {
-          const meetingTime = new Date(dependencies?.meetingTime);
+          const meetingTime = new Date(dependencies?.meetingTime as string);
           return {
             lowerThanMeetingTime: helpers.withMessage(
               "L'heure de fin du vote ne peut pas être supérieure à l'heure de rendez-vous",
@@ -86,9 +89,7 @@ export function LunchGroupPollFormSchema(): FormSchema {
         placeholder: "Restaurants autorisés (optionnel)",
         size: "9 md:5",
         options: GetRestaurants,
-        fieldParams: {
-          multiple: true,
-        },
+        multiple: true,
       },
       {
         key: "userVote",
@@ -98,14 +99,11 @@ export function LunchGroupPollFormSchema(): FormSchema {
         placeholder: "Votez pour le restaurant de votre choix",
         size: 9,
         dependencies: ["allowedRestaurants"],
-        options: async (dependencies) => {
+        options: async (deps) => {
+          const allowedRestaurants = (deps?.allowedRestaurants as string[]) ?? [];
           const restaurants = await GetRestaurants();
-          if (!dependencies?.allowedRestaurants?.length ?? false)
-            return restaurants;
-          else
-            return restaurants.filter((restaurant) =>
-              dependencies?.allowedRestaurants.includes(restaurant.value)
-            );
+          if (!allowedRestaurants.length ?? false) return restaurants;
+          else return restaurants.filter((restaurant) => allowedRestaurants.includes(restaurant.value));
         },
       },
       FormSectionTitle({
@@ -113,7 +111,7 @@ export function LunchGroupPollFormSchema(): FormSchema {
         size: 9,
         topPadding: true,
       }),
-      ...LunchGroupBaseFormFields,
+      ...LunchGroupBaseFormFields.fields,
     ],
-  } as FormSchema;
+  });
 }

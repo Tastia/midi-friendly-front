@@ -8,9 +8,7 @@ export const useAppStore = defineStore("appStore", () => {
   const isLoading = ref<boolean>(false);
   const isLoadingMessage = ref<string>("");
 
-  const theme = computed<GlobalTheme | null>(() =>
-    isDark.value ? darkTheme : null
-  );
+  const theme = computed<GlobalTheme | null>(() => (isDark.value ? darkTheme : null));
   const themeOverrides = computed<GlobalThemeOverrides>(() =>
     isDark.value ? DarkThemeOverrides : LightThemeOverrides
   );

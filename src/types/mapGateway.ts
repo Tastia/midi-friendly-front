@@ -31,10 +31,7 @@ export enum LunchGroupReceivedEvents {
   closeGroupPoll = "CloseGroupPoll",
 }
 
-export type GatewayUser = Omit<
-  User,
-  "organizations" | "credentials.password" | "credentials.userId"
-> & {
+export type GatewayUser = Omit<User, "organizations" | "credentials.password" | "credentials.userId"> & {
   isOnline: boolean;
 };
 
@@ -70,7 +67,7 @@ export type MapLunchGroupPoll = {
 
 export type CreateGroupPollDto = Omit<
   MapLunchGroupPoll,
-  "_id" | "votes" | "owner" | "chatRoom" | "createdAt" | "updatedAt"
+  "_id" | "votes" | "owner" | "chatRoom" | "createdAt" | "updatedAt" | "restaurant"
 > & { userVote: string };
 
 export type GatewayEventResponse<T = Record<string, any>> = {

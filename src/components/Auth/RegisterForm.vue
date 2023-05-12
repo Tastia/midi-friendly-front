@@ -1,11 +1,7 @@
 <script setup lang="ts">
 import { Form, FormSchema } from "@chronicstone/vue-sweetforms";
 import { helpers, sameAs } from "@vuelidate/validators";
-import {
-  AuthEmailCredentials,
-  AuthLoginDto,
-  AuthRegisterDto,
-} from "@/types/auth";
+import { AuthEmailCredentials, AuthLoginDto, AuthRegisterDto } from "@/types/auth";
 
 const emit = defineEmits<{ (e: "onSubmit", data: AuthRegisterDto): void }>();
 
@@ -41,10 +37,7 @@ const formSchema: FormSchema = {
       type: "password",
       dependencies: ["password"],
       validators: (dependencies) => ({
-        sameAs: helpers.withMessage(
-          "Les mots de passe ne correspondent pas",
-          sameAs(dependencies?.password)
-        ),
+        sameAs: helpers.withMessage("Les mots de passe ne correspondent pas", sameAs(dependencies?.password)),
       }),
     },
   ],
@@ -53,19 +46,9 @@ const formSchema: FormSchema = {
 
 <template>
   <div class="flex flex-col">
-    <Form
-      :form-options="formSchema"
-      @on-submit="SubmitFormData('email', $event)"
-    >
+    <Form :form-options="formSchema" @on-submit="SubmitFormData('email', $event)">
       <template #actions="{ toggleSubmit }">
-        <NButton
-          class="w-full"
-          size="large"
-          secondary
-          type="primary"
-          @click="toggleSubmit"
-          >REGISTER</NButton
-        >
+        <NButton class="w-full" size="large" secondary type="primary" @click="toggleSubmit">REGISTER</NButton>
       </template>
     </Form>
     <NDivider>

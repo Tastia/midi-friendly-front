@@ -15,20 +15,14 @@ const isHovered = useElementHover(markerElement);
 
 const lunchGroups = useRestaurantLunchGroups(props.restaurant._id);
 const userLunchGroup = computed(() =>
-  lunchGroups.value.find((group) =>
-    group.users.some((user) => user._id === userStore.user?._id)
-  )
+  lunchGroups.value.find((group) => group.users.some((user) => user._id === userStore.user?._id))
 );
 
 const { SubscribeOnboardingEvent } = useOnboardingEvents();
-const cancelSubscription = SubscribeOnboardingEvent(
-  (event: OnboardingEvents) => {
-    if (event === OnboardingEvents.openRestaurantProfile && props.index === 0)
-      showProfile.value = true;
-    if (event === OnboardingEvents.closeRestaurantProfile && props.index === 0)
-      showProfile.value = false;
-  }
-) as () => void;
+const cancelSubscription = SubscribeOnboardingEvent((event: OnboardingEvents) => {
+  if (event === OnboardingEvents.openRestaurantProfile && props.index === 0) showProfile.value = true;
+  if (event === OnboardingEvents.closeRestaurantProfile && props.index === 0) showProfile.value = false;
+}) as () => void;
 onUnmounted(() => cancelSubscription());
 </script>
 
@@ -51,29 +45,17 @@ onUnmounted(() => cancelSubscription());
         </span>
       </div>
       <template #trigger>
-        <div
-          ref="markerElement"
-          class="relative !cursor-pointer"
-          @click="showProfile = true"
-        >
-          <component
-            :is="lunchGroups.length > 0 ? NBadge : 'div'"
-            type="warning"
-            :value="lunchGroups.length"
-          >
+        <div ref="markerElement" class="relative !cursor-pointer" @click="showProfile = true">
+          <component :is="lunchGroups.length > 0 ? NBadge : 'div'" type="warning" :value="lunchGroups.length">
             <NAvatar
               class="shadow-sm"
               :style="{
-                border: `3px solid ${
-                  userLunchGroup ? themeVars.primaryColor : '#d2d2d2'
-                }`,
+                border: `3px solid ${userLunchGroup ? themeVars.primaryColor : '#d2d2d2'}`,
               }"
               :size="50"
               :theme-overrides="{ color: 'white' }"
             >
-              <i:material-symbols:restaurant
-                class="font-bold text-lg text-black"
-              />
+              <i:material-symbols:restaurant class="font-bold text-lg text-black" />
             </NAvatar>
           </component>
 

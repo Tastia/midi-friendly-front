@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Restaurant } from "@/types/restaurant";
-import { useSweetform } from "@chronicstone/vue-sweetforms";
 import { ParsedMapLunchGroup } from "@/composables/useRestaurantLunchGroups";
+import { useFormApi } from "@chronicstone/vue-sweettools";
 
 const S3_URL = import.meta.env.VITE_S3_BUCKET_URL;
 
@@ -16,15 +16,13 @@ const isOpen = computed({
 });
 
 const { width } = useWindowSize();
-const formApi = useSweetform();
+const formApi = useFormApi();
 const gatewayApi = inject(mapApiInjectionKey);
 const userStore = useUserStore();
 const lunchGroups = useRestaurantLunchGroups(props.restaurant._id);
 
 const isUserInAGroup = computed<boolean>(() =>
-  lunchGroups.value.some((group) =>
-    group.users.some((user) => user._id === userStore.user?._id)
-  )
+  lunchGroups.value.some((group) => group.users.some((user) => user._id === userStore.user?._id))
 );
 
 const restaurantTags = computed(() =>
@@ -122,9 +120,7 @@ function SortByMeetingTime(groups: ParsedMapLunchGroup[]) {
 }
 
 function GeneratePhotoAlt(index: number) {
-  return `${props.restaurant.name} - ${index + 1}/${
-    props.restaurant.photos.length
-  }`;
+  return `${props.restaurant.name} - ${index + 1}/${props.restaurant.photos.length}`;
 }
 
 function OpenGoogleMaps() {
@@ -148,10 +144,7 @@ function OpenGoogleMaps() {
         <h1 class="text-2xl font-black">{{ restaurant.name }}</h1>
       </template>
       <div id="restaurant-profile-drawer" class="flex flex-col gap-6">
-        <div
-          v-if="!restaurant.photos.length"
-          class="w-full h-50 rounded bg-gray-400 grid place-items-center"
-        >
+        <div v-if="!restaurant.photos.length" class="w-full h-50 rounded bg-gray-400 grid place-items-center">
           <NEmpty> Aucune photo disponible </NEmpty>
         </div>
 
@@ -169,11 +162,7 @@ function OpenGoogleMaps() {
         </NImageGroup>
 
         <div v-if="restaurantTags.length" class="flex flex-wrap gap-2">
-          <NTag
-            v-for="(tag, index) in restaurantTags"
-            :key="index"
-            type="primary"
-          >
+          <NTag v-for="(tag, index) in restaurantTags" :key="index" type="primary">
             {{ tag }}
           </NTag>
         </div>
@@ -224,9 +213,7 @@ function OpenGoogleMaps() {
         </p>
 
         <span class="font-semibold">Horaires :</span>
-        <NEmpty v-if="!restaurant.openingHours.length">
-          Horaires d'ouverture non renseignés
-        </NEmpty>
+        <NEmpty v-if="!restaurant.openingHours.length"> Horaires d'ouverture non renseignés </NEmpty>
         <div v-else>
           <div
             v-for="(item, index) in restaurant.openingHours"

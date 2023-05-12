@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { useSweetform } from "@chronicstone/vue-sweetforms";
 import { GoogleMap } from "vue3-google-map";
 import { OnboardingEvents } from "@/types/onboarding";
+import { useFormApi } from "@chronicstone/vue-sweettools";
 
 definePageMeta({
   middleware: ["auth"],
@@ -21,7 +21,7 @@ const props = withDefaults(
     }),
   }
 );
-const formApi = useSweetform();
+const formApi = useFormApi();
 const appStore = useAppStore();
 const mapGatewayApi = useMapGateway();
 provide(mapApiInjectionKey, mapGatewayApi);
@@ -44,19 +44,16 @@ const mapStylesConfig = computed(() => [
 ]);
 
 const { SubscribeOnboardingEvent } = useOnboardingEvents();
-const cancelSubscription = SubscribeOnboardingEvent(
-  (event: OnboardingEvents) => {
-    if (event === OnboardingEvents.openCreateGroupForm)
-      formApi.createForm(LunchGroupFormSchema());
+const cancelSubscription = SubscribeOnboardingEvent((event: OnboardingEvents) => {
+  if (event === OnboardingEvents.openCreateGroupForm) formApi.createForm(LunchGroupFormSchema());
 
-    if (event === OnboardingEvents.closeCreateGroupForm)
-      (
-        document.querySelector(
-          "#sweetforms__form > div.n-card__footer > div > button.n-button.n-button--error-type.n-button--medium-type.n-button--secondary"
-        ) as HTMLButtonElement
-      )?.click();
-  }
-) as () => void;
+  if (event === OnboardingEvents.closeCreateGroupForm)
+    (
+      document.querySelector(
+        "#sweetforms__form > div.n-card__footer > div > button.n-button.n-button--error-type.n-button--medium-type.n-button--secondary"
+      ) as HTMLButtonElement
+    )?.click();
+}) as () => void;
 onUnmounted(() => cancelSubscription());
 </script>
 

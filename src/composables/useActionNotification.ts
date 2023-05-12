@@ -1,6 +1,6 @@
 export const useActionNotification = (loadingMessage: string) => {
-  const { messageApi } = useReactifiedApi();
-  const message = messageApi.create(loadingMessage, {
+  const { $messageApi } = useNuxtApp();
+  const message = $messageApi.create(loadingMessage, {
     type: "loading",
     duration: 0,
   });

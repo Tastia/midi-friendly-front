@@ -20,9 +20,7 @@ const props = defineProps<{
       {{ userStore.activeOrganization?.name }}
       <template #trigger>
         <NAvatar :color="themeVars.primaryColor">
-          <i:mdi:office-building
-            class="font-bold text-[50px] text-shadow text-white"
-          />
+          <i:mdi:office-building class="font-bold text-[50px] text-shadow text-white" />
         </NAvatar>
       </template>
     </NTooltip>

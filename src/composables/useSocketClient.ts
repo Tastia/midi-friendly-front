@@ -1,9 +1,6 @@
 import { ManagerOptions, SocketOptions, io } from "socket.io-client";
 
-export function useSocketClient(
-  url: string,
-  options: Partial<ManagerOptions & SocketOptions>
-) {
+export function useSocketClient(url: string, options: Partial<ManagerOptions & SocketOptions>) {
   const userStore = useUserStore();
   const isConnected = ref(false);
   const client = io(`${import.meta.env.VITE_GATEWAY_URL}/chat` as string, {
@@ -21,11 +18,9 @@ export function useSocketClient(
 
   const { isOnline } = useNetwork();
 
-  watch(isOnline, (isOnline) =>
-    isOnline ? client.disconnect().connect() : client.disconnect()
-  );
+  watch(isOnline, (isOnline) => (isOnline ? client.disconnect().connect() : client.disconnect()));
 
-  client.timeout
+  client.timeout;
 
   return { client, isConnected };
 }

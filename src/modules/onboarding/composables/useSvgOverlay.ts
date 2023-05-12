@@ -1,7 +1,4 @@
-import {
-  SvgOverlayOptions,
-  defaultVOnboardingWrapperOptions,
-} from "../types/onboardingWrapper";
+import { SvgOverlayOptions, defaultVOnboardingWrapperOptions } from "../types/onboardingWrapper";
 
 export default function useSvgOverlay() {
   const path = ref("");
@@ -21,10 +18,7 @@ export default function useSvgOverlay() {
   };
   const updatePath = async (
     element: Element | null,
-    options: Omit<
-      SvgOverlayOptions,
-      "enabled"
-    > = defaultVOnboardingWrapperOptions.overlay!
+    options: Omit<SvgOverlayOptions, "enabled"> = defaultVOnboardingWrapperOptions.overlay!
   ) => {
     if (!element) return;
     const { innerWidth, innerHeight } = window;
@@ -54,22 +48,18 @@ export default function useSvgOverlay() {
       left: left - (padding?.left ?? 0),
     };
     const pointsPath = {
-      leftTop: `M${edges.left + (radius?.leftTop ?? 0)},${edges.top} Q${
+      leftTop: `M${edges.left + (radius?.leftTop ?? 0)},${edges.top} Q${edges.left},${edges.top} ${
         edges.left
-      },${edges.top} ${edges.left},${edges.top + (radius?.leftTop ?? 0)}`,
-      rightTop: `V${edges.top + (radius?.rightTop ?? 0)} Q${edges.right},${
-        edges.top
-      } ${edges.right - (radius?.rightTop ?? 0)},${edges.top}`,
-      rightBottom: `H${edges.right - (radius?.rightBottom ?? 0)} Q${
+      },${edges.top + (radius?.leftTop ?? 0)}`,
+      rightTop: `V${edges.top + (radius?.rightTop ?? 0)} Q${edges.right},${edges.top} ${
+        edges.right - (radius?.rightTop ?? 0)
+      },${edges.top}`,
+      rightBottom: `H${edges.right - (radius?.rightBottom ?? 0)} Q${edges.right},${edges.bottom} ${
         edges.right
-      },${edges.bottom} ${edges.right},${
-        edges.bottom - (radius?.rightBottom ?? 0)
-      }`,
-      leftBottom: `V${edges.bottom - (radius?.leftBottom ?? 0)} Q${
-        edges.left
-      },${edges.bottom} ${edges.left + (radius?.leftBottom ?? 0)},${
-        edges.bottom
-      }`,
+      },${edges.bottom - (radius?.rightBottom ?? 0)}`,
+      leftBottom: `V${edges.bottom - (radius?.leftBottom ?? 0)} Q${edges.left},${edges.bottom} ${
+        edges.left + (radius?.leftBottom ?? 0)
+      },${edges.bottom}`,
     };
     path.value = `
       M${innerWidth},${innerHeight}

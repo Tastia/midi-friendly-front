@@ -1,5 +1,4 @@
-const [SubscribeOnboardingEvent, DispatchOnboardingEvent] =
-  useEventDispatcher<any>();
+const [SubscribeOnboardingEvent, DispatchOnboardingEvent] = useEventDispatcher<any>();
 
 export function useOnboardingEvents() {
   return {

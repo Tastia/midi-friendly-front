@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { useLoadingBar, useThemeVars } from "naive-ui";
 
-useReactifiedApi();
-
 const route = useRoute();
 const themeVars = useThemeVars();
 const loadingApi = useLoadingBar();

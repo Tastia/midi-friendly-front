@@ -25,9 +25,7 @@ const { width } = useWindowSize();
 const { updatePath, path } = useSvgOverlay();
 
 const stepElement = ref<HTMLElement>();
-const mergedOptions = computed(() =>
-  pipeMergeObject(options, step?.options ?? {})
-);
+const mergedOptions = computed(() => pipeMergeObject(options, step?.options ?? {}));
 
 function AttachElement() {
   const element = useGetElement(step.attachTo.element);
@@ -46,28 +44,20 @@ function AttachElement() {
   }
 }
 
-function SetTargetElementClassName(
-  element = useGetElement(step.attachTo.element)
-) {
+function SetTargetElementClassName(element = useGetElement(step.attachTo.element)) {
   const classList = step.attachTo.classList;
   if (!classList || !element) return;
   element.classList.add(...classList);
 }
 
-function UnsetTargetElementClassName(
-  element = useGetElement(step.attachTo.element),
-  classList?: string[]
-) {
+function UnsetTargetElementClassName(element = useGetElement(step.attachTo.element), classList?: string[]) {
   if (!classList || !element) return;
   element.classList.remove(...classList);
 }
 
 onMounted(() => AttachElement());
 onUnmounted(() =>
-  UnsetTargetElementClassName(
-    useGetElement(step.attachTo?.element),
-    step.attachTo?.classList
-  )
+  UnsetTargetElementClassName(useGetElement(step.attachTo?.element), step.attachTo?.classList)
 );
 </script>
 
@@ -99,12 +89,7 @@ onUnmounted(() =>
 
           <template #footer>
             <div class="flex items-center gap-2">
-              <NButton
-                v-if="!isFirst"
-                class="w-1/2"
-                type="primary"
-                @click="$emit('previous')"
-              >
+              <NButton v-if="!isFirst" class="w-1/2" type="primary" @click="$emit('previous')">
                 Précédent
               </NButton>
               <NButton
@@ -115,14 +100,7 @@ onUnmounted(() =>
               >
                 Suivant
               </NButton>
-              <NButton
-                v-if="isLast"
-                class="w-1/2"
-                type="primary"
-                @click="$emit('next')"
-              >
-                Fermer
-              </NButton>
+              <NButton v-if="isLast" class="w-1/2" type="primary" @click="$emit('next')"> Fermer </NButton>
             </div>
           </template>
 

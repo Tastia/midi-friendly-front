@@ -3,9 +3,7 @@ import { CollectUserSatisfaction } from "~~/src/services/user.jsx";
 </script>
 
 <template>
-  <NButton type="primary" class="side-button" @click="CollectUserSatisfaction">
-    Votre avis
-  </NButton>
+  <NButton type="primary" class="side-button" @click="CollectUserSatisfaction"> Votre avis </NButton>
 </template>
 
 <style lang="scss" scoped>

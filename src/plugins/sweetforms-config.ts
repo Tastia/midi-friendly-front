@@ -1,7 +1,4 @@
-import {
-  SweetformPlugin,
-  type SweetformPluginConfig,
-} from "@chronicstone/vue-sweetforms";
+import { SweetformPlugin, type SweetformPluginConfig } from "@chronicstone/vue-sweetforms";
 
 export default defineNuxtPlugin((nuxtApp) => {
   const sweetformsConfig: SweetformPluginConfig = {
@@ -10,8 +7,7 @@ export default defineNuxtPlugin((nuxtApp) => {
       prevBtnMessage: "PRÉCÉDENT",
       cancelBtnMessage: "ANNULER",
       submitBtnMessage: "CONFIRMER",
-      requiredMessage: (label) =>
-        `Le champ ${label.toLocaleLowerCase()} doit être rempli`,
+      requiredMessage: (label) => `Le champ ${label.toLocaleLowerCase()} doit être rempli`,
     },
     uiConfig: {},
   };

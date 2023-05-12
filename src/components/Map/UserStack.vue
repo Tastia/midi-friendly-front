@@ -33,11 +33,7 @@ function mapUsersAvatar(users: typeof props.users) {
 </script>
 
 <template>
-  <n-avatar-group
-    :options="mapUsersAvatar(users)"
-    :size="size"
-    :max="maxDisplayed"
-  >
+  <n-avatar-group :options="mapUsersAvatar(users)" :size="size" :max="maxDisplayed">
     <template #avatar="{ option: { name, src, isOnline } }">
       <n-tooltip>
         <template #trigger>
@@ -47,11 +43,7 @@ function mapUsersAvatar(users: typeof props.users) {
             :class="isOnline ? 'avatar__online' : 'avatar__offline'"
             :size="size"
           />
-          <n-avatar
-            v-else
-            :class="isOnline ? 'avatar__online' : 'avatar__offline'"
-            :size="size"
-          >
+          <n-avatar v-else :class="isOnline ? 'avatar__online' : 'avatar__offline'" :size="size">
             {{
               name
                 .split(" ")
@@ -62,11 +54,7 @@ function mapUsersAvatar(users: typeof props.users) {
         </template>
         <div class="flex flex-col items-center gap-1">
           <span>{{ name }}</span>
-          <span
-            :style="`color: ${
-              themeVars[isOnline ? 'successColor' : 'errorColor']
-            }`"
-          >
+          <span :style="`color: ${themeVars[isOnline ? 'successColor' : 'errorColor']}`">
             {{ isOnline ? "En ligne" : "Hors ligne" }}
           </span>
         </div>

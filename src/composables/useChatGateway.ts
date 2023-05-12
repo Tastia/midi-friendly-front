@@ -1,10 +1,6 @@
 import { ChatRoom } from "./../types/chat";
 import { ChatGatewayEmittedEvents } from "@/types/chat";
-import {
-  ChatGatewayReceivedEvents,
-  ChatMessage,
-  ChatMessageDto,
-} from "@/types/chat";
+import { ChatGatewayReceivedEvents, ChatMessage, ChatMessageDto } from "@/types/chat";
 import io from "socket.io-client";
 import { GatewayEventResponse, GatewayUser } from "@/types/mapGateway";
 
@@ -34,17 +30,13 @@ export function useChatGateway() {
   client.on(
     ChatGatewayReceivedEvents.userConnected,
     ({ userId }: { userId: string }) =>
-      (users.value = users.value.map((user) =>
-        user._id === userId ? { ...user, isOnline: true } : user
-      ))
+      (users.value = users.value.map((user) => (user._id === userId ? { ...user, isOnline: true } : user)))
   );
 
   client.on(
     ChatGatewayReceivedEvents.userDisconnected,
     ({ userId }: { userId: string }) =>
-      (users.value = users.value.map((user) =>
-        user._id === userId ? { ...user, isOnline: false } : user
-      ))
+      (users.value = users.value.map((user) => (user._id === userId ? { ...user, isOnline: false } : user)))
   );
 
   client.on(
@@ -54,20 +46,14 @@ export function useChatGateway() {
     }
   );
 
-  client.on(
-    ChatGatewayReceivedEvents.addChatRoom,
-    ({ room }: { room: ChatRoom }) => dispatchNewRoom(room)
-  );
+  client.on(ChatGatewayReceivedEvents.addChatRoom, ({ room }: { room: ChatRoom }) => dispatchNewRoom(room));
 
-  function SendMessage(
-    data: ChatMessageDto
-  ): Promise<{ success: boolean; message: ChatMessage }> {
+  function SendMessage(data: ChatMessageDto): Promise<{ success: boolean; message: ChatMessage }> {
     return new Promise((resolve) =>
       client.emit(
         ChatGatewayEmittedEvents.sendMessage,
         data,
-        (response: { success: boolean; message: ChatMessage }) =>
-          resolve(response)
+        (response: { success: boolean; message: ChatMessage }) => resolve(response)
       )
     );
   }

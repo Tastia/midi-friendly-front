@@ -24,11 +24,7 @@ const dropdownOptions = useDropdownActions([
 
 <template>
   <NDropdown :options="(dropdownOptions as unknown as DropdownMixedOption[])">
-    <NAvatar
-      size="small"
-      round
-      v-bind="{ ...(userStore.user?.avatar && { src: userStore.user.avatar }) }"
-    >
+    <NAvatar size="small" round v-bind="{ ...(userStore.user?.avatar && { src: userStore.user.avatar }) }">
       <template v-if="!userStore.user?.avatar">
         {{ userStore.user?.firstName?.charAt(0) }}
         {{ userStore.user?.lastName?.charAt(0) }}

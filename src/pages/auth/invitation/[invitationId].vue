@@ -22,18 +22,13 @@ const registerMode = ref<"link" | "register">();
 const userStore = useUserStore();
 const appStore = useAppStore();
 
-const errorMessage = computed<string>(() =>
-  invitation.value ? GetErrorMessage(invitation.value) : ""
-);
+const errorMessage = computed<string>(() => (invitation.value ? GetErrorMessage(invitation.value) : ""));
 
-function GetErrorMessage(
-  errorFlags: Omit<AcceptInvitationResponse, "success">
-) {
+function GetErrorMessage(errorFlags: Omit<AcceptInvitationResponse, "success">) {
   if (errorFlags.notFound) return "Invitation not found";
   else if (errorFlags.alreadyUsed) return "Invitation already used";
   else if (errorFlags.expired) return "Invitation expired";
-  else if (errorFlags.maxUsageReached)
-    "Maximum number of usage for this invitation already reached";
+  else if (errorFlags.maxUsageReached) "Maximum number of usage for this invitation already reached";
   return "N/A";
 }
 
@@ -47,9 +42,7 @@ async function FetchInvitation() {
 async function FinaliseRegisterProcess(data: AuthRegisterDto | AuthLoginDto) {
   try {
     appStore.startLoading(
-      `${
-        registerMode.value === "link" ? "Association" : "Création"
-      } du compte en cours...`
+      `${registerMode.value === "link" ? "Association" : "Création"} du compte en cours...`
     );
     const { success, ...errorFlags } = await Authcontroller.accepInvitation({
       invitationId: route.params.invitationId as string,
@@ -67,16 +60,10 @@ async function FinaliseRegisterProcess(data: AuthRegisterDto | AuthLoginDto) {
     appStore.stopLoading();
 
     if (success) {
-      messageApi.success(
-        `${
-          registerMode.value === "link" ? "Association" : "Création"
-        } du compte réussie !`
-      );
+      messageApi.success(`${registerMode.value === "link" ? "Association" : "Création"} du compte réussie !`);
       const authData = await Authcontroller.login(data as AuthLoginDto);
       userStore.StoreAuthData(authData);
-      messageApi.success(
-        `Bienvenue, ${authData.account.firstName} ${authData.account.lastName}`
-      );
+      messageApi.success(`Bienvenue, ${authData.account.firstName} ${authData.account.lastName}`);
 
       // BUG: Navigation gets interrupted, hook page:finish never reached
       // HARDFIX::TEMP : reload location once route is updated
@@ -113,9 +100,7 @@ onMounted(() => {
   </template>
 
   <template v-else-if="!registerMode">
-    <div
-      class="px-8 md:px-16 lg:px-32 xl:px-64 py-4 md:py-8 lg:py-16 xl:py-32 flex flex-col gap-10"
-    >
+    <div class="px-8 md:px-16 lg:px-32 xl:px-64 py-4 md:py-8 lg:py-16 xl:py-32 flex flex-col gap-10">
       <div class="flex flex-col gap-4 sm:max-w-[60%]">
         <h1 class="font-black text-2xl">
           Vous avez été invité a rejoindre
@@ -129,25 +114,19 @@ onMounted(() => {
         </p> -->
       </div>
 
-      <div
-        class="flex flex-col !sm:flex-row gap-8 justify-between items-center w-full"
-      >
+      <div class="flex flex-col !sm:flex-row gap-8 justify-between items-center w-full">
         <div
           class="w-full h-[20vh] !sm:w-[48%] !sm:h-[40vh] illu-container p-8 flex flex-col justify-end cursor-pointer"
           @click="registerMode = 'link'"
         >
-          <p class="text-white text-md">
-            Me connecter à l'aide d'un comtpe existant
-          </p>
+          <p class="text-white text-md">Me connecter à l'aide d'un comtpe existant</p>
           <h2 class="font-bold text-white text-xl">Déja passé ?</h2>
         </div>
         <div
           class="w-full h-[20vh] !sm:w-[48%] !sm:h-[40vh] illu-container p-8 flex flex-col justify-end cursor-pointer"
           @click="registerMode = 'register'"
         >
-          <p class="text-white text-md un-blur">
-            S'inscrire sur midi-friendly dès maintenant
-          </p>
+          <p class="text-white text-md un-blur">S'inscrire sur midi-friendly dès maintenant</p>
           <h2 class="font-bold text-white text-xl">Nouveau ?</h2>
         </div>
       </div>
@@ -157,20 +136,13 @@ onMounted(() => {
   <template v-if="registerMode">
     <div class="flex overflow-hidden">
       <div class="w-0 lg:w-1/2 h-layout illu-container-full"></div>
-      <NScrollbar
-        class="w-full lg:w-1/2"
-        style="max-height: calc(100vh - 4rem)"
-      >
+      <NScrollbar class="w-full lg:w-1/2" style="max-height: calc(100vh - 4rem)">
         <div class="p-16 flex flex-col gap-8">
           <h1 class="font-600 text-lg">
             Lier l'organisation
             <i>{{ invitation?.invitation.organization.name }}</i>
             a un
-            {{
-              registerMode === "register"
-                ? "nouveau compte"
-                : "compte existant"
-            }}.
+            {{ registerMode === "register" ? "nouveau compte" : "compte existant" }}.
           </h1>
           <!-- <p class="text-gray-500">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis,
@@ -185,15 +157,8 @@ onMounted(() => {
           </Transition>
           <NDivider class="!m-0" />
           <div class="flex w-full justify-center">
-            <NButton
-              text
-              @click="
-                registerMode = registerMode === 'link' ? 'register' : 'link'
-              "
-            >
-              <span v-if="registerMode === 'register'">
-                Vous avez déja un compte ?
-              </span>
+            <NButton text @click="registerMode = registerMode === 'link' ? 'register' : 'link'">
+              <span v-if="registerMode === 'register'"> Vous avez déja un compte ? </span>
               <span v-else>Pas de compte ? Créez-en un</span>
             </NButton>
           </div>

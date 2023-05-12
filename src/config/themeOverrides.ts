@@ -62,14 +62,8 @@ const _darkThemeOverrides = {
   },
 };
 
-export const DarkThemeOverrides = deepmerge(
-  DefaultThemeOverrides,
-  _darkThemeOverrides
-);
-export const LightThemeOverrides = deepmerge(
-  DefaultThemeOverrides,
-  _lightThemeOverrides
-);
+export const DarkThemeOverrides = deepmerge(DefaultThemeOverrides, _darkThemeOverrides);
+export const LightThemeOverrides = deepmerge(DefaultThemeOverrides, _lightThemeOverrides);
 
 export const GMapsThemeOverridesDark = [
   { elementType: "geometry", stylers: [{ color: "#242f3e" }] },

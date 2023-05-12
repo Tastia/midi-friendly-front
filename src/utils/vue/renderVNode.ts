@@ -1,13 +1,7 @@
 import { createTextVNode, VNodeChild } from "vue";
 
 export const renderVNode = <T extends any[]>(
-  r:
-    | string
-    | number
-    | undefined
-    | null
-    | ((...args: [...T]) => VNodeChild)
-    | unknown,
+  r: string | number | undefined | null | ((...args: [...T]) => VNodeChild) | unknown,
   ...args: [...T]
 ): VNodeChild => {
   if (typeof r === "function") {

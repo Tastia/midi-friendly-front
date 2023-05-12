@@ -22,7 +22,7 @@ export default {
         </a>
       </div>
       <div class="absolute -right-10 top-10 hidden lg:block">
-        <nuxt-img :src="'/'+image" width="450" />
+        <nuxt-img :src="'/' + image" width="450" />
       </div>
     </div>
   </div>

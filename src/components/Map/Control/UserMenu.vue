@@ -10,9 +10,7 @@ const gatewayApi = inject(mapApiInjectionKey);
 
 const onlineUsers = computed<number>(
   () =>
-    gatewayApi?.users.value.filter(
-      (user) => user.isOnline && user._id !== userStore.user?._id
-    ).length ?? 0
+    gatewayApi?.users.value.filter((user) => user.isOnline && user._id !== userStore.user?._id).length ?? 0
 );
 const mappedUsersList = computed(() =>
   gatewayApi?.users.value
@@ -25,12 +23,10 @@ const mappedUsersList = computed(() =>
 );
 
 const { SubscribeOnboardingEvent } = useOnboardingEvents();
-const cancelSubscription = SubscribeOnboardingEvent(
-  (event: OnboardingEvents) => {
-    if (event === OnboardingEvents.openUserMenu) showMenu.value = true;
-    if (event === OnboardingEvents.closeUserMenu) showMenu.value = false;
-  }
-) as () => void;
+const cancelSubscription = SubscribeOnboardingEvent((event: OnboardingEvents) => {
+  if (event === OnboardingEvents.openUserMenu) showMenu.value = true;
+  if (event === OnboardingEvents.closeUserMenu) showMenu.value = false;
+}) as () => void;
 onUnmounted(() => cancelSubscription());
 </script>
 
@@ -39,12 +35,7 @@ onUnmounted(() => cancelSubscription());
     Liste des utilisateurs
     <template #trigger>
       <NBadge show-zero type="success" :value="onlineUsers">
-        <NButton
-          id="user-menu-trigger"
-          circle
-          type="primary"
-          @click="showMenu = true"
-        >
+        <NButton id="user-menu-trigger" circle type="primary" @click="showMenu = true">
           <template #icon>
             <i:mdi:user />
           </template>
@@ -53,31 +44,17 @@ onUnmounted(() => cancelSubscription());
     </template>
   </NTooltip>
 
-  <NDrawer
-    v-model:show="showMenu"
-    :width="width < 580 ? width : 580"
-    placement="right"
-    mask-closable
-  >
+  <NDrawer v-model:show="showMenu" :width="width < 580 ? width : 580" placement="right" mask-closable>
     <NDrawerContent :native-scrollbar="false" closable>
       <template #header>
-        <span class="text-xl font-black">
-          Utilisateurs de {{ userStore.activeOrganization?.name }}
-        </span>
+        <span class="text-xl font-black"> Utilisateurs de {{ userStore.activeOrganization?.name }} </span>
       </template>
 
       <div id="user-menu-drawer" class="flex flex-col gap-4">
-        <div
-          v-if="!mappedUsersList?.length"
-          class="h-32 grid place-items-center"
-        >
+        <div v-if="!mappedUsersList?.length" class="h-32 grid place-items-center">
           <NEmpty description="Aucun utilisateur" />
         </div>
-        <MapProfileUser
-          v-for="user in mappedUsersList"
-          :key="user._id"
-          :user="user"
-        />
+        <MapProfileUser v-for="user in mappedUsersList" :key="user._id" :user="user" />
       </div>
     </NDrawerContent>
   </NDrawer>

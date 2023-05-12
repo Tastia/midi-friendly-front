@@ -39,7 +39,4 @@ export type CreateInvitationLinkDto = {
   targetApp: InvitationTargetApp;
 };
 
-export type CreateInvitationEmailDto = Omit<
-  CreateInvitationLinkDto,
-  "maxUsage"
-> & { emails: string[] };
+export type CreateInvitationEmailDto = Omit<CreateInvitationLinkDto, "maxUsage"> & { emails: string[] };

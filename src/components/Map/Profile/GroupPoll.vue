@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import { MapLunchGroupPoll } from "@/types/mapGateway";
-import { useSweetform } from "@chronicstone/vue-sweetforms";
 import { useThemeVars } from "naive-ui";
 
 const themeVars = useThemeVars();
-const formApi = useSweetform();
 const props = defineProps<{ groupPoll: MapLunchGroupPoll }>();
 const emit = defineEmits<{
   (
@@ -17,15 +15,8 @@ const emit = defineEmits<{
   ): void;
 }>();
 
-const {
-  users,
-  voteState,
-  voteOptions,
-  timeLeft,
-  timeLeftPercentage,
-  userHasVoted,
-  userVoteValue,
-} = useLunchGroupPoll(props.groupPoll);
+const { users, voteState, voteOptions, timeLeft, timeLeftPercentage, userHasVoted, userVoteValue } =
+  useLunchGroupPoll(props.groupPoll);
 
 const timerProgressColor = computed(() => {
   if (timeLeftPercentage.value > 50) return themeVars.value.successColor;
@@ -102,9 +93,7 @@ async function SetUserVote() {
             class="bg-blue-gray-500/10 w-full h-auto p-2 !pr-0.5"
             :style="{ borderRadius: themeVars.borderRadius }"
           >
-            <NScrollbar
-              class="max-h-32 italic text-gray-500 whitespace-pre pr-2"
-            >
+            <NScrollbar class="max-h-32 italic text-gray-500 whitespace-pre pr-2">
               {{ groupPoll.description || "N/A" }}
             </NScrollbar>
           </div>
@@ -112,18 +101,12 @@ async function SetUserVote() {
       </div>
       <NDivider class="!m-0" />
       <div class="flex flex-col gap-3">
-        <div
-          v-for="voteItem in voteState"
-          :key="voteItem?.restaurant?._id"
-          class="flex flex-col gap-1.5"
-        >
+        <div v-for="voteItem in voteState" :key="voteItem?.restaurant?._id" class="flex flex-col gap-1.5">
           <div class="flex items-center justify-between">
             <NEllipsis :style="{ maxWidth: '80%' }">
               <span>{{ voteItem.restaurant.name }}</span>
             </NEllipsis>
-            <span class="text-xs text-gray-500">
-              {{ voteItem.voteCount.percentage }} %
-            </span>
+            <span class="text-xs text-gray-500"> {{ voteItem.voteCount.percentage }} % </span>
           </div>
           <NProgress
             type="line"

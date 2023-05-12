@@ -15,9 +15,7 @@ export const useBreakpoints = (rawBreakpoints: Breakpoints) => {
     return Object.entries(breakpoints)
       .map(([key, value]) => ({ key, value }))
       .filter(({ key }) => Object.keys(rawBreakpoints).includes(key))
-      .sort(
-        (a, b) => orderedSource.indexOf(a.key) - orderedSource.indexOf(b.key)
-      );
+      .sort((a, b) => orderedSource.indexOf(a.key) - orderedSource.indexOf(b.key));
   });
 
   return {

@@ -1,23 +1,11 @@
 <script setup lang="ts">
-import { Form, FormSchema } from "@chronicstone/vue-sweetforms";
-import { helpers, sameAs } from "@vuelidate/validators";
-import {
-  AuthEmailCredentials,
-  AuthLoginDto,
-  AuthProviderCredentials,
-  AuthRegisterDto,
-} from "@/types/auth";
+import { AuthEmailCredentials, AuthLoginDto, AuthProviderCredentials, AuthRegisterDto } from "@/types/auth";
+import { useFormController } from "@chronicstone/vue-sweettools";
+import { buildFormSchema, FormRenderer, FormRefInstance } from "@chronicstone/vue-sweettools";
 
 const emit = defineEmits<{ (e: "onSubmit", data: AuthLoginDto): void }>();
 
-function SubmitFormData(
-  type: AuthLoginDto["type"],
-  data: Omit<AuthEmailCredentials, "type"> | Omit<AuthRegisterDto, "type">
-) {
-  emit("onSubmit", { type, ...data } as AuthLoginDto);
-}
-
-const formSchema: FormSchema = {
+const formSchema = buildFormSchema({
   gridSize: 8,
   fieldSize: 8,
   fields: [
@@ -35,27 +23,29 @@ const formSchema: FormSchema = {
       required: true,
     },
   ],
-};
+});
+
+const formRef = ref<FormRefInstance>();
+const { formData } = useFormController(formRef, formSchema);
+
+function SubmitFormData(
+  type: AuthLoginDto["type"],
+  data: Omit<AuthEmailCredentials, "type"> | Omit<AuthRegisterDto, "type">
+) {
+  emit("onSubmit", { type, ...data } as AuthLoginDto);
+}
+
+watchEffect(() => {
+  console.log(formData.value);
+});
 </script>
 
 <template>
   <div class="flex flex-col">
-    <Form
-      :form-options="formSchema"
-      @on-submit="SubmitFormData('email', $event)"
-    >
-      <template #actions="{ toggleSubmit }">
-        <NButton
-          class="w-full"
-          size="large"
-          secondary
-          type="primary"
-          @click="toggleSubmit"
-        >
-          CONNEXION
-        </NButton>
-      </template>
-    </Form>
+    <FormRenderer :schema="formSchema" />
+    <NButton class="w-full" size="large" secondary type="primary" @click="SubmitFormData('email', formData)">
+      CONNEXION
+    </NButton>
     <NDivider>
       <span class="text-sm">OR</span>
     </NDivider>

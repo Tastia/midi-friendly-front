@@ -21,8 +21,7 @@ const { isReady, login } = useTokenClient({
 
 watch(
   () => isWindowFocused.value,
-  (newVal, oldVal) =>
-    newVal && !oldVal && !isAuthenticating.value && (isLoading.value = false),
+  (newVal, oldVal) => newVal && !oldVal && !isAuthenticating.value && (isLoading.value = false),
   { immediate: true }
 );
 
@@ -33,13 +32,10 @@ function StartAuthenticate() {
 
 async function RetriveProfileData(response: AuthCodeFlowSuccessResponse) {
   isAuthenticating.value = true;
-  const { data } = await axios.get(
-    "https://people.googleapis.com/v1/people/me",
-    {
-      headers: { Authorization: `Bearer ${response.access_token}` },
-      params: { personFields: "emailAddresses,names,photos,metadata" },
-    }
-  );
+  const { data } = await axios.get("https://people.googleapis.com/v1/people/me", {
+    headers: { Authorization: `Bearer ${response.access_token}` },
+    params: { personFields: "emailAddresses,names,photos,metadata" },
+  });
 
   isLoading.value = false;
   isAuthenticating.value = false;
@@ -59,13 +55,7 @@ function AuthenticationFailed(errorResponse: AuthCodeFlowErrorResponse) {
 </script>
 
 <template>
-  <NButton
-    :disabled="!isReady || isLoading"
-    :loading="isLoading"
-    secondary
-    round
-    @click="StartAuthenticate"
-  >
+  <NButton :disabled="!isReady || isLoading" :loading="isLoading" secondary round @click="StartAuthenticate">
     <template #icon>
       <i:logos:google-icon />
     </template>

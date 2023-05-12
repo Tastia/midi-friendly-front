@@ -9,48 +9,27 @@ export const useUserStore = defineStore("userStore", () => {
   const refreshToken = ref<string | null>();
   const rememberMe = ref<boolean>(false);
 
-  const organizations = useCStorage<Organization[]>(
-    "organizations",
-    [],
-    localStorage,
-    { serializer: ObjectSerializer as Serializer<Organization[]> }
-  );
+  const organizations = useCStorage<Organization[]>("organizations", [], localStorage, {
+    serializer: ObjectSerializer as Serializer<Organization[]>,
+  });
 
-  const activeOrganizationId = useCStorage<string | null>(
-    "activeOrganizationId",
-    null,
-    localStorage
-  );
+  const activeOrganizationId = useCStorage<string | null>("activeOrganizationId", null, localStorage);
 
-  const accessToken = useCStorage<string | null>(
-    "refreshToken",
-    null,
-    localStorage
-  );
+  const accessToken = useCStorage<string | null>("refreshToken", null, localStorage);
 
-  const user = useCStorage<(User & { onboarded: boolean }) | null>(
-    "user",
-    null,
-    localStorage,
-    {
-      serializer: ObjectSerializer as Serializer<User & { onboarded: boolean }>,
-    }
-  );
+  const user = useCStorage<(User & { onboarded: boolean }) | null>("user", null, localStorage, {
+    serializer: ObjectSerializer as Serializer<User & { onboarded: boolean }>,
+  });
 
   const activeOrganization = computed<Organization | null>(() =>
-    user.value
-      ? organizations.value.find(
-          (orga) => orga._id === activeOrganizationId.value
-        ) ?? null
-      : null
+    user.value ? organizations.value.find((orga) => orga._id === activeOrganizationId.value) ?? null : null
   );
 
   function StoreAuthData(data: AuthLoginData) {
     accessToken.value = data.accessToken;
     user.value = data.account;
     organizations.value = data.organizations;
-    if (data.organizations.length === 1)
-      activeOrganizationId.value = data.organizations[0]._id;
+    if (data.organizations.length === 1) activeOrganizationId.value = data.organizations[0]._id;
   }
 
   function ClearUserSession() {

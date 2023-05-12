@@ -16,11 +16,7 @@ const scrollContainer = ref<HTMLElement>();
 const nbOfUnreadMessages = computed(
   () =>
     rooms.value
-      .map(
-        (room) =>
-          room.lastMessage &&
-          !room.lastMessage?.readBy?.includes(userStore?.user?._id ?? "")
-      )
+      .map((room) => room.lastMessage && !room.lastMessage?.readBy?.includes(userStore?.user?._id ?? ""))
       .filter(Boolean).length
 );
 
@@ -44,24 +40,16 @@ async function LoadRooms() {
 
 function OpenRoom(roomId: string) {
   showMenu.value = false;
-  rooms.value
-    .find((room) => room._id === roomId)
-    ?.lastMessage?.readBy?.push(userStore?.user?._id ?? "");
+  rooms.value.find((room) => room._id === roomId)?.lastMessage?.readBy?.push(userStore?.user?._id ?? "");
 }
 
 function GetUserFullName(source: string | User) {
-  const user =
-    typeof source === "string"
-      ? chatApi?.users.value.find((user) => user._id === source)
-      : source;
+  const user = typeof source === "string" ? chatApi?.users.value.find((user) => user._id === source) : source;
   return user ? `${user.firstName} ${user.lastName}` : "";
 }
 
 function GetUserAvatar(source: string | User) {
-  const user =
-    typeof source === "string"
-      ? chatApi?.users.value.find((user) => user._id === source)
-      : source;
+  const user = typeof source === "string" ? chatApi?.users.value.find((user) => user._id === source) : source;
   return {
     src: user?.avatar,
     initials: `${user?.firstName?.charAt(0)}${user?.lastName.charAt(0)}`,
@@ -119,18 +107,11 @@ onUnmounted(() => {
       <template #header>
         <div class="flex flex-col gap-2">
           <h2 class="text-xl font-black">Discussions</h2>
-          <NInput
-            round
-            size="small"
-            placeholder="Rechercher une discussion..."
-          />
+          <NInput round size="small" placeholder="Rechercher une discussion..." />
         </div>
       </template>
 
-      <div
-        ref="scrollContainer"
-        class="flex flex-col w-full gap-2 h-[350px] overflow-y-scroll pr-4"
-      >
+      <div ref="scrollContainer" class="flex flex-col w-full gap-2 h-[350px] overflow-y-scroll pr-4">
         <template v-if="!rooms.length">
           <div class="h-full w-full grid place-items-center">
             <NEmpty description="Aucune discussion" />
@@ -159,24 +140,15 @@ onUnmounted(() => {
                 :src="GetUserAvatar(room.lastMessage?.user as unknown as string).src"
               />
               <NAvatar v-else round size="large">
-                {{
-                  GetUserAvatar(room.lastMessage?.user as unknown as string)
-                    .initials
-                }}
+                {{ GetUserAvatar(room.lastMessage?.user as unknown as string).initials }}
               </NAvatar>
               <div class="flex flex-col gap-0">
                 <span class="font-medium uppercase">
-                  {{
-                    room?.lunchGroupPoll?.label ?? room?.lunchGroup?.label ?? ""
-                  }}
+                  {{ room?.lunchGroupPoll?.label ?? room?.lunchGroup?.label ?? "" }}
                 </span>
                 <span v-if="room.lastMessage" class="text-gray-500">
                   <NEllipsis>
-                    {{
-                      GetUserFullName(
-                        room.lastMessage.user as unknown as string
-                      )
-                    }}
+                    {{ GetUserFullName(room.lastMessage.user as unknown as string) }}
                     : {{ room.lastMessage?.message.content }}</NEllipsis
                   >
                 </span>
@@ -186,10 +158,7 @@ onUnmounted(() => {
               </div>
               <NBadge
                 v-if="
-                  room.lastMessage &&
-                  !(room?.lastMessage?.readBy ?? []).includes(
-                    userStore.user?._id ?? ''
-                  )
+                  room.lastMessage && !(room?.lastMessage?.readBy ?? []).includes(userStore.user?._id ?? '')
                 "
                 processing
                 dot

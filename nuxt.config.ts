@@ -10,15 +10,7 @@ export default defineNuxtConfig({
   pages: true,
   srcDir: "src",
   imports: {
-    dirs: [
-      "stores",
-      "config",
-      "composables",
-      "utils",
-      "api/controllers",
-      "services",
-      "services/_utils",
-    ],
+    dirs: ["stores", "config", "composables", "utils", "api/controllers", "services", "services/_utils"],
   },
   alias: {
     "@/.": "./",
@@ -31,6 +23,13 @@ export default defineNuxtConfig({
     "@nuxt/image-edge",
   ],
   css: ["@/assets/styles/main.scss"],
+  runtimeConfig: {
+    public: {
+      airtableToken: "",
+      airtableBaseId: "",
+      airtableTableName: "",
+    },
+  },
   vite: {
     plugins: [
       Components({
@@ -41,12 +40,6 @@ export default defineNuxtConfig({
       }),
       PurgeIcons(),
     ],
-  },
-  runtimeConfig: {
-    public: {
-      // apiUrl: import.meta.env.VITE_API_URL,
-      // gatewayUrl: import.meta.env.VITE_GATEWAY_URL
-    },
   },
   nitro: {
     prerender: {

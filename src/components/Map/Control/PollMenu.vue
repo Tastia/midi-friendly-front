@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { useSweetform } from "@chronicstone/vue-sweetforms";
 import { CreateGroupPollDto, MapLunchGroupPoll } from "@/types/mapGateway";
 import { OnboardingEvents } from "@/types/onboarding";
+import { useFormApi } from "@chronicstone/vue-sweettools";
 
 const showMenu = ref<boolean>(false);
 const { width } = useWindowSize();
 
-const formApi = useSweetform();
+const formApi = useFormApi();
 const mapGatewayApi = inject(mapApiInjectionKey);
 
 function SortPollsByDate(polls: MapLunchGroupPoll[]) {
@@ -20,23 +20,12 @@ function SortPollsByDate(polls: MapLunchGroupPoll[]) {
 async function CreateNewPoll() {
   try {
     showMenu.value = false;
-    const { formData, isCompleted } = await formApi.createForm(
-      LunchGroupPollFormSchema()
-    );
+    const { formData, isCompleted } = await formApi.createForm(LunchGroupPollFormSchema());
 
     showMenu.value = true;
     if (!isCompleted) return;
 
-    mapGatewayApi?.CreateGroupPoll({
-      label: formData.label,
-      description: formData.description,
-      meetingTime: formData.meetingTime,
-      voteDeadline: formData.voteDeadline,
-      ...(formData.allowedRestaurants?.length && {
-        allowedRestaurants: formData.allowedRestaurants,
-      }),
-      userVote: formData.userVote,
-    });
+    mapGatewayApi?.CreateGroupPoll(formData);
   } catch (err) {
     console.error(err);
   }
@@ -67,9 +56,7 @@ async function SetUserVote(payload: {
           },
         ],
       },
-      payload.userCurrentVote
-        ? { restaurant: payload.userCurrentVote }
-        : undefined
+      payload.userCurrentVote ? { restaurant: payload.userCurrentVote } : undefined
     );
 
     showMenu.value = true;
@@ -85,12 +72,10 @@ async function SetUserVote(payload: {
 }
 
 const { SubscribeOnboardingEvent } = useOnboardingEvents();
-const cancelSubscription = SubscribeOnboardingEvent(
-  (event: OnboardingEvents) => {
-    if (event === OnboardingEvents.openPollMenu) showMenu.value = true;
-    if (event === OnboardingEvents.closePollMenu) showMenu.value = false;
-  }
-) as () => void;
+const cancelSubscription = SubscribeOnboardingEvent((event: OnboardingEvents) => {
+  if (event === OnboardingEvents.openPollMenu) showMenu.value = true;
+  if (event === OnboardingEvents.closePollMenu) showMenu.value = false;
+}) as () => void;
 onUnmounted(() => cancelSubscription());
 </script>
 
@@ -98,12 +83,7 @@ onUnmounted(() => cancelSubscription());
   <NTooltip>
     Gérer les votes
     <template #trigger>
-      <NButton
-        id="poll-menu-trigger"
-        type="primary"
-        circle
-        @click="showMenu = true"
-      >
+      <NButton id="poll-menu-trigger" type="primary" circle @click="showMenu = true">
         <template #icon>
           <i:fluent:poll-16-filled />
         </template>
@@ -145,9 +125,7 @@ onUnmounted(() => cancelSubscription());
 
       <div v-else id="poll-menu-drawer" class="flex flex-col gap-5">
         <MapProfileGroupPoll
-          v-for="poll in SortPollsByDate(
-            mapGatewayApi?.lunchGroupPolls.value ?? []
-          )"
+          v-for="poll in SortPollsByDate(mapGatewayApi?.lunchGroupPolls.value ?? [])"
           :key="poll._id"
           :group-poll="poll"
           @set-user-vote="SetUserVote"

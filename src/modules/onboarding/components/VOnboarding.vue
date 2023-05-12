@@ -1,10 +1,7 @@
 <script setup lang="ts">
 import { pipeMergeObject } from "@/utils/data/object";
 import { OnboardingStep } from "../types/onboardingStep";
-import {
-  VOnboardingWrapperOptions,
-  defaultVOnboardingWrapperOptions,
-} from "../types/onboardingWrapper";
+import { VOnboardingWrapperOptions, defaultVOnboardingWrapperOptions } from "../types/onboardingWrapper";
 import VOnboardingStep from "./VOnboardingStep.vue";
 import { sleep } from "@/utils/other/sleep";
 
@@ -22,14 +19,10 @@ const currentStepIndex = ref<number>(0);
 const mergedOptions = computed<VOnboardingWrapperOptions>(() =>
   pipeMergeObject(defaultVOnboardingWrapperOptions, options)
 );
-const activeStep = computed<OnboardingStep>(
-  () => steps[currentStepIndex.value]
-);
+const activeStep = computed<OnboardingStep>(() => steps[currentStepIndex.value]);
 
 const isFirstStep = computed<boolean>(() => currentStepIndex.value === 0);
-const isLastStep = computed<boolean>(
-  () => currentStepIndex.value === steps.length - 1
-);
+const isLastStep = computed<boolean>(() => currentStepIndex.value === steps.length - 1);
 
 async function StartOnboarding(index = 0) {
   currentStepIndex.value = index;

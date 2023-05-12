@@ -12,8 +12,7 @@ export const RemoveNullFromObject = (obj: { [key: string]: any }) => {
   return newObj;
 };
 
-export const pipeMergeObject = <T>(...args: T[]) =>
-  args.reduce((acc, curr) => deepmerge(acc, curr), {});
+export const pipeMergeObject = <T>(...args: T[]) => args.reduce((acc, curr) => deepmerge(acc, curr), {});
 
 export const ObjectSerializer = {
   read: (string: string) => {
@@ -23,6 +22,5 @@ export const ObjectSerializer = {
       return string;
     }
   },
-  write: (value: Record<string, any> | null) =>
-    value ? JSON.stringify(value) : value,
+  write: (value: Record<string, any> | null) => (value ? JSON.stringify(value) : value),
 };
